@@ -2,7 +2,23 @@ import logo from '../assets/logo.png'
 import partyplot from "../assets/party-plot.jpg";
 import Maintenance from '../assets/Maintenance.webp'
 import office from '../assets/officeplace.webp'
-import {MapPin , IndianRupee} from 'lucide-react'
+import Amenities from "../assets/Amenities.jpg";
+import {
+  MapPin,
+  IndianRupee,
+  ShieldCheck,
+  BadgeCheck,
+  Wrench,
+  Clock,
+  UserPlus,
+  Search,
+  CalendarCheck,
+  LayoutDashboard,
+  Dumbbell,
+  Car,
+  Waves,
+  Building2,
+} from "lucide-react";
 
 const Home = () => {
   return (
@@ -301,6 +317,229 @@ const Home = () => {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-6xl mx-auto relative">
+          {/* LEFT MAIN CARD */}
+          <div
+            className="bg-gradient-to-br from-blue-600 to-green-500 
+                    text-white p-26 rounded-r-4xl rounded-l-xl w-[60%] relative"
+          >
+            <h2 className="text-4xl font-bold mb-6">
+              WHY <br /> CHOOSE US
+            </h2>
+
+            <p className="text-sm opacity-90 max-w-xs">
+              Smart property management platform designed for tenants, owners,
+              and administrators with real-time control.
+            </p>
+
+            {/* Decorative Circle Effect */}
+            <div
+              className="absolute right-0 top-0 w-60 h-60 
+                      bg-white/10 rounded-full"
+            ></div>
+          </div>
+
+          {/* FEATURES FLOATING ON RIGHT */}
+          <div className="absolute top-2 left-168 right-5 space-y-12 w-[45%]">
+            {/* Feature 1 */}
+            <div className="flex items-start gap-5">
+              <div className="bg-blue-100 p-4 rounded-full shadow-lg left-20">
+                <ShieldCheck className="text-blue-600" size={22} />
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-800">Secure Payments</h4>
+                <p className="text-gray-500 text-sm">
+                  Safe and encrypted rent & service transactions.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="flex items-start gap-5">
+              <div className="bg-green-100 p-4 rounded-full shadow-lg">
+                <BadgeCheck className="text-green-600" size={22} />
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-800">
+                  Verified Properties
+                </h4>
+                <p className="text-gray-500 text-sm">
+                  Every listing is verified for trust and safety.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="flex items-start gap-5">
+              <div className="bg-blue-100 p-4 rounded-full shadow-lg">
+                <Wrench className="text-blue-600" size={22} />
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-800">
+                  24/7 Maintenance
+                </h4>
+                <p className="text-gray-500 text-sm">
+                  Real-time maintenance tracking system.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="flex items-start gap-5">
+              <div className="bg-green-100 p-4 rounded-full shadow-lg">
+                <Clock className="text-green-600" size={22} />
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-800">
+                  Real-Time Booking
+                </h4>
+                <p className="text-gray-500 text-sm">
+                  Instant amenity booking & rental management.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works - Map Style */}
+      <section className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-8">
+          {/* Title */}
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-800">How It Works</h2>
+            <p className="text-gray-500 mt-3">
+              A simple journey from registration to full property management.
+            </p>
+          </div>
+
+          {/* Roadmap */}
+          <div className="relative">
+            {/* Horizontal Line */}
+            <div className="absolute top-10 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-green-500"></div>
+
+            <div className="grid md:grid-cols-4 gap-10 relative">
+              {/* Step 1 */}
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg relative z-10">
+                  <UserPlus size={28} />
+                </div>
+                <h4 className="mt-6 font-semibold text-gray-800">
+                  Register Account
+                </h4>
+                <p className="text-gray-500 text-sm mt-2">
+                  Create your account as tenant, owner, or admin.
+                </p>
+              </div>
+
+              {/* Step 2 */}
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg relative z-10">
+                  <Search size={28} />
+                </div>
+                <h4 className="mt-6 font-semibold text-gray-800">
+                  Browse Properties
+                </h4>
+                <p className="text-gray-500 text-sm mt-2">
+                  Explore verified properties and amenities.
+                </p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg relative z-10">
+                  <CalendarCheck size={28} />
+                </div>
+                <h4 className="mt-6 font-semibold text-gray-800">
+                  Book or Raise Request
+                </h4>
+                <p className="text-gray-500 text-sm mt-2">
+                  Book property or submit maintenance request.
+                </p>
+              </div>
+
+              {/* Step 4 */}
+              <div className="text-center">
+                <div className="w-20 h-20 mx-auto bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg relative z-10">
+                  <LayoutDashboard size={28} />
+                </div>
+                <h4 className="mt-6 font-semibold text-gray-800">
+                  Manage Everything
+                </h4>
+                <p className="text-gray-500 text-sm mt-2">
+                  Track bookings, payments, and requests in real-time.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Amenities Highlight Section */}
+      <section className="py-24 bg-gray-100">
+        <div className="max-w-6xl mx-auto relative">
+          {/* Section Title */}
+          <div className="text-center mb-16 ">
+            <h2 className="text-4xl font-bold text-gray-800">
+              Property Amenities
+            </h2>
+            <p className="text-gray-600 mt-3">
+              Experience modern facilities with comfort and convenience.
+            </p>
+          </div>
+
+          {/* Center Image */}
+          <div className="flex justify-center ">
+            <img src={Amenities} alt="Property" className="w-150 shadow-2xl rounded-b-4xl" />
+          </div>
+
+          {/* Top Left */}
+          <div className="absolute -top-10 left-0 w-64 text-center">
+            <div className="bg-green-500 text-white p-5 rounded-full w-16 h-16 flex items-center justify-center mx-auto shadow-lg">
+              <Dumbbell size={28} />
+            </div>
+            <h4 className="mt-4 font-semibold text-gray-800">Gym Facility</h4>
+            <p className="text-sm text-gray-600 mt-2">
+              Fully equipped gym for residents.
+            </p>
+          </div>
+
+          {/* Top Right */}
+          <div className="absolute -top-10 right-0 w-64 text-center">
+            <div className="bg-blue-500 text-white p-5 rounded-full w-16 h-16 flex items-center justify-center mx-auto shadow-lg">
+              <Car size={28} />
+            </div>
+            <h4 className="mt-4 font-semibold text-gray-800">Parking Space</h4>
+            <p className="text-sm text-gray-600 mt-2">
+              Secure covered parking available.
+            </p>
+          </div>
+
+          {/* Bottom Left */}
+          <div className="absolute bottom-20 left-0 w-64 text-center">
+            <div className="bg-green-500 text-white p-5 rounded-full w-16 h-16 flex items-center justify-center mx-auto shadow-lg">
+              <Waves size={28} />
+            </div>
+            <h4 className="mt-4 font-semibold text-gray-800">Swimming Pool</h4>
+            <p className="text-sm text-gray-600 mt-2">
+              Modern pool with safety features.
+            </p>
+          </div>
+
+          {/* Bottom Right */}
+          <div className="absolute bottom-20 right-0 w-64 text-center">
+            <div className="bg-blue-500 text-white p-5 rounded-full w-16 h-16 flex items-center justify-center mx-auto shadow-lg">
+              <Building2 size={28} />
+            </div>
+            <h4 className="mt-4 font-semibold text-gray-800">Community Hall</h4>
+            <p className="text-sm text-gray-600 mt-2">
+              Perfect for events & gatherings.
+            </p>
+          </div>
         </div>
       </section>
 

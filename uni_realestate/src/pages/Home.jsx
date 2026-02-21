@@ -1,8 +1,10 @@
-import logo from '../assets/logo.png'
+
 import partyplot from "../assets/party-plot.jpg";
 import Maintenance from '../assets/Maintenance.webp'
 import office from '../assets/officeplace.webp'
 import Amenities from "../assets/Amenities.jpg";
+
+
 import {
   MapPin,
   IndianRupee,
@@ -18,36 +20,16 @@ import {
   Car,
   Waves,
   Building2,
+  Star,
+  Quote
+  
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-      {/* Navbar */}
-      <nav className="flex justify-between items-center px-1 py-1 bg-blue-600 shadow-md">
-        <img src={logo} alt="Logo" className="h-30 w-40 object-contain mx-5" />
-
-        <div className="space-x-6 hidden md:flex">
-          <a href="#" className="text-white hover:text-green-200 text-2xl">
-            Home
-          </a>
-          <a href="#" className="text-white hover:text-green-200 text-2xl">
-            Features
-          </a>
-          <a href="#" className="text-white hover:text-green-200 text-2xl">
-            Contact
-          </a>
-        </div>
-
-        <div className="space-x-4">
-          <button className="px-4 py-2 text-white border border-green-200 rounded-lg hover:bg-blue-500">
-            Login
-          </button>
-          <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
-            Register
-          </button>
-        </div>
-      </nav>
+      
 
       {/* Hero Section */}
       <section className="flex flex-col md:flex-row items-center justify-between px-8 py-20">
@@ -494,7 +476,11 @@ const Home = () => {
 
           {/* Center Image */}
           <div className="flex justify-center ">
-            <img src={Amenities} alt="Property" className="w-150 shadow-2xl rounded-b-4xl" />
+            <img
+              src={Amenities}
+              alt="Property"
+              className="w-150 shadow-2xl rounded-b-4xl"
+            />
           </div>
 
           {/* Top Left */}
@@ -543,12 +529,109 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-blue-600 text-white text-center py-6">
-        © 2026 PropertyPro. All rights reserved.
-      </footer>
+      {/* Premium Testimonials */}
+      <section className="py-24 bg-gray-100 overflow-hidden">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          {/* Title */}
+          <h2 className="text-4xl font-bold text-gray-800 mb-4">
+            What Our Users Say
+          </h2>
+          <p className="text-gray-600 mb-16">
+            Trusted by tenants, owners, and administrators.
+          </p>
+
+          <TestimonialCarousel />
+        </div>
+      </section>
+
+      {/* Call To Action Section */}
+      <section className="py-24 bg-gradient-to-r from-blue-600 to-green-500 text-white">
+        <div className="max-w-4xl mx-auto text-center px-6">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Ready to Simplify Property Management?
+          </h2>
+
+          <p className="text-lg opacity-90 mb-10">
+            Manage rentals, maintenance, and amenities in one powerful platform.
+            Join today and experience real-time property control.
+          </p>
+
+          <button className="bg-white text-blue-600 font-semibold px-10 py-4 rounded-full shadow-lg hover:scale-105 hover:shadow-2xl transition duration-300">
+            Create Account Now
+          </button>
+        </div>
+      </section>
+
+      
     </div>
   );
 };
 
 export default Home;
+
+
+ function TestimonialCarousel() {
+  const testimonials = [
+    {
+      name: "Rahul Mehta",
+      role: "Tenant",
+      image: "https://randomuser.me/api/portraits/men/32.jpg",
+      text: "Very easy to manage maintenance requests. Everything updates in real-time!",
+    },
+    {
+      name: "Priya Shah",
+      role: "Property Owner",
+      image: "https://randomuser.me/api/portraits/women/44.jpg",
+      text: "Simplified property tracking and rent management for all my listings.",
+    },
+    {
+      name: "Amit Verma",
+      role: "Admin",
+      image: "https://randomuser.me/api/portraits/men/46.jpg",
+      text: "The amenity booking system saves time for residents and staff.",
+    },
+  ];
+
+  const [index, setIndex] = useState(0);
+
+  // Auto Slide Every 3 Seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % testimonials.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const testimonial = testimonials[index];
+
+  return (
+    <div className="relative transition duration-500">
+      <div className="bg-gradient-to-r from-blue-600 to-green-500 text-white p-10 rounded-3xl shadow-2xl relative">
+        {/* Quote Icon */}
+        <Quote size={40} className="absolute top-6 left-6 opacity-20" />
+
+        {/* Avatar */}
+        <img
+          src={testimonial.image}
+          alt={testimonial.name}
+          className="w-20 h-20 rounded-full mx-auto mb-6 border-4 border-white shadow-lg"
+        />
+
+        {/* Text */}
+        <p className="italic text-lg mb-6">“{testimonial.text}”</p>
+
+        {/* Stars */}
+        <div className="flex justify-center gap-1 mb-4">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} size={18} fill="white" />
+          ))}
+        </div>
+
+        {/* Name */}
+        <h4 className="font-semibold text-xl">{testimonial.name}</h4>
+        <p className="text-sm opacity-90">{testimonial.role}</p>
+      </div>
+    </div>
+  );
+}

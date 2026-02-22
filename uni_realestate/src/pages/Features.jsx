@@ -8,6 +8,9 @@ import {
   Activity,
   CheckCircle,
   Bell,
+  Lock,
+  Database,
+  Cloud,
 } from "lucide-react";
 
 const features = [
@@ -64,6 +67,27 @@ const realtimeFeatures = [
     icon: <Bell size={24} />,
     title: "Maintenance Notifications",
     desc: "Get notified when maintenance tasks are updated.",
+  },
+];
+
+const securityFeatures = [
+  {
+    icon: <Lock size={28} />,
+    title: "Secure Authentication",
+    desc: "Role-based login system with protected user sessions and encrypted credentials.",
+    gradient: "from-indigo-600 to-blue-600",
+  },
+  {
+    icon: <Database size={28} />,
+    title: "Data Protection",
+    desc: "User data stored securely with validation, encryption and safe database handling.",
+    gradient: "from-green-600 to-emerald-500",
+  },
+  {
+    icon: <Cloud size={28} />,
+    title: "Cloud Deployment",
+    desc: "Deployed on reliable cloud infrastructure for high availability and performance.",
+    gradient: "from-cyan-600 to-sky-500",
   },
 ];
 
@@ -134,6 +158,40 @@ const CoreFeatures = () => {
               </h3>
 
               <p className="text-gray-600 text-sm">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* =========================Section Title========================== */}
+        <div className="text-center mb-16 top-10 mt-8">
+          <h2 className="text-4xl font-bold text-gray-800">
+            Security & Reliability
+          </h2>
+          <p className="text-gray-600 mt-4">
+            Built with enterprise-level security and dependable infrastructure.
+          </p>
+        </div>
+
+        {/* Cards */}
+        <div className="grid md:grid-cols-3 gap-10">
+          {securityFeatures.map((item, index) => (
+            <div
+              key={index}
+              className={`p-10 rounded-3xl text-white shadow-2xl 
+                         bg-gradient-to-br ${item.gradient}
+                         hover:scale-105 hover:shadow-3xl
+                         transition duration-300`}
+            >
+              {/* Icon */}
+              <div className="bg-white/20 w-16 h-16 flex items-center justify-center rounded-full mb-6">
+                {item.icon}
+              </div>
+
+              {/* Title */}
+              <h3 className="text-xl font-semibold mb-4">{item.title}</h3>
+
+              {/* Description */}
+              <p className="text-sm opacity-90 leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>

@@ -2,25 +2,38 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+
+
+const adminMiddleware  = require("./middleware/adminMiddleware");
+const authRoutes = require("./routes/authRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const authMiddleware = require("./middleware/authMiddleware");
+
 const PORT = process.env.PORT || 5000;
-
-require("dotenv").config();
-
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminMiddleware, adminRoutes);
+
 // Connect MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/real_estate_db")
-  .then(() => console.log("MongoDB Connected ✅"))
-  .catch((err) => console.log(err));
+    .connect(process.env.MONGO_URI)
+    .then(() => console.log("MongoDB Connected ✅"))
+    .catch((err) => console.log(err));
 
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
+app.get("/admin-dashboard", authMiddleware, adminMiddleware, (req, res) => {
+  res.json({ message: "Welcome Admin 👑" });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} 🚀`);
 });
+
+

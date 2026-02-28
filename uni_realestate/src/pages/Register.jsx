@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    fullName: "",
+    fullname: "",
     email: "",
     phone: "",
     role: "",
@@ -116,7 +116,7 @@ const Register = () => {
 
           <form className="space-y-4">
             <input
-              name="fullName"
+              name="fullname"
               type="text"
               placeholder="Full Name"
               className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400"

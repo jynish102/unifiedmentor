@@ -185,9 +185,10 @@ const Register = () => {
               className="w-full px-4 py-3 rounded-xl bg-white/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400"
             >
               <option className="text-black">Select Role</option>
-              <option className="text-black">Buyer</option>
-              <option className="text-black">Seller</option>
-              <option className="text-black">Agent</option>
+              <option className="text-black">Tenant</option>
+              <option className="text-black">Owner</option>
+              <option className="text-black">Staff</option>
+              
             </select>
 
             <div className="relative">

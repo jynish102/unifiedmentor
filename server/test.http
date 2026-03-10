@@ -1,9 +1,13 @@
-POST http://localhost:5000/api/admin/dashboard
-Authorization: Bearer <eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YTMxMTZiZWJlNjgwMDBlY2IyNjQyZSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3MjMwMTI3MiwiZXhwIjoxNzcyMzg3NjcyfQ.KTGMc0py-Ji__3OLQmzeE0C9-ih1hmQ6DhTvSPQ86bU>
+POST http://localhost:5000/api/auth/register
+
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YTMxMTZiZWJlNjgwMDBlY2IyNjQyZSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3MjgxNzY5NSwiZXhwIjoxNzcyOTA0MDk1fQ.bohx5zXkz2awcwcoC77hdCY8_5sJ64JAM9FeeCFebfU
 Content-Type: application/json
 
 {
-  
-  "email": "admin@gmail.com",
-  "password": "admin123"
+  "fullname": "Radhika Agarwal",
+  "email": "radhikaag@.com",
+  "phone": "1234567890",
+  "role": "owner",
+  "password": "password123"
 }
+

@@ -2,6 +2,7 @@ import { useState,useEffect } from "react";
 import logo from "../assets/logo2.png";
 import {Eye, EyeOff} from "lucide-react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const Register = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,6 +38,40 @@ const Register = () => {
       setTimeout(() => {
         setShake(false);
       }, 400);
+    }
+
+    //--------------------------------name validation
+    if (name === "fullname") {
+      // allow only letters and spaces
+      const regex = /^[A-Za-z\s]*$/;
+
+      if (!regex.test(value)) {
+        return; // stop if number or special char
+      }
+    }
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  //------------------------------form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
+        fullname: formData.fullname,
+        email: formData.email,
+        phone: formData.phone,
+        role: formData.role,
+        password: formData.password,
+      });
+
+      alert("User Registered ✅");
+      console.log(res.data);
+    } catch (err) {
+      console.error(err.response?.data || err.message);
+      alert("Registration Failed ❌");
     }
   };
 
@@ -114,10 +150,12 @@ const Register = () => {
             Create Your Account
           </h2>
 
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <input
               name="fullname"
               type="text"
+              value={formData.fullname}
+              onChange={handleChange}
               placeholder="Full Name"
               className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400"
             />
@@ -181,6 +219,8 @@ const Register = () => {
             )}
 
             <select
+              value={formData.role}
+              onChange={handleChange}
               name="role"
               className="w-full px-4 py-3 rounded-xl bg-white/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400"
             >
@@ -188,7 +228,6 @@ const Register = () => {
               <option className="text-black">Tenant</option>
               <option className="text-black">Owner</option>
               <option className="text-black">Staff</option>
-              
             </select>
 
             <div className="relative">

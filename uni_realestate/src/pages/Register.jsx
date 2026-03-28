@@ -1,8 +1,9 @@
 import { useState,useEffect } from "react";
 import logo from "../assets/logo2.png";
 import {Eye, EyeOff} from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 import axios from "axios";
+
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   // const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,6 +70,9 @@ const Register = () => {
       });
 
       alert("User Registered ✅");
+
+       navigate("/Login");
+
       console.log(res.data);
     } catch (err) {
       console.error(err.response?.data || err.message);
@@ -365,7 +370,7 @@ const Register = () => {
             <div className="text-center mt-6 text-sm text-white/80">
               Already have an account?{" "}
               <Link
-                to="/Login"
+                to="/login"
                 className="text-purple-300 font-semibold hover:text-purple-400 transition"
               >
                 Login

@@ -22,7 +22,7 @@ const Navbar = () => {
           </NavLink>
 
           <NavLink
-            to="/Features"
+            to="/features"
             className={({ isActive }) =>
               `text-2xl ${
                 isActive
@@ -35,7 +35,7 @@ const Navbar = () => {
           </NavLink>
 
           <NavLink
-            to="/Contact"
+            to="/contact"
             className={({ isActive }) =>
               `text-2xl ${
                 isActive
@@ -49,12 +49,12 @@ const Navbar = () => {
         </div>
 
         <div className="space-x-4">
-          <Link to="/Login">
+          <Link to="/login">
             <button className="px-4 py-2 text-white border border-green-200 rounded-lg hover:bg-blue-500">
               Login
             </button>
           </Link>
-          <Link to="/Register">
+          <Link to="/register">
             <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
               Register
             </button>

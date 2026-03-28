@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
-const adminMiddleware = require("../middleware/adminMiddleware");
+const authorizeRoles = require("../middleware/authorizeRoles");
 
 const {
   createMaintenance,
@@ -12,12 +12,11 @@ const {
   deleteMaintenance,
 } = require("../controllers/maintenanceController");
 
-
 // CREATE REQUEST
 router.post("/", createMaintenance);
 
 // GET ALL
-router.get("/",authMiddleware, getAllMaintenance);
+router.get("/", authMiddleware, getAllMaintenance);
 
 // GET BY PROPERTY
 router.get("/property/:propertyId", getMaintenanceByProperty);
@@ -26,9 +25,9 @@ router.get("/property/:propertyId", getMaintenanceByProperty);
 router.get("/tenant/:tenantId", getTenantMaintenance);
 
 // UPDATE STATUS
-router.put("/:id",authMiddleware,adminMiddleware, updateMaintenanceStatus);
+router.put("/:id", authMiddleware, authorizeRoles(["admin"]), updateMaintenanceStatus);
 
 // DELETE
-router.delete("/:id",authMiddleware,adminMiddleware, deleteMaintenance);
+router.delete("/:id", authMiddleware, authorizeRoles(["admin"]), deleteMaintenance);
 
 module.exports = router;

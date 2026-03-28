@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
-const adminMiddleware = require("../middleware/adminMiddleware");
+const authorizeRoles = require("../middleware/authorizeRoles");
 
 const {
   createBooking,
@@ -18,9 +18,9 @@ router.get("/", getAllBookings);
 
 router.get("/my-bookings", authMiddleware, getUserBookings);
 
-router.put("/:id",authMiddleware,adminMiddleware, updateBookingStatus);
+router.put("/:id", authMiddleware, authorizeRoles(["admin"]), updateBookingStatus);
 
-router.delete("/:id",authMiddleware,adminMiddleware, deleteBooking);
+router.delete("/:id", authMiddleware, authorizeRoles(["admin"]), deleteBooking);
 
 router.get("/available-properties", getAvailableProperties);
 

@@ -19,7 +19,7 @@ exports.registerUser = async (req, res) => {
       fullname,
       email,
       phone,
-      role: role || "tenant",
+      role: role || "Tenant",
       password: hashedPassword,
     });
 

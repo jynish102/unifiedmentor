@@ -1,11 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
-const adminMiddleware = require("../middleware/adminMiddleware");
+const authorizeRoles = require("../middleware/authorizeRoles");
 
-const { getAdminDashboard , getUserDashboard} = require("../controllers/dashboardController");
+const {
+  getAdminDashboard,
+  getUserDashboard,
+} = require("../controllers/dashboardController");
 
-router.get("/admin", authMiddleware, adminMiddleware, getAdminDashboard);
-router.get("/user", authMiddleware, getUserDashboard,getUserDashboard);
+router.get(
+  "/admin",
+  authMiddleware,
+  authorizeRoles("admin"),
+  getAdminDashboard,
+  
+);
+router.get("/user", authMiddleware, authorizeRoles("user"), getUserDashboard);
 
 module.exports = router;

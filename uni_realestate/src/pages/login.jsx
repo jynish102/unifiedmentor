@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import logo from "../assets/logo2.png";
+import axios from "axios";
 
 
 const Login = () => {
@@ -14,18 +15,55 @@ const Login = () => {
   {/*======================password ======================== */}
   const [shake, setShake] = useState(false);
   const [error, setError] = useState("");
-  const handleLogin = (e) => {
+  const navigate = useNavigate();
+  
+
+  const handleChange = (e) => {
+    const {name , value} = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== "123456") {
-      // replace with real validation
-      setError("Invalid password");
-      triggerShake();
-      return;
-    }
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email: formData.email,
+        password: formData.password,
+      });
 
-    setError("");
+      console.log(res.data);
+
+      // store token (if your API returns it)
+      localStorage.setItem("token", res.data.token);
+
+       //user Data
+       localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      // success
+      setError("");
+
+      //  🔥 redirect to dashboard
+      // navigate("/dashboard");
+      const role = res.data.user.role;
+
+      if (role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/user");
+      }
+
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed");
+      triggerShake();
+    }
   };
+
+
   const triggerShake = () => {
     setShake(true);
     setTimeout(() => {
@@ -76,12 +114,15 @@ const Login = () => {
             Access your real estate control panel
           </p>
 
-          <form className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-5">
             {/* Email */}
             <div>
               <label className="text-sm text-white/80">Email</label>
               <input
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="Enter your email"
                 className="w-full mt-1 px-4 py-3 rounded-xl bg-white/20 border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-white/60"
               />
@@ -92,9 +133,13 @@ const Login = () => {
               <label className="text-sm text-white/80">Password</label>
               <input
                 type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
                 placeholder="Enter your password"
                 className="w-full mt-1 px-4 py-3 rounded-xl bg-white/20 border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-white/60"
               />
+              {error && <p className="text-red-400 text-sm mt-1">{error}</p>}
 
               <button
                 type="button"
@@ -107,7 +152,10 @@ const Login = () => {
 
             {/* Forgot Password */}
             <div className="text-right text-sm">
-              <Link to="/ForgotPassword" className="text-white/70 hover:text-purple-300 cursor-pointer">
+              <Link
+                to="/ForgotPassword"
+                className="text-white/70 hover:text-purple-300 cursor-pointer"
+              >
                 Forgot Password?
               </Link>
             </div>

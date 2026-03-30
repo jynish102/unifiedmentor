@@ -16,7 +16,6 @@ import { tenantData } from "../components/data/mockData";
 const navigation = [
   { path: "/tenant/dashboard", name: "Dashboard", icon: Home },
   { path: "/tenant/amenities", name: "Amenities", icon: Calendar },
- 
   { path: "/tenant/maintenance", name: "Maintenance", icon: Wrench },
   { path: "/tenant/profile", name: "Profile", icon: User },
 ];

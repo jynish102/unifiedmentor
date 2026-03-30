@@ -37,7 +37,7 @@ const iconMap = {
   palmtree: Users,
 };
 
-export function Amenities() {
+export function TenantAmenities() {
   // ✅ FIXED (removed <any>)
   const [selectedAmenity, setSelectedAmenity] = useState(null);
   const [bookingDate, setBookingDate] = useState("");

@@ -1,8 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
-import { DashboardLayout } from "./layouts/DashboardLayout";
+import { AdminDashboardLayout } from "./layouts/AdminDashboardLayout";
+import { OwnerDashboardLayout } from "./layouts/OwnerDashboardLayout";
 import {TenantsDashboardLayout} from "./layouts/TenantsDashboardLayout";
+import { StaffDashboardLayout } from "./layouts/StaffDashboardLayout";
+
 import Home from "./pages/Home";
 import Features from "./pages/Features";
 import Contact from "./pages/Contact";
@@ -18,11 +21,20 @@ import { Tenants } from "./pages/admin/Tenants";
 import { Amenities } from "./pages/admin/Amenities";
 import Maintenance  from "./pages/admin/Maintenance";
 
+//owner
+import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
+import { Properties as OwnerProperties } from "./pages/owner/Properties";
+import { Amenities as OwnerAmenities } from "./pages/owner/Amenities";
+import { Financials } from "./pages/owner/Financials";
+import { Settings } from "./pages/owner/Settings";
+
 //tenants
-import { Dashboard } from "./pages/tenants/Dashboard";
+import { Dashboard as TenantsDashboard } from "./pages/tenants/Dashboard";
 import { Profile } from "./pages/tenants/Profile";
-import { Amenities as TenantAmenities } from "./pages/tenants/TenantAmenities";
-import { Maintenance as TenantMaintenance } from "./pages/tenants/TenantMaintenance";
+import { TenantAmenities } from "./pages/tenants/TenantAmenities";
+import { TenantMaintenance } from "./pages/tenants/TenantMaintenance";
+
+
 
 function App() {
   return (
@@ -41,8 +53,9 @@ function App() {
           <Route path="/ResetPassword/:token" element={<ResetPassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
-
-        <Route path="/admin"  element={<DashboardLayout />}>
+             
+         //admin routes    
+        <Route path="/admin" element={<AdminDashboardLayout />}>
           <Route path="overview" element={<Overview />} />
           <Route path="properties" element={<Properties />} />
           <Route path="tenants" element={<Tenants />} />
@@ -50,13 +63,27 @@ function App() {
           <Route path="maintenance" element={<Maintenance />} />
         </Route>
 
+        //owner routes
+        <Route path="/owner" element={<OwnerDashboardLayout />}>
+          <Route path="ownerdashboard" element={<OwnerDashboard />} />
+          <Route path="properties" element={<OwnerProperties />} />
+          <Route path="amenities" element={<OwnerAmenities />} />
+          <Route path="financials" element={<Financials />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+
+          //tenant routes
         <Route path="/tenant" element={<TenantsDashboardLayout />}>
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard" element={<TenantsDashboard />} />
           <Route path="amenities" element={<TenantAmenities />} />
           <Route path="maintenance" element={<TenantMaintenance />} />
           <Route path="profile" element={<Profile />} />
         </Route>
 
+        //staff routes
+        <Route path="/staff" element={<StaffDashboardLayout />}>
+          {/* Define staff-specific routes here */}
+        </Route>
       </Routes>
     </Router>
   );

@@ -23,7 +23,7 @@ const navItems = [
   
 ];
 
-export function DashboardLayout() {
+export function AdminDashboardLayout() {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 

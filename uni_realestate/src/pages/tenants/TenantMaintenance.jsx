@@ -25,7 +25,7 @@ import { Plus, Wrench, Clock, AlertCircle, CheckCircle2 } from "lucide-react";
 import { maintenanceRequests } from "../../components/data/mockData";
 import { toast } from "sonner";
 
-export function Maintenance() {
+export function TenantMaintenance() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [formData, setFormData] = useState({

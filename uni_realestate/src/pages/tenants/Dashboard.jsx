@@ -1,0 +1,199 @@
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { Badge } from "../../components/ui/badge";
+import { Button } from "../../components/ui/button";
+import { Calendar, Wrench, Bell, ArrowRight, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
+
+import {
+  tenantData,
+  announcements,
+  bookings,
+  maintenanceRequests,
+} from "../../components/data/mockData";
+
+export function Dashboard() {
+  const upcomingBookings = bookings
+    .filter((b) => b.status === "confirmed")
+    .slice(0, 2);
+
+  const recentRequests = maintenanceRequests.slice(0, 2);
+
+  return (
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold">
+          Welcome back, {tenantData.name.split(" ")[0]}!
+        </h1>
+        <p className="text-gray-600 mt-1">
+          Here's what's happening with your rental
+        </p>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Bookings */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Upcoming Bookings</p>
+                <p className="text-2xl font-bold mt-1">
+                  {bookings.filter((b) => b.status === "confirmed").length}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Active reservations
+                </p>
+              </div>
+              <div className="size-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <Calendar className="size-6 text-blue-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Maintenance */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Maintenance</p>
+                <p className="text-2xl font-bold mt-1">
+                  {
+                    maintenanceRequests.filter((r) => r.status !== "completed")
+                      .length
+                  }
+                </p>
+                <p className="text-xs text-gray-500 mt-1">Open requests</p>
+              </div>
+              <div className="size-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <Wrench className="size-6 text-orange-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Lease */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Lease Status</p>
+                <p className="text-2xl font-bold mt-1">Active</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Until {new Date(tenantData.leaseEnd).toLocaleDateString()}
+                </p>
+              </div>
+              <div className="size-12 bg-purple-100 rounded-full flex items-center justify-center">
+                <TrendingUp className="size-6 text-purple-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* LEFT */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Bookings */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Upcoming Bookings</CardTitle>
+              <Link to="/amenities">
+                <Button variant="ghost" size="sm">
+                  View All <ArrowRight className="size-4 ml-2" />
+                </Button>
+              </Link>
+            </CardHeader>
+
+            <CardContent>
+              {upcomingBookings.length > 0 ? (
+                <div className="space-y-4">
+                  {upcomingBookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                    >
+                      <div>
+                        <p className="font-medium">{booking.amenityName}</p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {new Date(booking.date).toLocaleDateString()} •{" "}
+                          {booking.time}
+                        </p>
+                      </div>
+
+                      <Badge className="bg-green-100 text-green-700">
+                        {booking.status}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center py-8">No bookings</p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Maintenance */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Recent Maintenance</CardTitle>
+              <Link to="/maintenance">
+                <Button variant="ghost" size="sm">
+                  View All <ArrowRight className="size-4 ml-2" />
+                </Button>
+              </Link>
+            </CardHeader>
+
+            <CardContent>
+              {recentRequests.map((request) => (
+                <div
+                  key={request.id}
+                  className="p-4 bg-gray-50 rounded-lg mb-3"
+                >
+                  <p className="font-medium">{request.title}</p>
+                  <p className="text-sm text-gray-600">{request.description}</p>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* RIGHT */}
+        <div className="space-y-6">
+          {/* Announcements */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="size-5" />
+                Announcements
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent>
+              {announcements.map((a) => (
+                <div key={a.id} className="mb-3">
+                  <p className="font-medium">{a.title}</p>
+                  <p className="text-sm text-gray-600">{a.message}</p>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Property */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Property Info</CardTitle>
+            </CardHeader>
+
+            <CardContent>
+              <p>Unit: {tenantData.unit}</p>
+              <p>Building: {tenantData.building}</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}

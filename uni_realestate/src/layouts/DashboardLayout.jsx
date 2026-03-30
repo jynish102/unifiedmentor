@@ -15,12 +15,12 @@ import { Input } from "../components/ui/input";
 import { useState } from "react";
 
 const navItems = [
-  { path: "/overview", label: "Overview", icon: LayoutDashboard },
-  { path: "/properties", label: "Properties", icon: Building2 },
-  { path: "/tenants", label: "Tenants", icon: Users },
-  { path: "/amenities", label: "Amenities", icon: Dumbbell },
-  { path: "/maintenance", label: "Maintenance", icon: Wrench },
-  { path: "/payments", label: "Payments", icon: CreditCard },
+  { path: "/admin/overview", label: "Overview", icon: LayoutDashboard },
+  { path: "/admin/properties", label: "Properties", icon: Building2 },
+  { path: "/admin/tenants", label: "Tenants", icon: Users },
+  { path: "/admin/amenities", label: "Amenities", icon: Dumbbell },
+  { path: "/admin/maintenance", label: "Maintenance", icon: Wrench },
+  
 ];
 
 export function DashboardLayout() {

@@ -20,6 +20,7 @@ import { Properties } from "./pages/admin/Properties";
 import { Tenants } from "./pages/admin/Tenants";
 import { Amenities } from "./pages/admin/Amenities";
 import Maintenance  from "./pages/admin/Maintenance";
+import PropertyDetails from "./pages/admin/PropertyDetails";
 
 //owner
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
@@ -45,24 +46,21 @@ function App() {
           <Route path="/features" element={<Features />} />
           <Route path="/contact" element={<Contact />} />
         </Route>
-
         <Route element={<AuthLayout />}>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/ResetPassword/:token" element={<ResetPassword />} />
-          <Route path="/dashboard" element={<Dashboard />} />
         </Route>
-             
-         //admin routes    
+        //admin routes
         <Route path="/admin" element={<AdminDashboardLayout />}>
           <Route path="overview" element={<Overview />} />
           <Route path="properties" element={<Properties />} />
+          <Route path="/admin/properties/:id" element={<PropertyDetails />} />
           <Route path="tenants" element={<Tenants />} />
           <Route path="amenities" element={<Amenities />} />
           <Route path="maintenance" element={<Maintenance />} />
         </Route>
-
         //owner routes
         <Route path="/owner" element={<OwnerDashboardLayout />}>
           <Route path="ownerdashboard" element={<OwnerDashboard />} />
@@ -71,15 +69,13 @@ function App() {
           <Route path="financials" element={<Financials />} />
           <Route path="settings" element={<Settings />} />
         </Route>
-
-          //tenant routes
+        //tenant routes
         <Route path="/tenant" element={<TenantsDashboardLayout />}>
           <Route path="dashboard" element={<TenantsDashboard />} />
           <Route path="amenities" element={<TenantAmenities />} />
           <Route path="maintenance" element={<TenantMaintenance />} />
           <Route path="profile" element={<Profile />} />
         </Route>
-
         //staff routes
         <Route path="/staff" element={<StaffDashboardLayout />}>
           {/* Define staff-specific routes here */}

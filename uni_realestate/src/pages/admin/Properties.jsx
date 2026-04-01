@@ -3,12 +3,16 @@ import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
 import { Plus, Search, MapPin, Home, DollarSign } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Api from "../../utils/api";
 
 export function Properties() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [properties, setProperties] = useState([]);
+  
 
   // ✅ Fetch from backend
   useEffect(() => {
@@ -89,6 +93,29 @@ export function Properties() {
               >
                 <CardContent className="p-6">
                   {/* Top */}
+                  {/* <div className="flex items-start justify-between mb-4">
+                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                      <Home className="text-blue-600" size={24} />
+                    </div>
+
+                    <Badge className={getStatusColor(property.status)}>
+                      {property.status}
+                    </Badge>
+                  </div> */}
+                  {/* Image */}
+                  <div className="w-full h-40 mb-4 rounded-lg overflow-hidden bg-gray-200">
+                    <img
+                      src={
+                        property.images?.[0]
+                          ? `http://localhost:5000/uploads/${property.images[0]}`
+                          : "https://via.placeholder.com/400"
+                      }
+                      alt={property.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Top */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
                       <Home className="text-blue-600" size={24} />
@@ -101,7 +128,7 @@ export function Properties() {
 
                   {/* Name */}
                   <h3 className="font-bold text-lg text-slate-900 mb-2">
-                    {property.name}
+                    {property.title}
                   </h3>
 
                   {/* Info */}
@@ -112,15 +139,18 @@ export function Properties() {
                     </div>
 
                     <div className="flex items-center gap-2">
+                      <MapPin size={16} className="text-slate-400" />
+                      <span>{property.city}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
                       <Home size={16} className="text-slate-400" />
-                      <span>{property.type}</span>
+                      <span>{property.propertyType}</span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <DollarSign size={16} className="text-slate-400" />
-                      <span>
-                        ₹{property.monthlyRent?.toLocaleString()}/month
-                      </span>
+                      <span>₹{property.price?.toLocaleString()}</span>
                     </div>
                   </div>
 
@@ -146,7 +176,14 @@ export function Properties() {
                   </div>
 
                   {/* Button */}
-                  <Button variant="outline" className="w-full mt-4">
+                  <Button
+                    variant="outline"
+                    className="w-full mt-4"
+                    size="sm"
+                    onClick={() =>
+                      navigate(`/admin/properties/${property._id}`)
+                    }
+                  >
                     View Details
                   </Button>
                 </CardContent>

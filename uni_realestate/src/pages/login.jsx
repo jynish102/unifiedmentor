@@ -53,8 +53,12 @@ const Login = () => {
 
       if (role === "admin") {
         navigate("/admin");
+      } else if (role === "owner") {
+        navigate("/owner");
+      } else if (role === "tenant") {
+        navigate("/tenant");
       } else {
-        navigate("/user");
+        navigate("/staff"); // default fallback
       }
 
     } catch (err) {

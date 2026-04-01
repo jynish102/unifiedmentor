@@ -44,9 +44,16 @@ export function Overview() {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
+        const token = localStorage.getItem("token");
         const res = await axios.get(
-          "http://localhost:5000/api/admin/dashboard",
+          "http://localhost:5000/api/dashboard/admin",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
+        
 
         const data = res.data;
 

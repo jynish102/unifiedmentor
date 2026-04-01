@@ -21,6 +21,7 @@ import { Tenants } from "./pages/admin/Tenants";
 import { Amenities } from "./pages/admin/Amenities";
 import Maintenance  from "./pages/admin/Maintenance";
 import PropertyDetails from "./pages/admin/PropertyDetails";
+import AddProperty from "./pages/admin/AddProperty";
 
 //owner
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
@@ -52,15 +53,18 @@ function App() {
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/ResetPassword/:token" element={<ResetPassword />} />
         </Route>
+
         //admin routes
         <Route path="/admin" element={<AdminDashboardLayout />}>
           <Route path="overview" element={<Overview />} />
           <Route path="properties" element={<Properties />} />
+          <Route path="properties/add-property" element={<AddProperty />} />
           <Route path="/admin/properties/:id" element={<PropertyDetails />} />
           <Route path="tenants" element={<Tenants />} />
           <Route path="amenities" element={<Amenities />} />
           <Route path="maintenance" element={<Maintenance />} />
         </Route>
+
         //owner routes
         <Route path="/owner" element={<OwnerDashboardLayout />}>
           <Route path="ownerdashboard" element={<OwnerDashboard />} />

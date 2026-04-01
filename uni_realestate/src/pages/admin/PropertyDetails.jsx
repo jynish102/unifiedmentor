@@ -6,11 +6,15 @@ export default function PropertyDetails() {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const getImageUrl = (img) => {
+    if (!img) return "https://via.placeholder.com/400";
+    return `http://localhost:5000/${img.replace(/\\/g, "/")}`;
+  };
 
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const res = await API.get(`/properties/${id}`);
+        const res = await API.get(`/property/${id}`);
         setProperty(res.data);
       } catch (err) {
         console.error(err);
@@ -27,11 +31,7 @@ export default function PropertyDetails() {
       <h2 className="text-2xl font-bold">{property.title}</h2>
 
       <img
-        src={
-          selectedImage ||
-          property.images?.[0] ||
-          "https://via.placeholder.com/400"
-        }
+        src={getImageUrl(selectedImage || property.images?.[0])}
         className="w-full max-w-md rounded-lg"
         alt="property"
       />
@@ -40,15 +40,13 @@ export default function PropertyDetails() {
         {property.images?.map((img, index) => (
           <img
             key={index}
-            src={img}
+            src={getImageUrl(img)}
             alt="thumb"
             className="w-24 h-24 object-cover rounded-lg cursor-pointer border hover:scale-105 transition"
             onClick={() => setSelectedImage(img)}
           />
         ))}
       </div>
-
-      <p>{property.description}</p>
 
       <p>
         <b>Address:</b> {property.address}, {property.city}

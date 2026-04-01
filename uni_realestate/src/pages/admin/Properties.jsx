@@ -6,7 +6,7 @@ import { Plus, Search, MapPin, Home, DollarSign } from "lucide-react";
 import { useState, useEffect, } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Api from "../../utils/api";
+import API from "../../utils/api";
 
 export function Properties() {
   const navigate = useNavigate();
@@ -49,6 +49,30 @@ export function Properties() {
     }
   };
 
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure?");
+
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      await API.delete(`/property/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // remove from UI
+      setProperties((prev) => prev.filter((p) => p._id !== id));
+
+      alert("Deleted successfully ✅");
+    } catch (err) {
+      console.error(err);
+      alert("Delete failed ❌");
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -58,7 +82,10 @@ export function Properties() {
           <p className="text-slate-500 mt-1">Manage your rental properties</p>
         </div>
 
-        <Button className="gap-2">
+        <Button
+          className="gap-2"
+          onClick={() => navigate("/admin/properties/add-property")}
+        >
           <Plus size={18} />
           Add Property
         </Button>
@@ -92,29 +119,6 @@ export function Properties() {
                 className="hover:shadow-md transition-shadow"
               >
                 <CardContent className="p-6">
-                  {/* Top */}
-                  {/* <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                      <Home className="text-blue-600" size={24} />
-                    </div>
-
-                    <Badge className={getStatusColor(property.status)}>
-                      {property.status}
-                    </Badge>
-                  </div> */}
-                  {/* Image */}
-                  <div className="w-full h-40 mb-4 rounded-lg overflow-hidden bg-gray-200">
-                    <img
-                      src={
-                        property.images?.[0]
-                          ? `http://localhost:5000/uploads/${property.images[0]}`
-                          : "https://via.placeholder.com/400"
-                      }
-                      alt={property.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
                   {/* Top */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
@@ -185,6 +189,28 @@ export function Properties() {
                     }
                   >
                     View Details
+                  </Button>
+
+                  {/* Update */}
+                  <Button
+                    variant="secondary"
+                    className="w-full"
+                    size="sm"
+                    onClick={() =>
+                      navigate(`/admin/properties/edit/${property._id}`)
+                    }
+                  >
+                    Edit
+                  </Button>
+
+                  {/* Delete */}
+                  <Button
+                    variant="destructive"
+                    className="w-full"
+                    size="sm"
+                    onClick={() => handleDelete(property._id)}
+                  >
+                    Delete
                   </Button>
                 </CardContent>
               </Card>

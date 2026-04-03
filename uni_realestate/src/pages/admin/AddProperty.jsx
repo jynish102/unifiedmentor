@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState,useEffect } from "react";
+import { useNavigate,useParams } from "react-router-dom";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 
 export default function AddProperty() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -14,15 +15,41 @@ export default function AddProperty() {
     city: "",
     price: "",
     deposit: "",
+    paymentFrequency: "monthly",
     propertyType: "Apartment",
     bedrooms: "",
     bathrooms: "",
     area: "",
     furnishing: "Semi-Furnished",
-    rentType: "monthly",
+    floor: "",
+    totalFloors: "",
+    parking: false,
+    amenities: {
+      lift: false,
+      gym: false,
+      security: false,
+      wifi: false,
+    },
+    units: 1,
+    occupied: 0,
+    status: "available",
+    availableFrom: "",
   });
 
   const [images, setImages] = useState([]);
+  const [existingImages, setExistingImages] = useState([]);
+
+  useEffect(() => {
+    if (id) {
+      const fetchProperty = async () => {
+        const res = await API.get(`/property/${id}`);
+        setFormData(res.data);
+        setExistingImages(res.data.images || []);
+      };
+
+      fetchProperty();
+    }
+  }, [id]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,6 +67,22 @@ export default function AddProperty() {
     setImages(validImages);
   };
 
+  const handleAmenityChange = (e) => {
+    const { name, checked } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      amenities: {
+        ...prev.amenities,
+        [name]: checked,
+      },
+      parking :{
+        ...prev.parking,
+        [name]: checked,
+      }
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -52,23 +95,34 @@ export default function AddProperty() {
         data.append(key, formData[key]);
       });
 
+      // old images (only for edit)
+      if (id) {
+        data.append("existingImages", JSON.stringify(existingImages));
+      }
+
       // append images
       for (let i = 0; i < images.length; i++) {
         data.append("images", images[i]);
       }
 
-      await API.post("/property/add", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      if (id) {
+        // ✅ UPDATE
+        await API.put(`${id}`, data, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        alert("Property Updated ✅");
+      } else {
+        // ✅ ADD
+        await API.post("/property/add", data, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        alert("Property Added ✅");
+      }
 
-      alert("Property Added ✅");
       navigate("/admin");
     } catch (err) {
       console.error(err);
-      alert("Error adding property");
+      alert("Something went wrong ❌");
     }
   };
 
@@ -102,6 +156,16 @@ export default function AddProperty() {
           type="number"
           onChange={handleChange}
         />
+
+        {/* Payment Frequency */}
+        <select
+          name="paymentFrequency"
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+        >
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+        </select>
 
         {/* Property Type */}
         <select
@@ -147,15 +211,101 @@ export default function AddProperty() {
           <option>Unfurnished</option>
         </select>
 
-        {/* Rent Type */}
-        <select
-          name="rentType"
+        <Input
+          name="floor"
+          placeholder="Floor"
+          type="number"
           onChange={handleChange}
-          className="w-full border p-2 rounded"
-        >
-          <option value="monthly">Monthly</option>
-          <option value="yearly">Yearly</option>
-        </select>
+        />
+        <Input
+          name="totalFloors"
+          placeholder="Total Floors"
+          type="number"
+          onChange={handleChange}
+        />
+
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="parking"
+            checked={formData.parking}
+            onChange={handleAmenityChange}
+          />
+          Parking
+        </label>
+        
+
+        <div className="grid grid-cols-2 gap-3">
+          <label>
+            <input
+              type="checkbox"
+              name="lift"
+              checked={formData.amenities.lift}
+              onChange={handleAmenityChange}
+            />
+            Lift
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              name="gym"
+              checked={formData.amenities.gym}
+              onChange={handleAmenityChange}
+            />
+            Gym
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              name="security"
+              checked={formData.amenities.security}
+              onChange={handleAmenityChange}
+            />
+            Security
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              name="wifi"
+              checked={formData.amenities.wifi}
+              onChange={handleAmenityChange}
+            />
+            WiFi
+          </label>
+        </div>
+
+        <Input
+          name="units"
+          placeholder="Units"
+          type="number"
+          onChange={handleChange}
+        />
+
+        <Input
+          name="occupied"
+          placeholder="Occupied Units"
+          type="number"
+          onChange={handleChange}
+        />
+
+        <Input className="flex items-center gap-2"
+          name="status"
+          placeholder="Status"
+          type="text"
+          onChange={handleChange}
+        />
+
+        <label className="flex items-center gap-2">
+        <Input
+          name="availableFrom"
+          placeholder="Available From"
+          type="date"
+          onChange={handleChange}
+        />Available From
+        </label>
 
         {/* Images */}
         <input
@@ -166,7 +316,7 @@ export default function AddProperty() {
         />
 
         <Button type="submit" className="w-full">
-          Add Property
+          {id ? "Update Property" : "Add Property"}
         </Button>
       </form>
     </div>

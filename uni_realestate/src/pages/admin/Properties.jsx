@@ -2,7 +2,16 @@ import { Card, CardContent, CardHeader } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
-import { Plus, Search, MapPin, Home, DollarSign } from "lucide-react";
+import {
+  Plus,
+  Search,
+  MapPin,
+  Home,
+  DollarSign,
+  Pencil,
+  Trash2,
+  Eye,
+} from "lucide-react";
 import { useState, useEffect, } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +40,7 @@ export function Properties() {
   // ✅ Filter
   const filteredProperties = properties.filter(
     (property) =>
-      property.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      property.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       property.address?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
@@ -138,23 +147,25 @@ export function Properties() {
                   {/* Info */}
                   <div className="space-y-2 text-sm text-slate-600">
                     <div className="flex items-center gap-2">
-                      <MapPin size={16} className="text-slate-400" />
-                      <span>{property.address}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <MapPin size={16} className="text-slate-400" />
-                      <span>{property.city}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
                       <Home size={16} className="text-slate-400" />
-                      <span>{property.propertyType}</span>
+                      <span>
+                        {property.bedrooms} Bed, {property.bathrooms} Bath
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <MapPin size={16} className="text-slate-400" />
+                      <span>
+                        {property.address}, {property.city}
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <DollarSign size={16} className="text-slate-400" />
-                      <span>₹{property.price?.toLocaleString()}</span>
+                      <span>
+                        ₹{property.price?.toLocaleString()} /
+                        {property.paymentFrequency}
+                      </span>
                     </div>
                   </div>
 
@@ -179,39 +190,44 @@ export function Properties() {
                     </div>
                   </div>
 
-                  {/* Button */}
-                  <Button
-                    variant="outline"
-                    className="w-full mt-4"
-                    size="sm"
-                    onClick={() =>
-                      navigate(`/admin/properties/${property._id}`)
-                    }
-                  >
-                    View Details
-                  </Button>
+                  <div className="flex gap-2 mt-4">
+                    {/* View */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() =>
+                        navigate(`/admin/properties/${property._id}`)
+                      }
+                    >
+                      <Eye size={14} />
+                      View
+                    </Button>
 
-                  {/* Update */}
-                  <Button
-                    variant="secondary"
-                    className="w-full"
-                    size="sm"
-                    onClick={() =>
-                      navigate(`/admin/properties/edit/${property._id}`)
-                    }
-                  >
-                    Edit
-                  </Button>
+                    {/* Edit */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() =>
+                        navigate(`/admin/properties/edit/${property._id}`)
+                      }
+                    >
+                      <Pencil size={14} />
+                      Edit
+                    </Button>
 
-                  {/* Delete */}
-                  <Button
-                    variant="destructive"
-                    className="w-full"
-                    size="sm"
-                    onClick={() => handleDelete(property._id)}
-                  >
-                    Delete
-                  </Button>
+                    {/* Delete */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => handleDelete(property._id)}
+                    >
+                      <Trash2 size={14} />
+                      Delete
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}

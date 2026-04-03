@@ -59,6 +59,7 @@ function App() {
           <Route path="overview" element={<Overview />} />
           <Route path="properties" element={<Properties />} />
           <Route path="properties/add-property" element={<AddProperty />} />
+          <Route path="/admin/properties/edit/:id" element={<AddProperty />} />
           <Route path="/admin/properties/:id" element={<PropertyDetails />} />
           <Route path="tenants" element={<Tenants />} />
           <Route path="amenities" element={<Amenities />} />

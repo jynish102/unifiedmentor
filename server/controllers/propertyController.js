@@ -2,12 +2,15 @@ const Property = require("../models/Property");
 
 exports.addProperty = async (req, res) => {
   try {
+    // console.log("BODY:", req.body);
+    // console.log("FILES:", req.files);
     const imagePaths = req.files.map((file) => file.path);
 
     const property = await Property.create({
       ...req.body,
       images: imagePaths,
       createdBy: req.user.id,
+      
     });
 
     res.status(201).json({
@@ -69,7 +72,7 @@ exports.updateProperty = async (req, res) => {
     const updatedProperty = await Property.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true },
+      { returnDocument: "after" },
     );
 
     res.json({

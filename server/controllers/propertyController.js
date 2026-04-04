@@ -4,7 +4,7 @@ exports.addProperty = async (req, res) => {
   try {
     // console.log("BODY:", req.body);
     // console.log("FILES:", req.files);
-    const imagePaths = req.files.map((file) => file.path);
+    const imagePaths = req.files?.map((file) => file.path) || [];
 
     const property = await Property.create({
       ...req.body,
@@ -18,6 +18,7 @@ exports.addProperty = async (req, res) => {
       property,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

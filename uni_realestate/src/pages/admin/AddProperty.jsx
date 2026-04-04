@@ -43,7 +43,36 @@ export default function AddProperty() {
     if (id) {
       const fetchProperty = async () => {
         const res = await API.get(`/property/${id}`);
-        setFormData(res.data);
+        const data = res.data;
+        console.log("API DATA:", data);
+        setFormData({
+          title: data.title || "",
+          description: data.description || "",
+          address: data.address || "",
+          city: data.city || "",
+          price: data.price || "",
+          deposit: data.deposit || "",
+          paymentFrequency: data.paymentFrequency || "monthly",
+          propertyType: data.propertyType || "Apartment",
+          bedrooms: data.bedrooms || "",
+          bathrooms: data.bathrooms || "",
+          area: data.area || "",
+          furnishing: data.furnishing || "Semi-Furnished",
+          floor: data.floor || "",
+          totalFloors: data.totalFloors || "",
+          parking: data.parking || false,
+          amenities: {
+            lift: data.amenities?.lift || false,
+            gym: data.amenities?.gym || false,
+            security: data.amenities?.security || false,
+            wifi: data.amenities?.wifi || false,
+          },
+          units: data.units || 1,
+          occupied: data.occupied || 0,
+          status: data.status || "available",
+          availableFrom: data.availableFrom ? data.availableFrom.split("T")[0] : "",
+        });
+
         setExistingImages(res.data.images || []);
       };
 
@@ -64,7 +93,11 @@ export default function AddProperty() {
       alert("Only image files allowed!");
     }
 
-    setImages(validImages);
+    if (validImages.length !== files.length) {
+      alert("Only image files allowed!");
+    }
+
+   setImages((prev) => [...prev, ...validImages]);
   };
 
   const handleAmenityChange = (e) => {
@@ -75,11 +108,14 @@ export default function AddProperty() {
       amenities: {
         ...prev.amenities,
         [name]: checked,
-      },
-      parking :{
-        ...prev.parking,
-        [name]: checked,
-      }
+      }, 
+    }));
+  };
+
+  const handleParkingChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      parking: e.target.checked, // ✅ boolean
     }));
   };
 
@@ -91,10 +127,13 @@ export default function AddProperty() {
       const token = localStorage.getItem("token");
 
       // append text fields
-      Object.keys(formData).forEach((key) => {
+    Object.keys(formData).forEach((key) => {
+      if (key === "amenities") {
+        data.append("amenities", JSON.stringify(formData.amenities));
+      } else {
         data.append(key, formData[key]);
-      });
-
+      }
+    });
       // old images (only for edit)
       if (id) {
         data.append("existingImages", JSON.stringify(existingImages));
@@ -107,7 +146,7 @@ export default function AddProperty() {
 
       if (id) {
         // ✅ UPDATE
-        await API.put(`${id}`, data, {
+        await API.put(`property/${id}`, data, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert("Property Updated ✅");
@@ -131,22 +170,39 @@ export default function AddProperty() {
       <h2 className="text-2xl font-bold mb-4">Add Property</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Input name="title" placeholder="Title" onChange={handleChange} />
+        <Input
+          name="title"
+          placeholder="Title"
+          value={formData.title}
+          onChange={handleChange}
+        />
 
         <Input
           name="description"
           placeholder="Description"
+          value={formData.description}
           onChange={handleChange}
         />
 
-        <Input name="address" placeholder="Address" onChange={handleChange} />
+        <Input
+          name="address"
+          placeholder="Address"
+          value={formData.address}
+          onChange={handleChange}
+        />
 
-        <Input name="city" placeholder="City" onChange={handleChange} />
+        <Input
+          name="city"
+          placeholder="City"
+          value={formData.city}
+          onChange={handleChange}
+        />
 
         <Input
           name="price"
           placeholder="Price"
           type="number"
+          value={formData.price}
           onChange={handleChange}
         />
 
@@ -154,12 +210,14 @@ export default function AddProperty() {
           name="deposit"
           placeholder="Deposit"
           type="number"
+          value={formData.deposit}
           onChange={handleChange}
         />
 
         {/* Payment Frequency */}
         <select
           name="paymentFrequency"
+          value={formData.paymentFrequency || "monthly"}
           onChange={handleChange}
           className="w-full border p-2 rounded"
         >
@@ -170,13 +228,14 @@ export default function AddProperty() {
         {/* Property Type */}
         <select
           name="propertyType"
+          value={formData.propertyType || "Apartment"}
           onChange={handleChange}
           className="w-full border p-2 rounded"
         >
-          <option>Apartment</option>
-          <option>House</option>
-          <option>Villa</option>
-          <option>Shop</option>
+          <option value="Apartment">Apartment</option>
+          <option value="House">House</option>
+          <option value="Villa">Villa</option>
+          <option value="Shop">Shop</option>
         </select>
 
         {/* Bedrooms / Bathrooms */}
@@ -184,12 +243,14 @@ export default function AddProperty() {
           name="bedrooms"
           placeholder="Bedrooms"
           type="number"
+          value={formData.bedrooms}
           onChange={handleChange}
         />
         <Input
           name="bathrooms"
           placeholder="Bathrooms"
           type="number"
+          value={formData.bathrooms}
           onChange={handleChange}
         />
 
@@ -197,6 +258,7 @@ export default function AddProperty() {
           name="area"
           placeholder="Area (sq.ft)"
           type="number"
+          value={formData.area}
           onChange={handleChange}
         />
 
@@ -204,23 +266,26 @@ export default function AddProperty() {
         <select
           name="furnishing"
           onChange={handleChange}
+          value={formData.furnishing || "Semi-Furnished"}
           className="w-full border p-2 rounded"
         >
-          <option>Furnished</option>
-          <option>Semi-Furnished</option>
-          <option>Unfurnished</option>
+          <option value="Furnished">Furnished</option>
+          <option value="Semi-Furnished">Semi-Furnished</option>
+          <option value="Unfurnished">Unfurnished</option>
         </select>
 
         <Input
           name="floor"
           placeholder="Floor"
           type="number"
+          value={formData.floor}
           onChange={handleChange}
         />
         <Input
           name="totalFloors"
           placeholder="Total Floors"
           type="number"
+          value={formData.totalFloors}
           onChange={handleChange}
         />
 
@@ -229,18 +294,17 @@ export default function AddProperty() {
             type="checkbox"
             name="parking"
             checked={formData.parking}
-            onChange={handleAmenityChange}
+            onChange={handleParkingChange}
           />
           Parking
         </label>
-        
 
         <div className="grid grid-cols-2 gap-3">
           <label>
             <input
               type="checkbox"
               name="lift"
-              checked={formData.amenities.lift}
+              checked={formData.amenities?.lift || false}
               onChange={handleAmenityChange}
             />
             Lift
@@ -250,7 +314,7 @@ export default function AddProperty() {
             <input
               type="checkbox"
               name="gym"
-              checked={formData.amenities.gym}
+              checked={formData.amenities?.gym || false}
               onChange={handleAmenityChange}
             />
             Gym
@@ -260,7 +324,7 @@ export default function AddProperty() {
             <input
               type="checkbox"
               name="security"
-              checked={formData.amenities.security}
+              checked={formData.amenities?.security || false}
               onChange={handleAmenityChange}
             />
             Security
@@ -270,7 +334,7 @@ export default function AddProperty() {
             <input
               type="checkbox"
               name="wifi"
-              checked={formData.amenities.wifi}
+              checked={formData.amenities?.wifi || false}
               onChange={handleAmenityChange}
             />
             WiFi
@@ -281,6 +345,7 @@ export default function AddProperty() {
           name="units"
           placeholder="Units"
           type="number"
+          value={formData.units}
           onChange={handleChange}
         />
 
@@ -288,31 +353,73 @@ export default function AddProperty() {
           name="occupied"
           placeholder="Occupied Units"
           type="number"
+          value={formData.occupied}
           onChange={handleChange}
         />
 
-        <Input className="flex items-center gap-2"
+        <Input
+          className="flex items-center gap-2"
           name="status"
           placeholder="Status"
           type="text"
+          value={formData.status}
           onChange={handleChange}
         />
 
         <label className="flex items-center gap-2">
-        <Input
-          name="availableFrom"
-          placeholder="Available From"
-          type="date"
-          onChange={handleChange}
-        />Available From
+          <Input
+            name="availableFrom"
+            placeholder="Available From"
+            type="date"
+            value={formData.availableFrom}
+            onChange={handleChange}
+          />
+          Available From
         </label>
 
         {/* Images */}
+        <div className="flex gap-3 flex-wrap">
+          {/* OLD IMAGES */}
+          {existingImages.map((img, index) => (
+            <div key={index} className="relative">
+              <img
+                src={`http://localhost:5000/${img}`}
+                alt="old"
+                className="w-24 h-24 object-cover rounded"
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setExistingImages((prev) =>
+                    prev.filter((_, i) => i !== index),
+                  )
+                }
+                className="absolute top-0 right-0 bg-red-500 text-white text-xs px-1 rounded"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+
+          {/* NEW IMAGES */}
+          {images.map((file, index) => (
+            <img
+              key={index}
+              src={URL.createObjectURL(file)}
+              alt="new"
+              className="w-24 h-24 object-cover rounded"
+            />
+          ))}
+        </div>
+
+        {/* FILE INPUT */}
         <input
           type="file"
-          accept="image/*"
           multiple
+          accept="image/*"
           onChange={handleImageChange}
+          className="border p-2 w-full"
         />
 
         <Button type="submit" className="w-full">

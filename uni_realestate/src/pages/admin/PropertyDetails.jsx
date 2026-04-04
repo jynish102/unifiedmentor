@@ -47,8 +47,10 @@ export default function PropertyDetails() {
           />
         ))}
       </div>
-      
-      <p><b>Description:</b> {property.description}</p>
+
+      <p>
+        <b>Description:</b> {property.description}
+      </p>
       <p>
         <b>Address:</b> {property.address}, {property.city}
       </p>
@@ -61,24 +63,58 @@ export default function PropertyDetails() {
       <p>
         <b>Type:</b> {property.propertyType}
       </p>
-      <p><b>Bedrooms:</b> {property.bedrooms}</p>
-      <p><b>Bathrooms:</b> {property.bathrooms}</p>
-      <p><b>Area:</b> {property.area} sq.ft</p>
-      <p><b>Furnishing:</b> {property.furnishing}</p>
-      <p><b>floor:</b> {property.floor}</p>
-      <p><b>Total Floors:</b> {property.totalFloors}</p>
-      <p><b>parking:</b> {property.parking}</p>
-      <p><b>lift:</b> {property.amenities.lift ? "Yes" : "No"}</p>
-      <p><b>gym:</b> {property.amenities.gym ? "Yes" : "No"}</p>
-      <p><b>security:</b> {property.amenities.security ? "Yes" : "No"}</p>
-      <p><b>wifi:</b> {property.amenities.wifi ? "Yes" : "No"}</p>
-      <p><b>units:</b> {property.units}</p>
-      <p><b>occupied:</b> {property.occupied}</p>
+      <p>
+        <b>Bedrooms:</b> {property.bedrooms}
+      </p>
+      <p>
+        <b>Bathrooms:</b> {property.bathrooms}
+      </p>
+      <p>
+        <b>Area:</b> {property.area} sq.ft
+      </p>
+      <p>
+        <b>Furnishing:</b> {property.furnishing}
+      </p>
+      <p>
+        <b>floor:</b> {property.floor}
+      </p>
+      <p>
+        <b>Total Floors:</b> {property.totalFloors}
+      </p>
+      <p>
+        <b>parking:</b> {property.parking}
+      </p>
+      <p>
+        <b>lift:</b> {property?.amenities?.lift ? "Yes" : "No"}
+      </p>
+      <p>
+        <b>gym:</b> {property?.amenities?.gym ? "Yes" : "No"}
+      </p>
+      <p>
+        <b>security:</b> {property?.amenities?.security ? "Yes" : "No"}
+      </p>
+      <p>
+        <b>wifi:</b> {property?.amenities?.wifi ? "Yes" : "No"}
+      </p>
+      <p>
+        <b>units:</b> {property.units}
+      </p>
+      <p>
+        <b>occupied:</b> {property.occupied}
+      </p>
       <p>
         <b>Status:</b> {property.status}
       </p>
-      <p><b>available from:</b> {property.available}</p>
-      
+      <p>
+        <b>Available From:</b>{" "}
+        {property?.available
+          ? new Date(property.available).toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })
+          : "N/A"}
+      </p>
     </div>
   );
 }

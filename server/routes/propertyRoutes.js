@@ -24,7 +24,13 @@ router.post(
 router.get("/", getProperties);
 router.get("/:id", getPropertyById);
 
-router.put("/:id", authMiddleware, ownerOrAdmin, updateProperty);
+router.put(
+  "/:id",
+  authMiddleware,
+  upload.array("images", 5),
+  ownerOrAdmin,
+  updateProperty,
+);
 router.delete("/:id", authMiddleware, ownerOrAdmin, deleteProperty);
 
 module.exports = router;

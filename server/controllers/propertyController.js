@@ -69,10 +69,23 @@ exports.updateProperty = async (req, res) => {
         .status(403)
         .json({ message: "Not authorized to update this property" });
     }
+    const updateData = { ...req.body };
+
+    // ✅ HANDLE IMAGES (THIS WAS MISSING 🔥)
+    if (req.files && req.files.length > 0) {
+      const imagePaths = req.files.map((file) => file.path);
+
+      // 👉 Option 1: Replace all images
+     // updateData.images = imagePaths;
+
+      // 👉 Option 2 (better): Append new images
+      updateData.images = [...property.images, ...imagePaths];
+    }
+
 
     const updatedProperty = await Property.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { returnDocument: "after" },
     );
 

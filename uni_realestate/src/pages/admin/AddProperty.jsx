@@ -80,6 +80,12 @@ export default function AddProperty() {
     }
   }, [id]);
 
+  useEffect(() => {
+    return () => {
+      images.forEach((file) => URL.revokeObjectURL(file.preview));
+    };
+  }, [images])
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -91,13 +97,21 @@ export default function AddProperty() {
 
     if (validImages.length !== files.length) {
       alert("Only image files allowed!");
+      e.target.value = ""; // reset input
+      return;
     }
 
-    if (validImages.length !== files.length) {
-      alert("Only image files allowed!");
+    const totalImages =
+      existingImages.length + images.length + validImages.length;
+    if (totalImages > 5) {
+      alert("Maximum 5 images allowed!");
+      e.target.value = "";
+      return;
     }
 
    setImages((prev) => [...prev, ...validImages]);
+   e.target.value = ""; // reset input
+
   };
 
   const handleAmenityChange = (e) => {
@@ -115,12 +129,22 @@ export default function AddProperty() {
   const handleParkingChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      parking: e.target.checked, // ✅ boolean
+      parking: e.target.checked, // boolean
     }));
+  };
+
+  const handleRemoveNewImage = (index) => {
+    const updated = [...images];
+    updated.splice(index, 1);
+    setImages(updated);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (existingImages.length + images.length > 5) {
+      alert("Max 5 images allowed");
+      return;
+    }
 
     try {
       const data = new FormData();
@@ -145,23 +169,28 @@ export default function AddProperty() {
       }
 
       if (id) {
-        // ✅ UPDATE
+        // UPDATE
         await API.put(`property/${id}`, data, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        alert("Property Updated ✅");
+        alert("Property Updated ");
       } else {
-        // ✅ ADD
+        // ADD
         await API.post("/property/add", data, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        alert("Property Added ✅");
+        alert("Property Added ");
       }
 
-      navigate("/admin");
+      navigate("/admin/properties");
     } catch (err) {
       console.error(err);
-      alert("Something went wrong ❌");
+      const message =
+        err.response?.data?.message || // backend message
+        err.message || // axios error
+        "Something went wrong ";
+
+      alert(message);
     }
   };
 
@@ -413,14 +442,24 @@ export default function AddProperty() {
           ))}
         </div>
 
-        {/* FILE INPUT */}
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleImageChange}
-          className="border p-2 w-full"
-        />
+        <div className="flex gap-3 flex-wrap mt-2">
+          {/* FILE INPUT */}
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImageChange}
+            className="border p-2 w-full"
+          />
+          {/* ❌ REMOVE BUTTON */}
+          <button
+            type="button"
+            onClick={() => handleRemoveNewImage(index)}
+            className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-1 text-xs"
+          >
+            ✕
+          </button>
+        </div>
 
         <Button type="submit" className="w-full">
           {id ? "Update Property" : "Add Property"}

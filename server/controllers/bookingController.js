@@ -6,6 +6,8 @@ const Property = require("../models/Property");
 exports.createBooking = async (req, res) => {
   try {
     const property = await Property.findById(req.body.property);
+    // const { unitsRequested } = req.body;
+    // const available = property.units - property.occupied;
 
     if (!property) {
       return res.status(404).json({

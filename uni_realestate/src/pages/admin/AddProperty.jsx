@@ -70,7 +70,9 @@ export default function AddProperty() {
           units: data.units || 1,
           occupied: data.occupied || 0,
           status: data.status || "available",
-          availableFrom: data.availableFrom ? data.availableFrom.split("T")[0] : "",
+          availableFrom: data.availableFrom
+            ? data.availableFrom.split("T")[0]
+            : "",
         });
 
         setExistingImages(res.data.images || []);
@@ -80,11 +82,11 @@ export default function AddProperty() {
     }
   }, [id]);
 
-  useEffect(() => {
-    return () => {
-      images.forEach((file) => URL.revokeObjectURL(file.preview));
-    };
-  }, [images])
+  // useEffect(() => {
+  //   return () => {
+  //     images.forEach((file) => URL.revokeObjectURL(file.preview));
+  //   };
+  // }, [images]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -109,9 +111,13 @@ export default function AddProperty() {
       return;
     }
 
-   setImages((prev) => [...prev, ...validImages]);
-   e.target.value = ""; // reset input
+    const filesWithPreview = validImages.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
 
+    setImages((prev) => [...prev, ...filesWithPreview]);
+    e.target.value = ""; // reset input
   };
 
   const handleAmenityChange = (e) => {
@@ -122,7 +128,7 @@ export default function AddProperty() {
       amenities: {
         ...prev.amenities,
         [name]: checked,
-      }, 
+      },
     }));
   };
 
@@ -133,10 +139,18 @@ export default function AddProperty() {
     }));
   };
 
+  // Remove new selected image
   const handleRemoveNewImage = (index) => {
     const updated = [...images];
     updated.splice(index, 1);
     setImages(updated);
+  };
+
+  // Remove existing image (edit mode)
+  const handleRemoveExistingImage = (index) => {
+    const updated = [...existingImages];
+    updated.splice(index, 1);
+    setExistingImages(updated);
   };
 
   const handleSubmit = async (e) => {
@@ -146,18 +160,23 @@ export default function AddProperty() {
       return;
     }
 
+    if (formData.occupied > formData.units) {
+      alert("Occupied cannot exceed total units");
+      return;
+    }
+
     try {
       const data = new FormData();
       const token = localStorage.getItem("token");
 
       // append text fields
-    Object.keys(formData).forEach((key) => {
-      if (key === "amenities") {
-        data.append("amenities", JSON.stringify(formData.amenities));
-      } else {
-        data.append(key, formData[key]);
-      }
-    });
+      Object.keys(formData).forEach((key) => {
+        if (key === "amenities") {
+          data.append("amenities", JSON.stringify(formData.amenities));
+        } else {
+          data.append(key, formData[key]);
+        }
+      });
       // old images (only for edit)
       if (id) {
         data.append("existingImages", JSON.stringify(existingImages));
@@ -170,7 +189,7 @@ export default function AddProperty() {
 
       if (id) {
         // UPDATE
-        await API.put(`property/${id}`, data, {
+        await API.put(`/property/${id}`, data, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert("Property Updated ");
@@ -394,6 +413,15 @@ export default function AddProperty() {
           value={formData.status}
           onChange={handleChange}
         />
+        <select 
+        className="flex items-center gap-2"
+          name="status"          
+          value={formData.status || "available"}
+          onChange={handleChange}
+        >
+          <option value="available">Available</option>
+          <option value="occupied">Occupied</option>
+        </select>
 
         <label className="flex items-center gap-2">
           <Input
@@ -406,60 +434,50 @@ export default function AddProperty() {
           Available From
         </label>
 
-        {/* Images */}
-        <div className="flex gap-3 flex-wrap">
-          {/* OLD IMAGES */}
+        <div className="flex gap-3 flex-wrap mt-2">
+          {/* Existing Images (Edit Mode) */}
           {existingImages.map((img, index) => (
             <div key={index} className="relative">
               <img
                 src={`http://localhost:5000/${img}`}
-                alt="old"
+                alt="property"
                 className="w-24 h-24 object-cover rounded"
               />
 
               <button
                 type="button"
-                onClick={() =>
-                  setExistingImages((prev) =>
-                    prev.filter((_, i) => i !== index),
-                  )
-                }
-                className="absolute top-0 right-0 bg-red-500 text-white text-xs px-1 rounded"
+                onClick={() => handleRemoveExistingImage(index)}
+                className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-1"
               >
-                ✕
+                ❌
               </button>
             </div>
           ))}
 
-          {/* NEW IMAGES */}
+          {/* New Images */}
           {images.map((file, index) => (
-            <img
-              key={index}
-              src={URL.createObjectURL(file)}
-              alt="new"
-              className="w-24 h-24 object-cover rounded"
-            />
+            <div key={index} className="relative">
+              <button
+                type="button"
+                onClick={() => handleRemoveNewImage(index)}
+                className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-1"
+              >
+                ❌
+              </button>
+              <img
+                src={file.preview}
+                alt="preview"
+                className="w-24 h-24 object-cover rounded"
+              />
+            </div>
           ))}
         </div>
-
-        <div className="flex gap-3 flex-wrap mt-2">
-          {/* FILE INPUT */}
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={handleImageChange}
-            className="border p-2 w-full"
-          />
-          {/* ❌ REMOVE BUTTON */}
-          <button
-            type="button"
-            onClick={() => handleRemoveNewImage(index)}
-            className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-1 text-xs"
-          >
-            ✕
-          </button>
-        </div>
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={handleImageChange}
+        />
 
         <Button type="submit" className="w-full">
           {id ? "Update Property" : "Add Property"}

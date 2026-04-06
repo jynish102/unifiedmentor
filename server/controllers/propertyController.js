@@ -60,6 +60,21 @@ exports.updateProperty = async (req, res) => {
       return res.status(404).json({ message: "Property not found" });
     }
 
+    const existingImages = JSON.parse(req.body.existingImages || "[]");
+    const imagesToDelete = property.images.filter(
+      (img) => !existingImages.includes(img),
+    );
+
+    const fs = require("fs");
+
+    imagesToDelete.forEach((img) => {
+      fs.unlink(`uploads/${img}`, (err) => {
+        if (err) console.log("Error deleting file:", err);
+      });
+    });
+
+    
+
     // Admin OR property owner
     if (
       property.createdBy.toString() !== req.user.id &&
@@ -71,16 +86,15 @@ exports.updateProperty = async (req, res) => {
     }
     const updateData = { ...req.body };
 
-    // ✅ HANDLE IMAGES (THIS WAS MISSING 🔥)
+    //  HANDLE IMAGES (THIS WAS MISSING )
+    let newImages = [];
+
     if (req.files && req.files.length > 0) {
-      const imagePaths = req.files.map((file) => file.path);
-
-      // 👉 Option 1: Replace all images
-     // updateData.images = imagePaths;
-
-      // 👉 Option 2 (better): Append new images
-      updateData.images = [...property.images, ...imagePaths];
+      newImages = req.files.map((file) => file.path);
     }
+
+    // FINAL IMAGES = remaining old + new uploads
+    updateData.images = [...existingImages, ...newImages];
 
 
     const updatedProperty = await Property.findByIdAndUpdate(

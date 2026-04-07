@@ -17,10 +17,9 @@ import { useState } from "react";
 const navItems = [
   { path: "/admin/overview", label: "Overview", icon: LayoutDashboard },
   { path: "/admin/properties", label: "Properties", icon: Building2 },
-  { path: "/admin/tenants", label: "Tenants", icon: Users },
   { path: "/admin/amenities", label: "Amenities", icon: Dumbbell },
+  { path: "/admin/tenants", label: "Tenants", icon: Users },
   { path: "/admin/maintenance", label: "Maintenance", icon: Wrench },
-  
 ];
 
 export function AdminDashboardLayout() {

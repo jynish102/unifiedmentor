@@ -88,6 +88,7 @@ export default function AddProperty() {
   //   };
   // }, [images]);
 
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -184,7 +185,7 @@ export default function AddProperty() {
 
       // append images
       for (let i = 0; i < images.length; i++) {
-        data.append("images", images[i]);
+        data.append("images", images[i].file);
       }
 
       if (id) {

@@ -7,7 +7,7 @@ export default function PropertyDetails() {
   const [property, setProperty] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const getImageUrl = (img) => {
-    if (!img) return "https://via.placeholder.com/400";
+    if (!img) return "/default-image.jpg";
     return `http://localhost:5000/${img.replace(/\\/g, "/")}`;
   };
 
@@ -20,9 +20,10 @@ export default function PropertyDetails() {
         console.error(err);
       }
     };
-
     fetchProperty();
   }, [id]);
+
+  
 
   if (!property) return <p>Loading...</p>;
 
@@ -34,6 +35,9 @@ export default function PropertyDetails() {
         src={getImageUrl(selectedImage || property.images?.[0])}
         className="w-full max-w-md rounded-lg"
         alt="property"
+        onError={(e) => {
+          e.target.src = "/default-image.jpg";
+        }}
       />
       {/* Thumbnail Images */}
       <div className="flex gap-3 overflow-x-auto">
@@ -44,6 +48,9 @@ export default function PropertyDetails() {
             alt="thumb"
             className="w-24 h-24 object-cover rounded-lg cursor-pointer border hover:scale-105 transition"
             onClick={() => setSelectedImage(img)}
+            onError={(e) => {
+              e.target.src = "/default-image.jpg";
+            }}
           />
         ))}
       </div>
@@ -107,8 +114,8 @@ export default function PropertyDetails() {
       </p>
       <p>
         <b>Available From:</b>{" "}
-        {property?.available
-          ? new Date(property.available).toLocaleDateString("en-IN", {
+        {property?.availableFrom
+          ? new Date(property.availableFrom).toLocaleDateString("en-IN", {
               day: "numeric",
               month: "long",
               year: "numeric",

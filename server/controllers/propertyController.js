@@ -60,21 +60,6 @@ exports.updateProperty = async (req, res) => {
       return res.status(404).json({ message: "Property not found" });
     }
 
-    const existingImages = JSON.parse(req.body.existingImages || "[]");
-    const imagesToDelete = property.images.filter(
-      (img) => !existingImages.includes(img),
-    );
-
-    const fs = require("fs");
-
-    imagesToDelete.forEach((img) => {
-      fs.unlink(`uploads/${img}`, (err) => {
-        if (err) console.log("Error deleting file:", err);
-      });
-    });
-
-    
-
     // Admin OR property owner
     if (
       property.createdBy.toString() !== req.user.id &&
@@ -84,9 +69,28 @@ exports.updateProperty = async (req, res) => {
         .status(403)
         .json({ message: "Not authorized to update this property" });
     }
-    const updateData = { ...req.body };
 
-    //  HANDLE IMAGES (THIS WAS MISSING )
+    const existingImages = JSON.parse(req.body.existingImages || "[]");
+    const imagesToDelete = property.images.filter(
+      (img) => !existingImages.includes(img),
+    );
+
+    const fs = require("fs");
+    const path = require("path");
+
+    imagesToDelete.forEach((img) => {
+      const filePath = path.join(__dirname, "..", img);
+      fs.unlink(filePath, (err) => {
+        if (err) console.log("Error deleting file:", err);
+      });
+    });
+
+    const updateData = { ...req.body };
+    if (req.body.amenities) {
+      updateData.amenities = JSON.parse(req.body.amenities);
+    }
+
+  
     let newImages = [];
 
     if (req.files && req.files.length > 0) {
@@ -95,7 +99,6 @@ exports.updateProperty = async (req, res) => {
 
     // FINAL IMAGES = remaining old + new uploads
     updateData.images = [...existingImages, ...newImages];
-
 
     const updatedProperty = await Property.findByIdAndUpdate(
       req.params.id,

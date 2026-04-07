@@ -2,7 +2,9 @@ import { Card, CardContent, CardHeader } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
-import { Plus, Search, MapPin, Clock, Users } from "lucide-react";
+import { Plus, Search, MapPin, Clock, Users,Pencil,
+  Trash2,
+  Eye } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -137,11 +139,35 @@ export function Amenities() {
                   )}
 
                   {/* Actions */}
-                  <div className="grid grid-cols-2 gap-2 mt-4">
-                    <Button variant="outline" size="sm">
+                  <div className="flex gap-2 mt-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                    >
+                      <Eye size={14} />
+                      View
+                    </Button>
+
+                    {/* Edit */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                    >
+                      <Pencil size={14} />
                       Edit
                     </Button>
-                    <Button size="sm">Book Now</Button>
+
+                    {/* Delete */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                    >
+                      <Trash2 size={14} />
+                      Delete
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

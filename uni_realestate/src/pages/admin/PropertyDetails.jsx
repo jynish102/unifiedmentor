@@ -1,11 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 
 export default function PropertyDetails() {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const navigate = useNavigate();
   const getImageUrl = (img) => {
     if (!img) return "/default-image.jpg";
     return `http://localhost:5000/${img.replace(/\\/g, "/")}`;
@@ -30,7 +32,12 @@ export default function PropertyDetails() {
   return (
     <div className="p-6 space-y-4">
       <h2 className="text-2xl font-bold">{property.title}</h2>
-
+      <button
+        onClick={() => navigate(`/admin/amenities/add-amenity/${property._id}`)}
+        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+      >
+        Add Amenity
+      </button>
       <img
         src={getImageUrl(selectedImage || property.images?.[0])}
         className="w-full max-w-md rounded-lg"

@@ -22,6 +22,8 @@ import { Amenities } from "./pages/admin/Amenities";
 import Maintenance  from "./pages/admin/Maintenance";
 import PropertyDetails from "./pages/admin/PropertyDetails";
 import AddProperty from "./pages/admin/AddProperty";
+import AddAmenity from "./pages/admin/AddAmenity";
+import AmenityDetails from "./pages/admin/AmenityDetails";
 
 //owner
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
@@ -61,6 +63,8 @@ function App() {
           <Route path="properties/add-property" element={<AddProperty />} />
           <Route path="/admin/properties/edit/:id" element={<AddProperty />} />
           <Route path="/admin/properties/:id" element={<PropertyDetails />} />
+          {/* <Route path="/admin/amenities/:id" element={<AmenityDetails />} /> */}
+          <Route path="/adminamenities/add-amenity/:propertyId" element={<AddAmenity />} />
           <Route path="tenants" element={<Tenants />} />
           <Route path="amenities" element={<Amenities />} />
           <Route path="maintenance" element={<Maintenance />} />

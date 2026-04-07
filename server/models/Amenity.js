@@ -27,11 +27,13 @@ const amenitySchema = new mongoose.Schema(
       default: 1,
     },
 
-    location: String,
+    location: { 
+      type : String,
+    },  
 
     operatingHours: {
-      start: String,
-      end: String,
+      start: { type: String }, 
+      end: { type: String },
     },
 
     status: {
@@ -40,7 +42,10 @@ const amenitySchema = new mongoose.Schema(
       default: "active",
     },
 
-    images: [String],
+    images: {
+      type: [String],
+      default: []
+    }
   },
   { timestamps: true },
 );

@@ -218,15 +218,16 @@ export default function AddProperty() {
     <div className="p-6 max-w-3xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Add Property</h2>
       <button
-              onClick={() => navigate("/admin/properties")}
-              className="bg-gray-500 text-white px-3 py-1 rounded"
-            >
-              Cancel
-            </button>
+        onClick={() => navigate("/admin/properties")}
+        className="bg-gray-500 text-white px-3 py-1 rounded"
+      >
+        Cancel
+      </button>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           name="title"
+          type="text"
           placeholder="Title"
           value={formData.title}
           onChange={handleChange}
@@ -234,6 +235,7 @@ export default function AddProperty() {
 
         <Input
           name="description"
+          type="text"
           placeholder="Description"
           value={formData.description}
           onChange={handleChange}
@@ -241,6 +243,7 @@ export default function AddProperty() {
 
         <Input
           name="address"
+          type="text"
           placeholder="Address"
           value={formData.address}
           onChange={handleChange}
@@ -248,6 +251,7 @@ export default function AddProperty() {
 
         <Input
           name="city"
+          type="text"
           placeholder="City"
           value={formData.city}
           onChange={handleChange}
@@ -336,6 +340,7 @@ export default function AddProperty() {
           value={formData.floor}
           onChange={handleChange}
         />
+        
         <Input
           name="totalFloors"
           placeholder="Total Floors"
@@ -420,9 +425,9 @@ export default function AddProperty() {
           value={formData.status}
           onChange={handleChange}
         />
-        <select 
-        className="flex items-center gap-2"
-          name="status"          
+        <select
+          className="flex items-center gap-2"
+          name="status"
           value={formData.status || "available"}
           onChange={handleChange}
         >

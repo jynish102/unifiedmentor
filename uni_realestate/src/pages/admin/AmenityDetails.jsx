@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function AmenityDetails() {
   const { id } = useParams();
+  console.log(id)
   const [amenity, setAmenity] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();

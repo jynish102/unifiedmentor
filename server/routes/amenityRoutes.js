@@ -5,6 +5,7 @@ const upload = require("../middleware/uploadPropertyImages");
 const {
   createAmenity,
   getAllAmenities,
+  getAmenityById,
   getAmenitiesByProperty,
   updateAmenity,
   deleteAmenity,
@@ -15,6 +16,7 @@ router.post("/:propertyId", upload.array("images", 5), createAmenity);
 
 // Get all amenities
 router.get("/", getAllAmenities);
+router.get("/:id" , getAmenityById)
 
 // Get amenities by property
 router.get("/:propertyId", getAmenitiesByProperty);

@@ -52,6 +52,31 @@ exports.getAllAmenities = async (req, res) => {
   }
 };
 
+exports.getAmenityById = async (req, res) => {
+  try {
+    const amenity = await Amenity.findById(req.params.id).populate(
+      "property",
+      "title description address",
+    );
+
+    if (!amenity) {
+      return res.status(404).json({
+        message: "Amenity not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: amenity,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 // GET AMENITIES BY PROPERTY
 exports.getAmenitiesByProperty = async (req, res) => {
   try {

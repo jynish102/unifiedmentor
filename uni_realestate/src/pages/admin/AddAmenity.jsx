@@ -6,7 +6,7 @@ import { Input } from "../../components/ui/input";
 
 export default function AddAmenity() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id, propertyId } = useParams();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -14,7 +14,10 @@ export default function AddAmenity() {
     price: "",
     capacity: "1",
     location: "",
-    operatingHours: "",
+    operatingHours: {
+      start: "",
+      end: ""
+    },
     status: "active",
     
   });
@@ -24,17 +27,20 @@ export default function AddAmenity() {
 
   useEffect(() => {
     if (id) {
-      const fetchProperty = async () => {
-        const res = await API.get(`/property/${id}`);
+      const fetchAmenity = async () => {
+        const res = await API.get(`/amenity/${id}`);
         const data = res.data;
         console.log("API DATA:", data);
         setFormData({
-          title: data.title || "",
+          name: data.name || "",
           description: data.description || "",
           price: data.price || "",
           capacity: data.capacity || "1",
           location: data.location || "",
-          operatingHours: data.operatingHours || "",
+          operatingHours: {
+            start: data.operatingHours?.start || "",
+            end: data.operatingHours?.end || ""
+          },
           status: data.status || "active",
           
         });
@@ -42,7 +48,7 @@ export default function AddAmenity() {
         setExistingImages(res.data.images || []);
       };
 
-      fetchProperty();
+      fetchAmenity();
     }
   }, [id]);
 
@@ -54,6 +60,28 @@ export default function AddAmenity() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleTimeChange = (field, value) => {
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        operatingHours: {
+          ...prev.operatingHours,
+          [field]: value,
+        },
+      };
+
+      if (
+        updated.operatingHours.start &&
+        updated.operatingHours.end &&
+        updated.operatingHours.start > updated.operatingHours.end
+      ) {
+        alert("Start time must be before end time");
+      }
+
+      return updated;
+    });
   };
 
   const handleImageChange = (e) => {
@@ -83,10 +111,6 @@ export default function AddAmenity() {
     setImages((prev) => [...prev, ...filesWithPreview]);
     e.target.value = ""; // reset input
   };
-
-  
-  
-
   // Remove new selected image
   const handleRemoveNewImage = (index) => {
     const updated = [...images];
@@ -114,8 +138,8 @@ export default function AddAmenity() {
 
       // append text fields
       Object.keys(formData).forEach((key) => {
-        if (key === "amenities") {
-          data.append("amenities", JSON.stringify(formData.amenities));
+        if (key === "operatingHours") {
+          data.append("operatingHours", JSON.stringify(formData.operatingHours));
         } else {
           data.append(key, formData[key]);
         }
@@ -138,7 +162,7 @@ export default function AddAmenity() {
         alert("Amenity Updated ");
       } else {
         // ADD
-        await API.post("/amenity/add", data, {
+        await API.post(`/amenity/${propertyId}`, data, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert("Amenity Added ");
@@ -159,10 +183,17 @@ export default function AddAmenity() {
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Add Amenity</h2>
+      <button
+        onClick={() => navigate("/admin/amenities")}
+        className="bg-gray-500 text-white px-3 py-1 rounded"
+      >
+        Cancel
+      </button>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           name="name"
+          type="text"
           placeholder="Name"
           value={formData.name}
           onChange={handleChange}
@@ -170,6 +201,7 @@ export default function AddAmenity() {
 
         <Input
           name="description"
+          type="text"
           placeholder="Description"
           value={formData.description}
           onChange={handleChange}
@@ -177,28 +209,54 @@ export default function AddAmenity() {
 
         <Input
           name="price"
-          placeholder="Price"
           type="number"
+          placeholder="Price"
           value={formData.price}
           onChange={handleChange}
         />
 
         <Input
-          className="flex items-center gap-2"
-          name="status"
-          placeholder="Status"
-          type="text"
-          value={formData.status}
+          name="capacity"
+          type="number"
+          placeholder="Capacity"
+          value={formData.capacity}
           onChange={handleChange}
         />
 
         <Input
-          className="flex items-center gap-2"
-          name="operatingHours"
-          placeholder="Operating Hours"
+          name="location"
           type="text"
-          value={formData.operatingHours}
+          placeholder="Location"
+          value={formData.location}
           onChange={handleChange}
+        />
+
+        <select
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+        >
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+
+        <Input
+          className="flex items-center gap-2"
+          name="start"
+          placeholder="Start Time"
+          type="time"
+          value={formData.operatingHours?.start}
+          onChange={(e) => handleTimeChange("start", e.target.value)}
+        />
+
+        <Input
+          className="flex items-center gap-2"
+          name="end"
+          placeholder="End Time"
+          type="time"
+          value={formData.operatingHours?.end}
+          onChange={(e) => handleTimeChange("end", e.target.value)}
         />
 
         <div className="flex gap-3 flex-wrap mt-2">

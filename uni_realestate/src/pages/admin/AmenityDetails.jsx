@@ -1,11 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
+import { useNavigate } from "react-router-dom"; 
 
 export default function AmenityDetails() {
   const { id } = useParams();
   const [amenity, setAmenity] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const navigate = useNavigate();
 
   const getImageUrl = (img) => {
     if (!img) return "/default-image.jpg";
@@ -28,6 +30,12 @@ export default function AmenityDetails() {
 
   return (
     <div className="p-6 space-y-4">
+      <button
+        onClick={() => navigate("/admin/amenities")}
+        className="bg-gray-500 text-white px-3 py-1 rounded"
+      >
+        Close
+      </button>
       {/* Title */}
       <h2 className="text-2xl font-bold">{amenity.name}</h2>
 

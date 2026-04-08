@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../middleware/uploadPropertyImages");
 
 const {
   createAmenity,
@@ -10,7 +11,7 @@ const {
 } = require("../controllers/amenityController");
 
 // Add amenity to property
-router.post("/:propertyId", createAmenity);
+router.post("/:propertyId", upload.array("images", 5), createAmenity);
 
 // Get all amenities
 router.get("/", getAllAmenities);
@@ -19,7 +20,7 @@ router.get("/", getAllAmenities);
 router.get("/:propertyId", getAmenitiesByProperty);
 
 // Update amenity
-router.put("/:id", updateAmenity);
+router.put("/:id", upload.array("images", 5) , updateAmenity);
 
 // Delete amenity
 router.delete("/:id", deleteAmenity);

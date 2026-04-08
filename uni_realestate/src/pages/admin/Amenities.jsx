@@ -7,10 +7,13 @@ import { Plus, Search, MapPin, Clock, Users,Pencil,
   Eye } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import API from "../../utils/api";
 
 export function Amenities() {
   const [searchTerm, setSearchTerm] = useState("");
   const [amenities, setAmenities] = useState([]);
+  const navigate = useNavigate();
 
   // ✅ Fetch Amenities
   useEffect(() => {
@@ -40,6 +43,31 @@ export function Amenities() {
       : "bg-gray-100 text-gray-700";
   };
 
+   const handleDelete = async (id) => {
+      const confirmDelete = window.confirm("Are you sure?");
+  
+      if (!confirmDelete) return;
+  
+      try {
+        const token = localStorage.getItem("token");
+  
+        await API.delete(`/amenity/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        // remove from UI
+        setAmenities((prev) => prev.filter((p) => p._id !== id));
+  
+        alert("Deleted successfully ✅");
+      } catch (err) {
+        console.error(err);
+        alert("Delete failed ❌");
+      }
+    };
+  
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -49,10 +77,10 @@ export function Amenities() {
           <p className="text-slate-500 mt-1">Manage property amenities</p>
         </div>
 
-        <Button className="gap-2">
+        {/* <Button className="gap-2">
           <Plus size={18} />
           Add Amenity
-        </Button>
+        </Button> */}
       </div>
 
       {/* Search */}
@@ -129,21 +157,15 @@ export function Amenities() {
                     )}
                   </div>
 
-                  {/* Image */}
-                  {amenity.images?.length > 0 && (
-                    <img
-                      src={amenity.images[0]}
-                      alt={amenity.name}
-                      className="mt-3 h-32 w-full object-cover rounded"
-                    />
-                  )}
-
                   {/* Actions */}
                   <div className="flex gap-2 mt-4">
                     <Button
                       variant="outline"
                       size="sm"
                       className="flex-1"
+                      onClick={() =>
+                        navigate(`/admin/amenities/${amenity._id}`)
+                      }
                     >
                       <Eye size={14} />
                       View
@@ -154,6 +176,9 @@ export function Amenities() {
                       variant="outline"
                       size="sm"
                       className="flex-1"
+                      onClick={() =>
+                        navigate(`/admin/amenities/edit/${amenity._id}`)
+                      }
                     >
                       <Pencil size={14} />
                       Edit
@@ -164,6 +189,7 @@ export function Amenities() {
                       variant="outline"
                       size="sm"
                       className="flex-1"
+                      onClick={() => handleDelete(amenity._id)}
                     >
                       <Trash2 size={14} />
                       Delete

@@ -2,21 +2,33 @@ const Amenity = require("../models/Amenity");
 
 exports.createAmenity = async (req, res) => {
   try {
-    const { name, description } = req.body;
+     console.log("BODY:", req.body);
+     console.log("FILES:", req.files);
 
-    const amenity = new Amenity({
+     if (!req.body) {
+       return res.status(400).json({ message: "No data received" });
+     }
+    const imagePaths = req.files?.map((file) => file.path) || [];
+
+    let operatingHours = {};
+    // fix object field
+    if (req.body.operatingHours) {
+      req.body.operatingHours = JSON.parse(req.body.operatingHours);
+    }
+
+    const amenity = await Amenity.create({
+      ...req.body,
+      operatingHours,
       property: req.params.propertyId,
-      name,
-      description,
+      images: imagePaths,
     });
-
-    await amenity.save();
 
     res.status(201).json({
       success: true,
       data: amenity,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

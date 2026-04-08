@@ -55,7 +55,6 @@ function App() {
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/ResetPassword/:token" element={<ResetPassword />} />
         </Route>
-
         //admin routes
         <Route path="/admin" element={<AdminDashboardLayout />}>
           <Route path="overview" element={<Overview />} />
@@ -63,13 +62,16 @@ function App() {
           <Route path="properties/add-property" element={<AddProperty />} />
           <Route path="/admin/properties/edit/:id" element={<AddProperty />} />
           <Route path="/admin/properties/:id" element={<PropertyDetails />} />
-          {/* <Route path="/admin/amenities/:id" element={<AmenityDetails />} /> */}
-          <Route path="/adminamenities/add-amenity/:propertyId" element={<AddAmenity />} />
-          <Route path="tenants" element={<Tenants />} />
           <Route path="amenities" element={<Amenities />} />
+          <Route
+            path="/admin/amenities/add-amenity/:propertyId"
+            element={<AddAmenity />}
+          />
+          <Route path="/admin/amenities/edit/:id" element={<AddAmenity />} />
+          <Route path="/admin/amenities/:id" element={<AmenityDetails />} />
+          <Route path="tenants" element={<Tenants />} />
           <Route path="maintenance" element={<Maintenance />} />
         </Route>
-
         //owner routes
         <Route path="/owner" element={<OwnerDashboardLayout />}>
           <Route path="ownerdashboard" element={<OwnerDashboard />} />

@@ -32,12 +32,20 @@ export default function PropertyDetails() {
   return (
     <div className="p-6 space-y-4">
       <h2 className="text-2xl font-bold">{property.title}</h2>
+      
       <button
         onClick={() => navigate(`/admin/amenities/add-amenity/${property._id}`)}
         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
       >
         Add Amenity
       </button>
+
+      <button
+              onClick={() => navigate("/admin/properties")}
+              className="bg-gray-500 text-white px-3 py-1 rounded"
+            >
+              Close
+            </button>
       <img
         src={getImageUrl(selectedImage || property.images?.[0])}
         className="w-full max-w-md rounded-lg"

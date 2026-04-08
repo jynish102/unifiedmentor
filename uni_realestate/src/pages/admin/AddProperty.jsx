@@ -217,6 +217,12 @@ export default function AddProperty() {
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Add Property</h2>
+      <button
+              onClick={() => navigate("/admin/properties")}
+              className="bg-gray-500 text-white px-3 py-1 rounded"
+            >
+              Cancel
+            </button>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input

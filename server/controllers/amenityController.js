@@ -2,8 +2,8 @@ const Amenity = require("../models/Amenity");
 
 exports.createAmenity = async (req, res) => {
   try {
-     console.log("BODY:", req.body);
-     console.log("FILES:", req.files);
+    //  console.log("BODY:", req.body);
+    //  console.log("FILES:", req.files);
 
      if (!req.body) {
        return res.status(400).json({ message: "No data received" });
@@ -13,9 +13,12 @@ exports.createAmenity = async (req, res) => {
     let operatingHours = {};
     // fix object field
     if (req.body.operatingHours) {
-      req.body.operatingHours = JSON.parse(req.body.operatingHours);
+      operatingHours = JSON.parse(req.body.operatingHours);
+      // console.log("Parsed operatingHours:", operatingHours);
     }
-
+  
+    delete req.body.operatingHours;
+    
     const amenity = await Amenity.create({
       ...req.body,
       operatingHours,

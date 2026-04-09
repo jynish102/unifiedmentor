@@ -29,7 +29,10 @@ export default function AddAmenity() {
     if (id) {
       const fetchAmenity = async () => {
         const res = await API.get(`/amenity/${id}`);
-        const data = res.data;
+        const data = res.data.data;
+        
+        console.log(existingImages)
+
         console.log("API DATA:", data);
         setFormData({
           name: data.name || "",
@@ -38,8 +41,8 @@ export default function AddAmenity() {
           capacity: data.capacity || "1",
           location: data.location || "",
           operatingHours: {
-            start: data.operatingHours?.start || "",
-            end: data.operatingHours?.end || ""
+            start: data.operatingHours?.start?.slice(0,5) || "",
+            end: data.operatingHours?.end?.slice(0,5) || ""
           },
           status: data.status || "active",
           
@@ -265,7 +268,7 @@ export default function AddAmenity() {
             <div key={index} className="relative">
               <img
                 src={`http://localhost:5000/${img}`}
-                alt="property"
+                alt="amenity"
                 className="w-24 h-24 object-cover rounded"
               />
 

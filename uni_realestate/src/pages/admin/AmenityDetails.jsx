@@ -19,7 +19,7 @@ export default function AmenityDetails() {
     const fetchAmenity = async () => {
       try {
         const res = await API.get(`/amenity/${id}`);
-        setAmenity(res.data);
+        setAmenity(res.data.data);
       } catch (err) {
         console.error(err);
       }

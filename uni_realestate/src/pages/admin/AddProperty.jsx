@@ -44,7 +44,7 @@ export default function AddProperty() {
       const fetchProperty = async () => {
         const res = await API.get(`/property/${id}`);
         const data = res.data;
-        console.log("API DATA:", data);
+        // console.log("API DATA:", data);
         setFormData({
           title: data.title || "",
           description: data.description || "",

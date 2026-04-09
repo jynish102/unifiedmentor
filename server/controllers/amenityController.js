@@ -104,27 +104,68 @@ exports.getAmenitiesByProperty = async (req, res) => {
 // UPDATE AMENITY
 exports.updateAmenity = async (req, res) => {
   try {
+    const fs = require("fs");
+    const path = require("path");
 
-    const amenity = await Amenity.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    // ✅ 1. GET OLD DATA FIRST
+    const amenity = await Amenity.findById(req.params.id);
 
     if (!amenity) {
       return res.status(404).json({
-        message: "Amenity not found"
+        message: "Amenity not found",
       });
     }
 
-    res.json({
-      success: true,
-      data: amenity
+    // ✅ 2. Parse incoming images
+    const existingImages = JSON.parse(req.body.existingImages || "[]");
+
+    const oldImages = amenity.images || [];
+
+    // ✅ 3. Find deleted images
+    const deletedImages = oldImages.filter(
+      (img) => !existingImages.includes(img),
+    );
+
+    console.log("OLD:", oldImages);
+    console.log("NEW:", existingImages);
+    console.log("DELETE:", deletedImages);
+
+    // ✅ 4. Delete files from folder
+    deletedImages.forEach((img) => {
+      const filePath = path.join(__dirname, "..", img);
+
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
     });
 
+    if (req.body.operatingHours) {
+      req.body.operatingHours = JSON.parse(req.body.operatingHours);
+    }
+
+    // ✅ 5. Update fields
+    Object.keys(req.body).forEach((key) => {
+      if (key !== "existingImages") {
+        amenity[key] = req.body[key];
+      }
+    });
+
+    // ✅ 6. Update images
+    amenity.images = [
+      ...existingImages,
+      ...(req.files?.map((file) => file.path) || []),
+    ];
+
+    // ✅ 7. Save
+    await amenity.save();
+
+    res.json({
+      success: true,
+      data: amenity,
+    });
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };

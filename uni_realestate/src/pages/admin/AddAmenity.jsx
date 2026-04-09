@@ -31,7 +31,7 @@ export default function AddAmenity() {
         const res = await API.get(`/amenity/${id}`);
         const data = res.data.data;
         
-        console.log(existingImages)
+      
 
         console.log("API DATA:", data);
         setFormData({
@@ -48,7 +48,8 @@ export default function AddAmenity() {
           
         });
 
-        setExistingImages(res.data.images || []);
+        setExistingImages(data.images || []);
+          console.log(existingImages);
       };
 
       fetchAmenity();

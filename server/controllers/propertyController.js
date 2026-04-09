@@ -54,6 +54,8 @@ exports.getPropertyById = async (req, res) => {
 //Update Property
 exports.updateProperty = async (req, res) => {
   try {
+      const fs = require("fs");
+      const path = require("path");
     const property = await Property.findById(req.params.id);
 
     if (!property) {
@@ -74,10 +76,6 @@ exports.updateProperty = async (req, res) => {
     const imagesToDelete = property.images.filter(
       (img) => !existingImages.includes(img),
     );
-
-    const fs = require("fs");
-    const path = require("path");
-
     imagesToDelete.forEach((img) => {
       const filePath = path.join(__dirname, "..", img);
       fs.unlink(filePath, (err) => {

@@ -16,9 +16,10 @@ export default function AddProperty() {
     price: "",
     deposit: "",
     paymentFrequency: "monthly",
+    category: "residential",
     propertyType: "Apartment",
-    bedrooms: "",
-    bathrooms: "",
+    bedrooms: 0,
+    bathrooms: 0,
     area: "",
     furnishing: "Semi-Furnished",
     floor: "",
@@ -30,8 +31,8 @@ export default function AddProperty() {
       security: false,
       wifi: false,
     },
-    units: 1,
-    occupied: 0,
+    units: "",
+    occupied: "",
     status: "available",
     availableFrom: "",
   });
@@ -282,6 +283,18 @@ export default function AddProperty() {
         >
           <option value="monthly">Monthly</option>
           <option value="yearly">Yearly</option>
+          <option value="daily">Daily</option>
+        </select>
+
+        {/* Payment Frequency */}
+        <select
+          name="category"
+          value={formData.category || "residential"}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+        >
+          <option value="residential">Residential</option>
+          <option value="commercial">Commercial</option>
         </select>
 
         {/* Property Type */}
@@ -295,6 +308,9 @@ export default function AddProperty() {
           <option value="House">House</option>
           <option value="Villa">Villa</option>
           <option value="Shop">Shop</option>
+          <option value="Warehouse">Warehouse</option>
+          <option value="land">Land</option>
+          <option value="others">Others</option>
         </select>
 
         {/* Bedrooms / Bathrooms */}
@@ -302,14 +318,14 @@ export default function AddProperty() {
           name="bedrooms"
           placeholder="Bedrooms"
           type="number"
-          value={formData.bedrooms}
+          value={formData.bedrooms || "" }
           onChange={handleChange}
         />
         <Input
           name="bathrooms"
           placeholder="Bathrooms"
           type="number"
-          value={formData.bathrooms}
+          value={formData.bathrooms || ""}
           onChange={handleChange}
         />
 
@@ -340,7 +356,7 @@ export default function AddProperty() {
           value={formData.floor}
           onChange={handleChange}
         />
-        
+
         <Input
           name="totalFloors"
           placeholder="Total Floors"
@@ -417,19 +433,13 @@ export default function AddProperty() {
           onChange={handleChange}
         />
 
-        <Input
-          className="flex items-center gap-2"
-          name="status"
-          placeholder="Status"
-          type="text"
-          value={formData.status}
-          onChange={handleChange}
-        />
+       
         <select
-          className="flex items-center gap-2"
+          className="flex items-center gap-2  w-full border p-2 rounded"
           name="status"
           value={formData.status || "available"}
           onChange={handleChange}
+         
         >
           <option value="available">Available</option>
           <option value="occupied">Occupied</option>

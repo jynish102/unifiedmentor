@@ -42,7 +42,7 @@ app.use("/api/dashboard", dashboardRoutes);
 // Connect MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected ✅"))
+  .then(() => console.log("MongoDB Connected "))
   .catch((err) => console.log(err));
 
 app.get("/", (req, res) => {
@@ -50,5 +50,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} 🚀`);
+  console.log(`Server running on port ${PORT} `);
 });

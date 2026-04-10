@@ -23,7 +23,7 @@ export function Properties() {
   const [properties, setProperties] = useState([]);
   
 
-  // ✅ Fetch from backend
+  // Fetch from backend
   useEffect(() => {
     const fetchProperties = async () => {
       try {
@@ -37,14 +37,14 @@ export function Properties() {
     fetchProperties();
   }, []);
 
-  // ✅ Filter
+  // Filter
   const filteredProperties = properties.filter(
     (property) =>
       property.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       property.address?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  // ✅ Status color
+  // Status color
   const getStatusColor = (status) => {
     switch (status) {
       case "available":
@@ -75,10 +75,10 @@ export function Properties() {
       // remove from UI
       setProperties((prev) => prev.filter((p) => p._id !== id));
 
-      alert("Deleted successfully ✅");
+      alert("Deleted successfully ");
     } catch (err) {
       console.error(err);
-      alert("Delete failed ❌");
+      alert("Delete failed ");
     }
   };
 

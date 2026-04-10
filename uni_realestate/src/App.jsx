@@ -28,6 +28,8 @@ import AmenityDetails from "./pages/admin/AmenityDetails";
 //owner
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
 import { Properties as OwnerProperties } from "./pages/owner/Properties";
+import { AddProperty as OwnerAddProperty } from "./pages/owner/AddProperty";
+import { PropertyDetails as OwnerPropertyDetails } from "./pages/owner/PropertyDetails";
 import { Amenities as OwnerAmenities } from "./pages/owner/Amenities";
 import { Financials } from "./pages/owner/Financials";
 import { Settings } from "./pages/owner/Settings";
@@ -76,6 +78,9 @@ function App() {
         <Route path="/owner" element={<OwnerDashboardLayout />}>
           <Route path="ownerdashboard" element={<OwnerDashboard />} />
           <Route path="properties" element={<OwnerProperties />} />
+          <Route path="properties/add-property" element={<OwnerAddProperty />} />
+          
+          <Route path="/owner/properties/:id" element={<OwnerPropertyDetails />} /> 
           <Route path="amenities" element={<OwnerAmenities />} />
           <Route path="financials" element={<Financials />} />
           <Route path="settings" element={<Settings />} />

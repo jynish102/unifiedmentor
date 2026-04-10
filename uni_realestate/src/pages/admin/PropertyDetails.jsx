@@ -32,7 +32,7 @@ export default function PropertyDetails() {
   return (
     <div className="p-6 space-y-4">
       <h2 className="text-2xl font-bold">{property.title}</h2>
-      
+
       <button
         onClick={() => navigate(`/admin/amenities/add-amenity/${property._id}`)}
         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
@@ -41,11 +41,11 @@ export default function PropertyDetails() {
       </button>
 
       <button
-              onClick={() => navigate("/admin/properties")}
-              className="bg-gray-500 text-white px-3 py-1 rounded"
-            >
-              Close
-            </button>
+        onClick={() => navigate("/admin/properties")}
+        className="bg-gray-500 text-white px-3 py-1 rounded"
+      >
+        Close
+      </button>
       <img
         src={getImageUrl(selectedImage || property.images?.[0])}
         className="w-full max-w-md rounded-lg"
@@ -80,8 +80,12 @@ export default function PropertyDetails() {
         <b>Deposit:</b> {property.deposit}
       </p>
       <p>
-        <b>paymentFrequency:</b> {property.paymentFrequency}
+        <b>Payment Frequency:</b> {property.paymentFrequency}
       </p>
+      <p>
+        <b>Category:</b> {property.category}
+      </p>
+
       <p>
         <b>Type:</b> {property.propertyType}
       </p>
@@ -104,7 +108,7 @@ export default function PropertyDetails() {
         <b>Total Floors:</b> {property.totalFloors}
       </p>
       <p>
-        <b>parking:</b> {property.parking}
+        <b>parking:</b> {property.parking? "Yes" : "No"}
       </p>
       <p>
         <b>lift:</b> {property?.amenities?.lift ? "Yes" : "No"}

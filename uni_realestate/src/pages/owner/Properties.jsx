@@ -15,87 +15,38 @@ import {
   Search,
   Filter,
   MoreVertical,
+  Eye,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { ImageWithFallback } from "../../components/ui/imageWithFallback";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import API from "../../utils/api";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const properties = [
-  {
-    id: 1,
-    name: "Sunset Apartments #302",
-    address: "123 Ocean Drive, Miami, FL",
-    type: "Apartment",
-    bedrooms: 2,
-    bathrooms: 2,
-    rent: 2500,
-    status: "occupied",
-    tenant: "Sarah Johnson",
-    image: "modern apartment interior",
-  },
-  {
-    id: 2,
-    name: "Ocean View Villa",
-    address: "456 Beach Road, Malibu, CA",
-    type: "House",
-    bedrooms: 4,
-    bathrooms: 3,
-    rent: 6500,
-    status: "occupied",
-    tenant: "Michael Chen",
-    image: "luxury beach villa",
-  },
-  {
-    id: 3,
-    name: "Downtown Loft #12",
-    address: "789 Main Street, New York, NY",
-    type: "Loft",
-    bedrooms: 1,
-    bathrooms: 1,
-    rent: 3200,
-    status: "vacant",
-    tenant: null,
-    image: "modern loft apartment",
-  },
-  {
-    id: 4,
-    name: "Garden Apartments #105",
-    address: "321 Park Avenue, Seattle, WA",
-    type: "Apartment",
-    bedrooms: 3,
-    bathrooms: 2,
-    rent: 2800,
-    status: "occupied",
-    tenant: "Emily Rodriguez",
-    image: "apartment with garden view",
-  },
-  {
-    id: 5,
-    name: "Riverside Condo",
-    address: "555 River Road, Portland, OR",
-    type: "Condo",
-    bedrooms: 2,
-    bathrooms: 2,
-    rent: 2400,
-    status: "maintenance",
-    tenant: "James Wilson",
-    image: "riverside condo interior",
-  },
-  {
-    id: 6,
-    name: "Suburban Family Home",
-    address: "888 Maple Street, Austin, TX",
-    type: "House",
-    bedrooms: 4,
-    bathrooms: 3,
-    rent: 3500,
-    status: "occupied",
-    tenant: "The Martinez Family",
-    image: "suburban family house",
-  },
-];
 
-export  function Properties() {
+
+export function Properties() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const [properties, setProperties] = useState([]);
+
+  // Fetch from backend
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/property");
+        setProperties(res.data);
+      } catch (err) {
+        console.error("Error fetching properties", err);
+      }
+    };
+
+    fetchProperties();
+  }, []);
+
+  
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -112,9 +63,34 @@ export  function Properties() {
 
   const filteredProperties = properties.filter(
     (property) =>
-      property.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       property.address.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
+   const handleDelete = async (id) => {
+     const confirmDelete = window.confirm("Are you sure?");
+
+     if (!confirmDelete) return;
+
+     try {
+       const token = localStorage.getItem("token");
+
+       await API.delete(`/property/${id}`, {
+         headers: {
+           Authorization: `Bearer ${token}`,
+         },
+       });
+
+       // remove from UI
+       setProperties((prev) => prev.filter((p) => p._id !== id));
+
+       alert("Deleted successfully ");
+     } catch (err) {
+       console.error(err);
+       alert("Delete failed ");
+     }
+   };
+
 
   return (
     <div className="space-y-6">
@@ -123,7 +99,8 @@ export  function Properties() {
           <h2 className="text-3xl font-bold text-gray-900">Properties</h2>
           <p className="text-gray-600 mt-1">Manage your rental properties</p>
         </div>
-        <Button className="w-full sm:w-auto">
+        <Button className="w-full sm:w-auto" 
+        onClick={() => navigate("/owner/properties/add-property")}>
           <Plus className="size-4 mr-2" />
           Add Property
         </Button>
@@ -153,7 +130,7 @@ export  function Properties() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProperties.map((property) => (
           <Card
-            key={property.id}
+            key={property._id}
             className="overflow-hidden hover:shadow-lg transition-shadow"
           >
             <div className="relative h-48 bg-gray-200">
@@ -172,10 +149,10 @@ export  function Properties() {
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <CardTitle className="text-lg">{property.name}</CardTitle>
+                  <CardTitle className="text-lg">{property.title}</CardTitle>
                   <div className="flex items-center text-sm text-gray-600 mt-1">
                     <MapPin className="size-3 mr-1" />
-                    {property.address}
+                    {property.address},{property.city}
                   </div>
                 </div>
                 <Button variant="ghost" size="sm" className="ml-2">
@@ -187,7 +164,7 @@ export  function Properties() {
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">Type:</span>
-                <span className="font-medium">{property.type}</span>
+                <span className="font-medium">{property.propertytype}</span>
               </div>
 
               <div className="flex items-center justify-between text-sm">
@@ -200,26 +177,50 @@ export  function Properties() {
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">Monthly Rent:</span>
                 <span className="font-medium text-green-600 flex items-center">
-                  <DollarSign className="size-3" />
-                  {property.rent.toLocaleString()}
+                  <DollarSign className="size-3" />₹
+                  {property.price?.toLocaleString()} /
+                  {property.paymentFrequency}
                 </span>
               </div>
 
-              {property.tenant ? (
-                <div className="flex items-center justify-between text-sm pt-2 border-t">
-                  <span className="text-gray-600">Tenant:</span>
-                  <span className="font-medium flex items-center">
-                    <Users className="size-3 mr-1" />
-                    {property.tenant}
-                  </span>
-                </div>
-              ) : (
-                <div className="pt-2 border-t">
-                  <Button className="w-full" size="sm">
-                    Find Tenant
-                  </Button>
-                </div>
-              )}
+              <div className="flex gap-2 mt-4">
+                                  {/* View */}
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1"
+                                    onClick={() =>
+                                      navigate(`/owner/properties/${property._id}`)
+                                    }
+                                  >
+                                    <Eye size={14} />
+                                    View
+                                  </Button>
+              
+                                  {/* Edit */}
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1"
+                                    onClick={() =>
+                                      navigate(`/owner/properties/edit/${property._id}`)
+                                    }
+                                  >
+                                    <Pencil size={14} />
+                                    Edit
+                                  </Button>
+              
+                                  {/* Delete */}
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex-1"
+                                    onClick={() => handleDelete(property._id)}
+                                  >
+                                    <Trash2 size={14} />
+                                    Delete
+                                  </Button>
+                                  </div>
             </CardContent>
           </Card>
         ))}

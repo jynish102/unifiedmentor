@@ -13,26 +13,50 @@ const propertySchema = new mongoose.Schema(
 
     paymentFrequency: {
       type: String,
-      enum: ["monthly", "yearly"],
+      enum: ["monthly", "yearly" , "daily"],
       default: "monthly",
+    },
+
+    category: {
+      type: String,
+      enum: ["residential", "commercial"],
+      required: true,
+      default: "residential",
     },
 
     propertyType: {
       type: String,
-      enum: ["Apartment", "House", "Villa", "Shop"],
+      enum: ["Apartment", "House", "Villa", "Shop", "Warehouse" ,"land","others"],
     },
 
-    bedrooms: Number,
-    bathrooms: Number,
-    area: Number,
+    bedrooms: {
+      type: Number,
+      default: 0,
+    },
+
+    bathrooms: {
+      type: Number,
+      default: 0,
+    },
+
+    area: {
+      type: Number,
+    },
 
     furnishing: {
       type: String,
       enum: ["Furnished", "Semi-Furnished", "Unfurnished"],
+      default: "Semi-Furnished",
     },
 
-    floor: Number,
-    totalFloors: Number,
+    floor: {
+      type: Number,
+      default: 0,
+    },
+    totalFloors: {
+      type: Number,
+      default: 0,
+    },
 
     parking: Boolean,
 
@@ -43,7 +67,7 @@ const propertySchema = new mongoose.Schema(
       wifi: Boolean,
     },
 
-    // ✅ NEW
+    // NEW
     units: {
       type: Number,
       default: 1,

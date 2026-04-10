@@ -154,7 +154,7 @@ const upcomingMaintenance = [
   },
 ];
 
-export  function Amenities() {
+export default function Amenities() {
   const getStatusIcon = (status) => {
     return status === "operational" ? (
       <CheckCircle className="size-4 text-green-600" />

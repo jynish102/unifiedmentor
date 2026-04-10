@@ -25,6 +25,8 @@ export default function PropertyDetails() {
     fetchProperty();
   }, [id]);
 
+  
+
   if (!property) return <p>Loading...</p>;
 
   return (
@@ -106,7 +108,7 @@ export default function PropertyDetails() {
         <b>Total Floors:</b> {property.totalFloors}
       </p>
       <p>
-        <b>parking:</b> {property.parking ? "Yes" : "No"}
+        <b>parking:</b> {property.parking? "Yes" : "No"}
       </p>
       <p>
         <b>lift:</b> {property?.amenities?.lift ? "Yes" : "No"}

@@ -27,7 +27,7 @@ import axios from "axios";
 
 
 
-export function Properties() {
+export  default function Properties() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [properties, setProperties] = useState([]);

@@ -16,7 +16,7 @@ export function Amenities() {
   const [amenities, setAmenities] = useState([]);
   const navigate = useNavigate();
 
-  // ✅ Fetch Amenities
+  //  Fetch Amenities
   useEffect(() => {
     const fetchAmenities = async () => {
       try {
@@ -30,19 +30,36 @@ export function Amenities() {
     fetchAmenities();
   }, []);
 
-  // ✅ Filter
+  // Filter
   const filteredAmenities = amenities.filter(
     (amenity) =>
       amenity.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       amenity.description?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  // ✅ Status Color
-  const getStatusColor = (status) => {
-    return status === "active"
-      ? "bg-green-100 text-green-700"
-      : "bg-gray-100 text-gray-700";
-  };
+  
+
+  const getStatusIcon = (status) => {
+      return status === "operational" ? (
+        <CheckCircle className="size-4 text-green-600" />
+      ) : (
+        <AlertCircle className="size-4 text-orange-600" />
+      );
+    };
+  
+    const getPriorityColor = (priority) => {
+      switch (priority) {
+        case "high":
+          return "bg-red-100 text-red-700";
+        case "medium":
+          return "bg-orange-100 text-orange-700";
+        case "low":
+          return "bg-blue-100 text-blue-700";
+        default:
+          return "bg-gray-100 text-gray-700";
+      }
+    };
+  
 
    const handleDelete = async (id) => {
       const confirmDelete = window.confirm("Are you sure?");
@@ -61,10 +78,10 @@ export function Amenities() {
         // remove from UI
         setAmenities((prev) => prev.filter((p) => p._id !== id));
   
-        alert("Deleted successfully ✅");
+        alert("Deleted successfully ");
       } catch (err) {
         console.error(err);
-        alert("Delete failed ❌");
+        alert("Delete failed ");
       }
     };
   
@@ -114,7 +131,7 @@ export function Amenities() {
                   <div className="flex items-start justify-between mb-4">
                     <div className="text-3xl">🏢</div>
 
-                    <Badge className={getStatusColor(amenity.status)}>
+                    <Badge className={getStatusIcon(amenity.status)}>
                       {amenity.status}
                     </Badge>
                   </div>

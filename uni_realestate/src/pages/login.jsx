@@ -53,9 +53,9 @@ const Login = () => {
 
       if (role === "admin") {
         navigate("/admin");
-      } else if (role === "owner") {
+      } else if (role === "Owner") {
         navigate("/owner");
-      } else if (role === "tenant") {
+      } else if (role === "Tenant") {
         navigate("/tenant");
       } else {
         navigate("/staff"); // default fallback

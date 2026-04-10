@@ -38,9 +38,20 @@ const amenitySchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["active", "inactive"],
-      default: "active",
+      enum: ["operational", "maintenance"],
+      default: "operational",
     },
+
+    priority: {
+      type: String,
+      enum: ["low", "medium", "high"],
+      default: "medium",
+    },
+
+    maintenanceDate: {
+    type: Date,
+    default: null,
+  },
 
     images: {
       type: [String],

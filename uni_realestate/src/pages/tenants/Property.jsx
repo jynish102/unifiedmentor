@@ -1,32 +1,46 @@
-import { Card, CardContent, CardHeader } from "../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
-import { Input } from "../../components/ui/input";
 import {
+  Building2,
+  MapPin,
+  DollarSign,
+  Users,
   Plus,
   Search,
-  MapPin,
-  Home,
-  DollarSign,
+  Filter,
+  MoreVertical,
+  Eye,
   Pencil,
   Trash2,
-  Eye,
 } from "lucide-react";
+import { ImageWithFallback } from "../../components/ui/imageWithFallback";
 import { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import API from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 
-export  default function Properties() {
+
+export default function Properties() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [properties, setProperties] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const getImageUrl = (img) => {
+    if (!img) return "/default-image.jpg";
+    return `http://localhost:5000/${img.replace(/\\/g, "/")}`;
+  };
 
   // Fetch from backend
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/property");
+        const res = await API.get("/property");
         setProperties(res.data);
       } catch (err) {
         console.error("Error fetching properties", err);
@@ -36,20 +50,12 @@ export  default function Properties() {
     fetchProperties();
   }, []);
 
-  // Filter
-  const filteredProperties = properties.filter(
-    (property) =>
-      property.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      property.address?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
-  // Status color
   const getStatusColor = (status) => {
     switch (status) {
-      case "available":
-        return "bg-green-100 text-green-700";
       case "occupied":
-        return "bg-blue-100 text-blue-700";
+        return "bg-green-100 text-green-700";
+      case "vacant":
+        return "bg-yellow-100 text-yellow-700";
       case "maintenance":
         return "bg-orange-100 text-orange-700";
       default:
@@ -57,127 +63,152 @@ export  default function Properties() {
     }
   };
 
+  const filteredProperties = properties.filter(
+    (property) =>
+      property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      property.address.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+ 
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-slate-900">Properties</h2>
-          <p className="text-slate-500 mt-1"> Your rental properties</p>
+          <h2 className="text-3xl font-bold text-gray-900">Properties</h2>
+          <p className="text-gray-600 mt-1">Manage your rental properties</p>
         </div>
+        
       </div>
 
-      {/* Search + List */}
       <Card>
-        <CardHeader>
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1 max-w-md">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                size={18}
-              />
-
-              <Input
+        <CardContent className="pt-6">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-gray-400" />
+              <input
+                type="text"
                 placeholder="Search properties..."
-                className="pl-10"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-          </div>
-        </CardHeader>
-
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredProperties.map((property) => (
-              <Card
-                key={property._id}
-                className="hover:shadow-md transition-shadow"
-              >
-                <CardContent className="p-6">
-                  {/* Top */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                      <Home className="text-blue-600" size={24} />
-                    </div>
-
-                    <Badge className={getStatusColor(property.status)}>
-                      {property.status}
-                    </Badge>
-                  </div>
-
-                  {/* Name */}
-                  <h3 className="font-bold text-lg text-slate-900 mb-2">
-                    {property.title}
-                  </h3>
-
-                  {/* Info */}
-                  <div className="space-y-2 text-sm text-slate-600">
-                    <div className="flex items-center gap-2">
-                      <Home size={16} className="text-slate-400" />
-                      <span>
-                        {property.bedrooms} Bed, {property.bathrooms} Bath
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <MapPin size={16} className="text-slate-400" />
-                      <span>
-                        {property.address}, {property.city}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <DollarSign size={16} className="text-slate-400" />
-                      <span>
-                        ₹{property.price?.toLocaleString()} /
-                        {property.paymentFrequency}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Occupancy */}
-                  <div className="mt-4 pt-4 border-t border-slate-200">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-slate-600">Occupancy</span>
-                      <span className="font-medium">
-                        {property.occupied}/{property.units}
-                      </span>
-                    </div>
-
-                    <div className="mt-2 w-full bg-slate-200 rounded-full h-2">
-                      <div
-                        className="bg-blue-500 h-2 rounded-full"
-                        style={{
-                          width: `${
-                            (property.occupied / property.units) * 100
-                          }%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2 mt-4">
-                    {/* View */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() =>
-                        navigate(`/tenant/properties/${property._id}`)
-                      }
-                    >
-                      <Eye size={14} />
-                      View
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            <Button variant="outline" className="w-full sm:w-auto">
+              <Filter className="size-4 mr-2" />
+              Filter
+            </Button>
           </div>
         </CardContent>
       </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredProperties.map((property) => (
+          <Card
+            key={property._id}
+            className="overflow-hidden hover:shadow-lg transition-shadow"
+          >
+            <div className="relative h-48 bg-gray-200">
+              <ImageWithFallback
+                src={getImageUrl(selectedImage || property.images?.[0])}
+                alt={property.name}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.src = "/default-image.jpg";
+                }}
+              />
+              <Badge
+                className={`absolute top-3 right-3 ${getStatusColor(property.status)}`}
+              >
+                {property.status}
+              </Badge>
+            </div>
+
+            <CardHeader>
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <CardTitle className="text-lg">{property.title}</CardTitle>
+                  <div className="flex items-center text-sm text-gray-600 mt-1">
+                    <MapPin className="size-3 mr-1" />
+                    {property.address},{property.city}
+                  </div>
+                </div>
+                <Button variant="ghost" size="sm" className="ml-2">
+                  <MoreVertical className="size-4" />
+                </Button>
+              </div>
+            </CardHeader>
+
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-600">Type:</span>
+                <span className="font-medium">{property.propertyType}</span>
+              </div>
+
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-600">Bed/Bath:</span>
+                <span className="font-medium">
+                  {property.bedrooms}BD / {property.bathrooms}BA
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-600">Monthly Rent:</span>
+                <span className="font-medium text-green-600 flex items-center">
+                  <DollarSign className="size-3" />₹
+                  {property.price?.toLocaleString()} /
+                  {property.paymentFrequency}
+                </span>
+              </div>
+
+              <div className="flex gap-2 mt-4">
+                {/* View */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => navigate(`/tenants/properties/${property._id}`)}
+                >
+                  <Eye size={14} />
+                  View
+                </Button>
+
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-sm text-gray-600">Total Properties</p>
+            <p className="text-2xl font-bold mt-1">{properties.length}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-sm text-gray-600">Occupied</p>
+            <p className="text-2xl font-bold mt-1">
+              {properties.filter((p) => p.status === "occupied").length}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-sm text-gray-600">Total Monthly Revenue</p>
+            <p className="text-2xl font-bold mt-1">
+              $
+              {properties
+                .filter((p) => p.status === "occupied")
+                .reduce((sum, p) => sum + p.rent, 0)
+                .toLocaleString()}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -13,8 +13,11 @@ const propertySchema = new mongoose.Schema(
 
     paymentFrequency: {
       type: String,
-      enum: ["monthly", "yearly" , "daily"],
+      enum: ["monthly", "yearly", "daily"],
       default: "monthly",
+      required: function () {
+        return this.listingType === "rent";
+      },
     },
 
     category: {
@@ -26,7 +29,21 @@ const propertySchema = new mongoose.Schema(
 
     propertyType: {
       type: String,
-      enum: ["Apartment", "House", "Villa", "Shop", "Warehouse" ,"land","others"],
+      enum: [
+        "Apartment",
+        "House",
+        "Villa",
+        "Shop",
+        "Warehouse",
+        "land",
+        "others",
+      ],
+    },
+
+    listingType: {
+      type: String,
+      enum: ["rent", "sale"],
+      default: "rent",
     },
 
     bedrooms: {
@@ -82,7 +99,7 @@ const propertySchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["available", "rented", "maintenance"],
+      enum: ["available", "maintenance"],
       default: "available",
     },
 

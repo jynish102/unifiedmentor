@@ -28,19 +28,22 @@ import AmenityDetails from "./pages/admin/AmenityDetails";
 //owner
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
 import  OwnerProperties  from "./pages/owner/Properties";
-import { AddProperty as OwnerAddProperty } from "./pages/owner/AddProperty";
+import OwnerAddProperty  from "./pages/owner/AddProperty";
 import  OwnerPropertyDetails  from "./pages/owner/PropertyDetails";
 import OwnerAmenities  from "./pages/owner/Amenities";
+import OwnerAddAmenity from "./pages/owner/AddAmenity";
+import OwnerAmenityDetails from "./pages/owner/AmenityDetails";
 import { Financials } from "./pages/owner/Financials";
 import { Settings } from "./pages/owner/Settings";
 
 //tenants
 import { Dashboard as TenantsDashboard } from "./pages/tenants/Dashboard";
 import { Profile } from "./pages/tenants/Profile";
-import Property from "./pages/tenants/Property";
+import TenantProperty from "./pages/tenants/Property";
 import TenantPropertyDetails from "./pages/tenants/PropertyDetails";
-import { TenantAmenities } from "./pages/tenants/TenantAmenities";
-import { TenantMaintenance } from "./pages/tenants/TenantMaintenance";
+import TenantAmenities  from "./pages/tenants/TenantAmenities";
+import TenantAmenityDetails from "./pages/tenants/AmenityDetails";
+import TenantMaintenance  from "./pages/tenants/TenantMaintenance";
 
 
 
@@ -82,9 +85,15 @@ function App() {
           <Route path="ownerdashboard" element={<OwnerDashboard />} />
           <Route path="properties" element={<OwnerProperties />} />
           <Route path="properties/add-property" element={<OwnerAddProperty />} />
-        
+          <Route path="/owner/properties/edit/:id" element={<OwnerAddProperty />} />
           <Route path="/owner/properties/:id" element={<OwnerPropertyDetails />} /> 
           <Route path="amenities" element={<OwnerAmenities />} />
+          <Route
+            path="/owner/amenities/add-amenity/:propertyId"
+            element={<OwnerAddAmenity />}
+          />
+          <Route path="/owner/amenities/edit/:id" element={<OwnerAddAmenity />} />
+          <Route path="/owner/amenities/:id" element={<OwnerAmenityDetails />} />
           <Route path="financials" element={<Financials />} />
           <Route path="settings" element={<Settings />} />
         </Route>
@@ -92,9 +101,10 @@ function App() {
         //tenant routes
         <Route path="/tenant" element={<TenantsDashboardLayout />}>
           <Route path="dashboard" element={<TenantsDashboard />} />
-          <Route path="property" element={<Property />} />
+          <Route path="properties" element={<TenantProperty />} />
           <Route path="/tenant/properties/:id" element={<TenantPropertyDetails />} /> 
           <Route path="amenities" element={<TenantAmenities />} />
+          <Route path="/tenant/amenities/:id" element={<TenantAmenityDetails />} />
           <Route path="maintenance" element={<TenantMaintenance />} />
           <Route path="profile" element={<Profile />} />
         </Route>

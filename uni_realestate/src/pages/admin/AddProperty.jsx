@@ -18,6 +18,7 @@ export default function AddProperty() {
     paymentFrequency: "monthly",
     category: "residential",
     propertyType: "Apartment",
+    listingType: "rent",
     bedrooms: 0,
     bathrooms: 0,
     area: "",
@@ -54,7 +55,9 @@ export default function AddProperty() {
           price: data.price || "",
           deposit: data.deposit || "",
           paymentFrequency: data.paymentFrequency || "monthly",
+          category: data.category || "residential",
           propertyType: data.propertyType || "Apartment",
+          listingType: data.listingType || "rent",
           bedrooms: data.bedrooms || "",
           bathrooms: data.bathrooms || "",
           area: data.area || "",
@@ -286,7 +289,7 @@ export default function AddProperty() {
           <option value="daily">Daily</option>
         </select>
 
-        {/* Payment Frequency */}
+        {/* Category */}
         <select
           name="category"
           value={formData.category || "residential"}
@@ -312,6 +315,18 @@ export default function AddProperty() {
           <option value="land">Land</option>
           <option value="others">Others</option>
         </select>
+
+        {/* Listing Type */}
+        <select
+          name="listingType"
+          value={formData.listingType || "rent"}
+          onChange={handleChange}
+          className="w-full border p-2 rounded"
+        >
+          <option value="rent">Rent</option>
+          <option value="sale">Sale</option>
+        </select>
+
 
         {/* Bedrooms / Bathrooms */}
         <Input

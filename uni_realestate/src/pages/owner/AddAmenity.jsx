@@ -16,11 +16,11 @@ export default function AddAmenity() {
     location: "",
     operatingHours: {
       start: "",
-      end: ""
+      end: "",
     },
     status: "operational",
     priority: "Medium",
-    maintenanceDate: ""
+    maintenanceDate: "",
   });
 
   const [images, setImages] = useState([]);
@@ -31,7 +31,8 @@ export default function AddAmenity() {
       const fetchAmenity = async () => {
         const res = await API.get(`/amenity/${id}`);
         const data = res.data.data;
-        // console.log("API DATA:", data);
+
+        console.log("API DATA:", data);
         setFormData({
           name: data.name || "",
           description: data.description || "",
@@ -39,16 +40,16 @@ export default function AddAmenity() {
           capacity: data.capacity || "1",
           location: data.location || "",
           operatingHours: {
-            start: data.operatingHours?.start?.slice(0,5) || "",
-            end: data.operatingHours?.end?.slice(0,5) || ""
+            start: data.operatingHours?.start?.slice(0, 5) || "",
+            end: data.operatingHours?.end?.slice(0, 5) || "",
           },
           status: data.status || "operational",
           priority: data.priority || "Medium",
-          maintenanceDate: data.maintenanceDate || ""
+          maintenanceDate: data.maintenanceDate || "",
         });
 
         setExistingImages(data.images || []);
-          console.log(existingImages);
+        console.log(existingImages);
       };
 
       fetchAmenity();
@@ -142,7 +143,10 @@ export default function AddAmenity() {
       // append text fields
       Object.keys(formData).forEach((key) => {
         if (key === "operatingHours") {
-          data.append("operatingHours", JSON.stringify(formData.operatingHours));
+          data.append(
+            "operatingHours",
+            JSON.stringify(formData.operatingHours),
+          );
         } else {
           data.append(key, formData[key]);
         }
@@ -171,7 +175,7 @@ export default function AddAmenity() {
         alert("Amenity Added ");
       }
 
-      navigate("/admin/amenities");
+      navigate("/owner/amenities");
     } catch (err) {
       console.error(err);
       const message =
@@ -187,7 +191,7 @@ export default function AddAmenity() {
     <div className="p-6 max-w-3xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Add Amenity</h2>
       <button
-        onClick={() => navigate("/admin/amenities")}
+        onClick={() => navigate("/owner/amenities")}
         className="bg-gray-500 text-white px-3 py-1 rounded"
       >
         Cancel

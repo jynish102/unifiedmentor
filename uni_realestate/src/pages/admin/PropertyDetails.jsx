@@ -89,6 +89,11 @@ export default function PropertyDetails() {
       <p>
         <b>Type:</b> {property.propertyType}
       </p>
+     
+      <p>
+        <b>Listing Type:</b> {property.listingType}
+      </p>
+      
       <p>
         <b>Bedrooms:</b> {property.bedrooms}
       </p>
@@ -108,7 +113,7 @@ export default function PropertyDetails() {
         <b>Total Floors:</b> {property.totalFloors}
       </p>
       <p>
-        <b>parking:</b> {property.parking? "Yes" : "No"}
+        <b>parking:</b> {property.parking ? "Yes" : "No"}
       </p>
       <p>
         <b>lift:</b> {property?.amenities?.lift ? "Yes" : "No"}

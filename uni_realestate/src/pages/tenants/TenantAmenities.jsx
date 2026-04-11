@@ -1,214 +1,191 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
-import { Badge } from "../../components/ui/badge";
+import { Card, CardContent, CardHeader } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../../components/ui/dialog";
-import { Label } from "../../components/ui/label";
+import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
-
 import {
-  Dumbbell,
-  Waves,
-  Briefcase,
-  Film,
-  Bed,
+  Plus,
+  Search,
+  MapPin,
   Clock,
   Users,
-  Calendar as CalendarIcon,
-  CheckCircle2,
+  Pencil,
+  Trash2,
+  Eye,
+  AlertCircle,
+  CheckCircle,
 } from "lucide-react";
+import { useState, useEffect } from "react";
 
-import { amenities, bookings } from "../../components/data/mockData";
-import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import API from "../../utils/api";
 
-// ✅ FIXED (removed TS type)
-const iconMap = {
-  dumbbell: Dumbbell,
-  waves: Waves,
-  briefcase: Briefcase,
-  film: Film,
-  bed: Bed,
-  palmtree: Users,
-};
+export default function Amenities() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [amenities, setAmenities] = useState([]);
+  const navigate = useNavigate();
 
-export function TenantAmenities() {
-  // ✅ FIXED (removed <any>)
-  const [selectedAmenity, setSelectedAmenity] = useState(null);
-  const [bookingDate, setBookingDate] = useState("");
-  const [bookingTime, setBookingTime] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  //  Fetch Amenities
+  useEffect(() => {
+    const fetchAmenities = async () => {
+      try {
+        const res = await API.get("/amenity");
+        setAmenities(res.data.data || []);
+      } catch (err) {
+        console.error("Error fetching amenities", err);
+      }
+    };
 
-  const handleBooking = () => {
-    if (!bookingDate || !bookingTime) {
-      toast.error("Please select both date and time");
-      return;
-    }
+    fetchAmenities();
+  }, []);
 
-    toast.success(
-      `Successfully booked ${selectedAmenity?.name} for ${bookingDate} at ${bookingTime}`,
+  // Filter
+  const filteredAmenities = amenities.filter(
+    (amenity) =>
+      amenity.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      amenity.description?.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  const getStatusIcon = (status) => {
+    return status === "operational" ? (
+      <CheckCircle className="size-5 text-green-600 space-x-10" />
+    ) : (
+      <AlertCircle className="size-4 text-orange-600  space-x-2" />
     );
-
-    setIsDialogOpen(false);
-    setBookingDate("");
-    setBookingTime("");
   };
 
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case "high":
+        return "bg-red-100 text-red-700";
+      case "medium":
+        return "bg-orange-100 text-orange-700";
+      case "low":
+        return "bg-blue-100 text-blue-700";
+      default:
+        return "bg-gray-100 text-gray-700";
+    }
+  };
+
+  
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold">Amenities</h1>
-        <p className="text-gray-600 mt-1">Book and manage building amenities</p>
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h2 className="text-3xl font-bold text-slate-900">Amenities</h2>
+          <p className="text-slate-500 mt-1">Property amenities</p>
+        </div>
       </div>
 
-      {/* Current Bookings */}
+      {/* Search */}
       <Card>
         <CardHeader>
-          <CardTitle>Your Bookings</CardTitle>
+          <div className="relative max-w-md">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+              size={18}
+            />
+            <Input
+              placeholder="Search amenities..."
+              className="pl-10"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </CardHeader>
 
         <CardContent>
-          {bookings.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {bookings.map((booking) => (
-                <div
-                  key={booking.id}
-                  className="p-4 bg-gray-50 rounded-lg border"
-                >
-                  <p className="font-medium">{booking.amenityName}</p>
-
-                  <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
-                    <CalendarIcon className="size-4" />
-                    {new Date(booking.date).toLocaleDateString()}
+          {/* Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredAmenities.map((amenity) => (
+              <Card
+                key={amenity._id}
+                className="hover:shadow-md transition-shadow"
+              >
+                <CardContent className="p-6">
+                  {/* Top */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="text-3xl">🏢</div>
+                    <div className="flex items-center gap-2">
+                      {getStatusIcon(amenity.status)}
+                      <Badge
+                        className={
+                          amenity.status === "operational"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-orange-100 text-orange-700"
+                        }
+                      >
+                        {amenity.status}
+                      </Badge>
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
-                    <Clock className="size-4" />
-                    {booking.time}
+                  {/* Name */}
+                  <h3 className="font-bold text-lg text-slate-900 mb-1">
+                    {amenity.name}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-sm text-slate-600 mb-3">
+                    {amenity.description}
+                  </p>
+
+                  {/* Info */}
+                  <div className="space-y-2 text-sm text-slate-600">
+                    <div className="flex items-center gap-2">
+                      💰 <span>₹{amenity.price}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Users size={16} />
+                      <span>Capacity: {amenity.capacity}</span>
+                    </div>
+
+                    {amenity.location && (
+                      <div className="flex items-center gap-2">
+                        <MapPin size={16} />
+                        <span>{amenity.location}</span>
+                      </div>
+                    )}
+
+                    {amenity.operatingHours?.start && (
+                      <div className="flex items-center gap-2">
+                        <Clock size={16} />
+                        <span>
+                          {amenity.operatingHours.start} -{" "}
+                          {amenity.operatingHours.end}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
-                  <Badge
-                    className={
-                      booking.status === "confirmed"
-                        ? "bg-green-100 text-green-700 mt-2"
-                        : "bg-yellow-100 text-yellow-700 mt-2"
-                    }
-                  >
-                    {booking.status}
-                  </Badge>
+                  {/* Actions */}
+                  <div className="flex gap-2 mt-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() =>
+                        navigate(`/tenants/amenities/${amenity._id}`)
+                      }
+                    >
+                      <Eye size={14} />
+                      View
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
-                  <Button variant="outline" size="sm" className="w-full mt-3">
-                    Cancel Booking
-                  </Button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500 text-center py-8">
-              No current bookings
+          {/* Empty State */}
+          {filteredAmenities.length === 0 && (
+            <p className="text-center text-slate-500 mt-6">
+              No amenities found
             </p>
           )}
         </CardContent>
       </Card>
-
-      {/* Amenities List */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Available Amenities</h2>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {amenities.map((amenity) => {
-            const IconComponent = iconMap[amenity.icon] || Users;
-
-            return (
-              <Card
-                key={amenity.id}
-                className={!amenity.available ? "opacity-60" : ""}
-              >
-                <CardContent className="p-6">
-                  <div className="flex justify-between mb-4">
-                    <IconComponent className="size-6 text-blue-600" />
-
-                    <Badge
-                      className={
-                        amenity.available
-                          ? "bg-green-500 text-white"
-                          : "bg-gray-300"
-                      }
-                    >
-                      {amenity.available ? "Available" : "Unavailable"}
-                    </Badge>
-                  </div>
-
-                  <h3 className="font-semibold text-lg">{amenity.name}</h3>
-                  <p className="text-sm text-gray-600 mb-3">
-                    {amenity.description}
-                  </p>
-
-                  <p className="text-sm text-gray-600">{amenity.hours}</p>
-
-                  <p className="text-sm text-gray-600 mb-4">
-                    Capacity: {amenity.capacity}
-                  </p>
-
-                  {/* Dialog */}
-                  <Dialog
-                    open={isDialogOpen && selectedAmenity?.id === amenity.id}
-                    onOpenChange={setIsDialogOpen}
-                  >
-                    <DialogTrigger asChild>
-                      <Button
-                        className="w-full"
-                        disabled={!amenity.available}
-                        onClick={() => setSelectedAmenity(amenity)}
-                      >
-                        Book Now
-                      </Button>
-                    </DialogTrigger>
-
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Book {amenity.name}</DialogTitle>
-                      </DialogHeader>
-
-                      <div className="space-y-4 pt-4">
-                        <div>
-                          <Label htmlFor="date">Date</Label>
-                          <Input
-                            id="date"
-                            type="date"
-                            value={bookingDate}
-                            onChange={(e) => setBookingDate(e.target.value)}
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="time">Time</Label>
-                          <Input
-                            id="time"
-                            type="time"
-                            value={bookingTime}
-                            onChange={(e) => setBookingTime(e.target.value)}
-                          />
-                        </div>
-
-                        <Button onClick={handleBooking} className="w-full">
-                          Confirm Booking
-                        </Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 }

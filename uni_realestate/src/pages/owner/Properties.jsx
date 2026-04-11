@@ -31,6 +31,12 @@ export  default function Properties() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [properties, setProperties] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+   const getImageUrl = (img) => {
+     if (!img) return "/default-image.jpg";
+     return `http://localhost:5000/${img.replace(/\\/g, "/")}`;
+   };
 
   // Fetch from backend
   useEffect(() => {
@@ -99,8 +105,10 @@ export  default function Properties() {
           <h2 className="text-3xl font-bold text-gray-900">Properties</h2>
           <p className="text-gray-600 mt-1">Manage your rental properties</p>
         </div>
-        <Button className="w-full sm:w-auto" 
-        onClick={() => navigate("/owner/properties/add-property")}>
+        <Button
+          className="w-full sm:w-auto"
+          onClick={() => navigate("/owner/properties/add-property")}
+        >
           <Plus className="size-4 mr-2" />
           Add Property
         </Button>
@@ -135,9 +143,12 @@ export  default function Properties() {
           >
             <div className="relative h-48 bg-gray-200">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80"
+                src={getImageUrl(selectedImage || property.images?.[0])}
                 alt={property.name}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.src = "/default-image.jpg";
+                }}
               />
               <Badge
                 className={`absolute top-3 right-3 ${getStatusColor(property.status)}`}
@@ -164,7 +175,7 @@ export  default function Properties() {
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">Type:</span>
-                <span className="font-medium">{property.propertytype}</span>
+                <span className="font-medium">{property.propertyType}</span>
               </div>
 
               <div className="flex items-center justify-between text-sm">
@@ -184,43 +195,41 @@ export  default function Properties() {
               </div>
 
               <div className="flex gap-2 mt-4">
-                                  {/* View */}
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="flex-1"
-                                    onClick={() =>
-                                      navigate(`/owner/properties/${property._id}`)
-                                    }
-                                  >
-                                    <Eye size={14} />
-                                    View
-                                  </Button>
-              
-                                  {/* Edit */}
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="flex-1"
-                                    onClick={() =>
-                                      navigate(`/owner/properties/edit/${property._id}`)
-                                    }
-                                  >
-                                    <Pencil size={14} />
-                                    Edit
-                                  </Button>
-              
-                                  {/* Delete */}
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="flex-1"
-                                    onClick={() => handleDelete(property._id)}
-                                  >
-                                    <Trash2 size={14} />
-                                    Delete
-                                  </Button>
-                                  </div>
+                {/* View */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => navigate(`/owner/properties/${property._id}`)}
+                >
+                  <Eye size={14} />
+                  View
+                </Button>
+
+                {/* Edit */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() =>
+                    navigate(`/owner/properties/edit/${property._id}`)
+                  }
+                >
+                  <Pencil size={14} />
+                  Edit
+                </Button>
+
+                {/* Delete */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => handleDelete(property._id)}
+                >
+                  <Trash2 size={14} />
+                  Delete
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}

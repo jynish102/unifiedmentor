@@ -2,9 +2,18 @@ import { Card, CardContent, CardHeader } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
-import { Plus, Search, MapPin, Clock, Users,Pencil,
+import {
+  Plus,
+  Search,
+  MapPin,
+  Clock,
+  Users,
+  Pencil,
   Trash2,
-  Eye } from "lucide-react";
+  Eye,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +30,7 @@ export function Amenities() {
     const fetchAmenities = async () => {
       try {
         const res = await axios.get("http://localhost:5000/api/amenity");
-        setAmenities(res.data.data || []); // important fix
+        setAmenities(res.data.data || []);
       } catch (err) {
         console.error("Error fetching amenities", err);
       }
@@ -41,9 +50,9 @@ export function Amenities() {
 
   const getStatusIcon = (status) => {
       return status === "operational" ? (
-        <CheckCircle className="size-4 text-green-600" />
+        <CheckCircle className="size-5 text-green-600 space-x-10" />
       ) : (
-        <AlertCircle className="size-4 text-orange-600" />
+        <AlertCircle className="size-4 text-orange-600  space-x-2" />
       );
     };
   
@@ -94,11 +103,6 @@ export function Amenities() {
           <h2 className="text-3xl font-bold text-slate-900">Amenities</h2>
           <p className="text-slate-500 mt-1">Manage property amenities</p>
         </div>
-
-        {/* <Button className="gap-2">
-          <Plus size={18} />
-          Add Amenity
-        </Button> */}
       </div>
 
       {/* Search */}
@@ -130,10 +134,18 @@ export function Amenities() {
                   {/* Top */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="text-3xl">🏢</div>
-
-                    <Badge className={getStatusIcon(amenity.status)}>
-                      {amenity.status}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      {getStatusIcon(amenity.status)}
+                      <Badge
+                        className={
+                          amenity.status === "operational"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-orange-100 text-orange-700"
+                        }
+                      >
+                        {amenity.status}
+                      </Badge>
+                    </div>
                   </div>
 
                   {/* Name */}

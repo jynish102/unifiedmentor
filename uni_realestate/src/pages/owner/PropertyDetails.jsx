@@ -8,6 +8,7 @@ export default function PropertyDetails() {
   const [property, setProperty] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
+
   const getImageUrl = (img) => {
     if (!img) return "/default-image.jpg";
     return `http://localhost:5000/${img.replace(/\\/g, "/")}`;
@@ -25,6 +26,8 @@ export default function PropertyDetails() {
     fetchProperty();
   }, [id]);
 
+  
+
   if (!property) return <p>Loading...</p>;
 
   return (
@@ -32,18 +35,19 @@ export default function PropertyDetails() {
       <h2 className="text-2xl font-bold">{property.title}</h2>
 
       <button
-        onClick={() => navigate(`/admin/amenities/add-amenity/${property._id}`)}
+        onClick={() => navigate(`/owner/amenities/add-amenity/${property._id}`)}
         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
       >
         Add Amenity
       </button>
 
       <button
-        onClick={() => navigate("/admin/properties")}
+        onClick={() => navigate("/owner/properties")}
         className="bg-gray-500 text-white px-3 py-1 rounded"
       >
         Close
       </button>
+      
       <img
         src={getImageUrl(selectedImage || property.images?.[0])}
         className="w-full max-w-md rounded-lg"
@@ -87,6 +91,11 @@ export default function PropertyDetails() {
       <p>
         <b>Type:</b> {property.propertyType}
       </p>
+     
+      <p>
+        <b>Listing Type:</b> {property.listingType}
+      </p>
+      
       <p>
         <b>Bedrooms:</b> {property.bedrooms}
       </p>

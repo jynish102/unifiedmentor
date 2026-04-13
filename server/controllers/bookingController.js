@@ -1,11 +1,15 @@
 const Booking = require("../models/Booking");
 const Property = require("../models/Property");
+const User = require("../models/User");
 
 
 // CREATE BOOKING
 exports.createBooking = async (req, res) => {
   try {
+    // console.log("PROPERTY ID:", req.body.property);
     const property = await Property.findById(req.body.property);
+    // const user = await User.findById(req.body.user);
+    // console.log("USER:", req.user);
     // const { unitsRequested } = req.body;
     // const available = property.units - property.occupied;
 
@@ -15,15 +19,37 @@ exports.createBooking = async (req, res) => {
       });
     }
 
-    const { user, startDate, endDate, rentAmount } = req.body;
+    if (!req.body.property) {
+      return res.status(400).json({
+        message: "Property ID is required",
+      });
+    }
+
+    if (property.listingType !== "rent") {
+      return res.status(400).json({
+        message: "Booking is only allowed for rental properties",
+      });
+    }
+
+    if (property.occupied >= property.units) {
+      return res.status(400).json({
+        message: "No units available",
+      });
+    }
+
+   
+
+    const {  startDate, endDate, rentAmount } = req.body;
+    
 
     // Check if property already booked for these dates
     const existingBooking = await Booking.findOne({
-      property: property,
+      property: property._id,
       $or: [
         {
           startDate: { $lte: endDate },
           endDate: { $gte: startDate },
+          
         },
       ],
     });
@@ -47,8 +73,8 @@ exports.createBooking = async (req, res) => {
     }
 
     const booking = new Booking({
-      property: req.body.property,
-      user: req.body.user,
+      property: property._id,
+      user: req.user.id,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
       rentAmount: req.body.rentAmount,

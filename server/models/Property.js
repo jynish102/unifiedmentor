@@ -99,7 +99,7 @@ const propertySchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["available", "maintenance"],
+      enum: ["available", "maintenance","booked" , "sold"],
       default: "available",
     },
 
@@ -112,5 +112,17 @@ const propertySchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+
+propertySchema.virtual("availableUnits").get(function () {
+  return this.units - this.occupied;
+});
+
+
+propertySchema.set("toJSON", { virtuals: true });
+propertySchema.set("toObject", { virtuals: true });
+
+
+module.exports = mongoose.model("Property", propertySchema);
 
 module.exports = mongoose.model("Property", propertySchema);

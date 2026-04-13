@@ -31,10 +31,15 @@ export default function PropertyDetails() {
   return (
     <div className="p-6 space-y-4">
       <h2 className="text-2xl font-bold">{property.title}</h2>
-
+      <button
+        onClick={() => navigate(`/tenant/properties/booking/${property._id}`)}
+        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+      >
+        Book Now
+      </button>
 
       <button
-        onClick={() => navigate("/tenants/properties")}
+        onClick={() => navigate("/tenant/properties")}
         className="bg-gray-500 text-white px-3 py-1 rounded"
       >
         Close
@@ -126,6 +131,9 @@ export default function PropertyDetails() {
       </p>
       <p>
         <b>occupied:</b> {property.occupied}
+      </p>
+      <p>
+        <b>Available Units:</b> {property.availableUnits}
       </p>
       <p>
         <b>Status:</b> {property.status}

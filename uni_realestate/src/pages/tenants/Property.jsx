@@ -29,7 +29,7 @@ export default function Properties() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [properties, setProperties] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage] = useState(null);
 
   const getImageUrl = (img) => {
     if (!img) return "/default-image.jpg";
@@ -167,7 +167,7 @@ export default function Properties() {
                   variant="outline"
                   size="sm"
                   className="flex-1"
-                  onClick={() => navigate(`/tenants/properties/${property._id}`)}
+                  onClick={() => navigate(`/tenant/properties/${property._id}`)}
                 >
                   <Eye size={14} />
                   View

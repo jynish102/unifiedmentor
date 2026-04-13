@@ -47,7 +47,7 @@ export default function PropertyDetails() {
       >
         Close
       </button>
-      
+
       <img
         src={getImageUrl(selectedImage || property.images?.[0])}
         className="w-full max-w-md rounded-lg"
@@ -81,9 +81,11 @@ export default function PropertyDetails() {
       <p>
         <b>Deposit:</b> {property.deposit}
       </p>
-      <p>
-        <b>Payment Frequency:</b> {property.paymentFrequency}
-      </p>
+      {property.listingType === "rent" && property.paymentFrequency && (
+        <p>
+          <b>Payment Frequency:</b> {property.paymentFrequency}
+        </p>
+      )}
       <p>
         <b>Category:</b> {property.category}
       </p>
@@ -91,11 +93,11 @@ export default function PropertyDetails() {
       <p>
         <b>Type:</b> {property.propertyType}
       </p>
-     
+
       <p>
         <b>Listing Type:</b> {property.listingType}
       </p>
-      
+
       <p>
         <b>Bedrooms:</b> {property.bedrooms}
       </p>
@@ -134,6 +136,9 @@ export default function PropertyDetails() {
       </p>
       <p>
         <b>occupied:</b> {property.occupied}
+      </p>
+      <p>
+        <b>Available Units:</b> {property.availableUnits}
       </p>
       <p>
         <b>Status:</b> {property.status}

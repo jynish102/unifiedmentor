@@ -277,16 +277,19 @@ export default function AddProperty() {
         />
 
         {/* Payment Frequency */}
-        <select
-          name="paymentFrequency"
-          value={formData.paymentFrequency || "monthly"}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        >
-          <option value="monthly">Monthly</option>
-          <option value="yearly">Yearly</option>
-          <option value="daily">Daily</option>
-        </select>
+        {formData.listingType === "rent" && (
+          <select
+            name="paymentFrequency"
+            value={formData.paymentFrequency || "monthly"}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          >
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+            <option value="daily">Daily</option>
+          </select>
+        )}
+       
 
         {/* Category */}
         <select
@@ -453,7 +456,9 @@ export default function AddProperty() {
           onChange={handleChange}
         >
           <option value="available">Available</option>
-          <option value="occupied">Occupied</option>
+          <option value="maintenance">Maintenance</option>
+          <option value="booked">Booked</option>
+          <option value="sold">Sold</option>
         </select>
 
         <label className="flex items-center gap-2">

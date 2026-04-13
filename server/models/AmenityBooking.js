@@ -28,6 +28,25 @@ const amenityBookingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
+    guests: {
+      type: Number,
+      default: 1,
+    },
+
+    totalPrice: {
+      type: Number,
+    },
+
+    note: {
+      type: String,
+    },
+
+    status: {
+      type: String,
+      enum: ["booked", "cancelled", "completed"],
+      default: "booked",
+    },
   },
   { timestamps: true },
 );

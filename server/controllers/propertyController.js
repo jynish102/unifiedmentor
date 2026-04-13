@@ -5,6 +5,12 @@ exports.addProperty = async (req, res) => {
     // console.log("BODY:", req.body);
     // console.log("FILES:", req.files);
     const imagePaths = req.files?.map((file) => file.path) || [];
+    
+    if (req.body.occupied > req.body.units) {
+      return res.status(400).json({
+        message: "Occupied cannot be greater than total units",
+      });
+    }
 
     const property = await Property.create({
       ...req.body,

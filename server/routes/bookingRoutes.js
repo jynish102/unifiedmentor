@@ -12,7 +12,7 @@ const {
   getAvailableProperties,
 } = require("../controllers/bookingController");
 
-router.post("/", createBooking);
+router.post("/", authMiddleware, createBooking);
 
 router.get("/", getAllBookings);
 

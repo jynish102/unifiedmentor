@@ -41,6 +41,7 @@ import { Dashboard as TenantsDashboard } from "./pages/tenants/Dashboard";
 import { Profile } from "./pages/tenants/Profile";
 import TenantProperty from "./pages/tenants/Property";
 import TenantPropertyDetails from "./pages/tenants/PropertyDetails";
+import PropertyBooking from "./pages/tenants/PropertyBooking";
 import TenantAmenities  from "./pages/tenants/TenantAmenities";
 import TenantAmenityDetails from "./pages/tenants/AmenityDetails";
 import TenantMaintenance  from "./pages/tenants/TenantMaintenance";
@@ -79,32 +80,56 @@ function App() {
           <Route path="tenants" element={<Tenants />} />
           <Route path="maintenance" element={<Maintenance />} />
         </Route>
-
         //owner routes
         <Route path="/owner" element={<OwnerDashboardLayout />}>
           <Route path="ownerdashboard" element={<OwnerDashboard />} />
           <Route path="properties" element={<OwnerProperties />} />
-          <Route path="properties/add-property" element={<OwnerAddProperty />} />
-          <Route path="/owner/properties/edit/:id" element={<OwnerAddProperty />} />
-          <Route path="/owner/properties/:id" element={<OwnerPropertyDetails />} /> 
+          <Route
+            path="properties/add-property"
+            element={<OwnerAddProperty />}
+          />
+          <Route
+            path="/owner/properties/edit/:id"
+            element={<OwnerAddProperty />}
+          />
+          <Route
+            path="/owner/properties/:id"
+            element={<OwnerPropertyDetails />}
+          />
           <Route path="amenities" element={<OwnerAmenities />} />
           <Route
             path="/owner/amenities/add-amenity/:propertyId"
             element={<OwnerAddAmenity />}
           />
-          <Route path="/owner/amenities/edit/:id" element={<OwnerAddAmenity />} />
-          <Route path="/owner/amenities/:id" element={<OwnerAmenityDetails />} />
+          <Route
+            path="/owner/amenities/edit/:id"
+            element={<OwnerAddAmenity />}
+          />
+          <Route
+            path="/owner/amenities/:id"
+            element={<OwnerAmenityDetails />}
+          />
           <Route path="financials" element={<Financials />} />
           <Route path="settings" element={<Settings />} />
         </Route>
-
         //tenant routes
         <Route path="/tenant" element={<TenantsDashboardLayout />}>
           <Route path="dashboard" element={<TenantsDashboard />} />
           <Route path="properties" element={<TenantProperty />} />
-          <Route path="/tenant/properties/:id" element={<TenantPropertyDetails />} /> 
+          <Route
+            path="/tenant/properties/:id"
+            element={<TenantPropertyDetails />}
+          />
+          <Route
+            path="/tenant/properties/booking/:propertyId"
+            element={<PropertyBooking />}
+          />
+
           <Route path="amenities" element={<TenantAmenities />} />
-          <Route path="/tenant/amenities/:id" element={<TenantAmenityDetails />} />
+          <Route
+            path="/tenant/amenities/:id"
+            element={<TenantAmenityDetails />}
+          />
           <Route path="maintenance" element={<TenantMaintenance />} />
           <Route path="profile" element={<Profile />} />
         </Route>

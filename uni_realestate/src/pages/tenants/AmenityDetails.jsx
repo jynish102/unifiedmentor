@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function AmenityDetails() {
   const { id } = useParams();
-  console.log(id);
+  // console.log(id);
   const [amenity, setAmenity] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
@@ -31,6 +31,12 @@ export default function AmenityDetails() {
 
   return (
     <div className="p-6 space-y-4">
+      <button
+        onClick={() => navigate(`/tenant/amenities/booking/${amenity._id}`)}
+        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+      >
+        Book Amenity
+      </button>
       <button
         onClick={() => navigate("/tenant/amenities")}
         className="bg-gray-500 text-white px-3 py-1 rounded"
@@ -94,12 +100,15 @@ export default function AmenityDetails() {
         <b>Status:</b> {amenity.status}
       </p>
 
-      <p>
-        <b>Priority:</b> {amenity.priority || "Medium"}
-      </p>
+      {amenity.status === "maintenance" && (
+        <p>
+          <b>Priority:</b> {amenity.priority || "medium"}
+        </p>
+      )}
 
       <p>
-        <b>Maintenance Date:</b> {amenity.maintenanceDate || ""}
+        <b>Upcoming Maintenance Date:</b>{" "}
+        {amenity.upcomingMaintenanceDate || ""}
       </p>
 
       <p>

@@ -24,6 +24,7 @@ import PropertyDetails from "./pages/admin/PropertyDetails";
 import AddProperty from "./pages/admin/AddProperty";
 import AddAmenity from "./pages/admin/AddAmenity";
 import AmenityDetails from "./pages/admin/AmenityDetails";
+import BookingRequests from "./pages/admin/BookingRequests";
 
 //owner
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
@@ -44,6 +45,7 @@ import TenantPropertyDetails from "./pages/tenants/PropertyDetails";
 import PropertyBooking from "./pages/tenants/PropertyBooking";
 import TenantAmenities  from "./pages/tenants/TenantAmenities";
 import TenantAmenityDetails from "./pages/tenants/AmenityDetails";
+import AmenityBooking from "./pages/tenants/AmenityBooking";
 import TenantMaintenance  from "./pages/tenants/TenantMaintenance";
 
 
@@ -63,6 +65,7 @@ function App() {
           <Route path="/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/ResetPassword/:token" element={<ResetPassword />} />
         </Route>
+
         //admin routes
         <Route path="/admin" element={<AdminDashboardLayout />}>
           <Route path="overview" element={<Overview />} />
@@ -78,8 +81,10 @@ function App() {
           <Route path="/admin/amenities/edit/:id" element={<AddAmenity />} />
           <Route path="/admin/amenities/:id" element={<AmenityDetails />} />
           <Route path="tenants" element={<Tenants />} />
+          <Route path="bookings" element={<BookingRequests />} />
           <Route path="maintenance" element={<Maintenance />} />
         </Route>
+
         //owner routes
         <Route path="/owner" element={<OwnerDashboardLayout />}>
           <Route path="ownerdashboard" element={<OwnerDashboard />} />
@@ -112,6 +117,7 @@ function App() {
           <Route path="financials" element={<Financials />} />
           <Route path="settings" element={<Settings />} />
         </Route>
+
         //tenant routes
         <Route path="/tenant" element={<TenantsDashboardLayout />}>
           <Route path="dashboard" element={<TenantsDashboard />} />
@@ -130,9 +136,14 @@ function App() {
             path="/tenant/amenities/:id"
             element={<TenantAmenityDetails />}
           />
+          <Route
+            path="/tenant/amenities/booking/:amenityId"
+            element={<AmenityBooking />}
+          />
           <Route path="maintenance" element={<TenantMaintenance />} />
           <Route path="profile" element={<Profile />} />
         </Route>
+
         //staff routes
         <Route path="/staff" element={<StaffDashboardLayout />}>
           {/* Define staff-specific routes here */}

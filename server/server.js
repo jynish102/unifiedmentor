@@ -27,15 +27,16 @@ app.use("/api/auth", authRoutes);
 app.use("/api/admin", authMiddleware, adminRoutes);
 
 app.use("/api/property", propertyRoutes);
+
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api/amenity", amenityRoutes);
 
 app.use("/api/bookings", bookingRoutes);
 
-app.use("/api/maintenance", maintenanceRoutes);
-
 app.use("/api/amenity-bookings", amenityBookingRoutes);
+
+app.use("/api/maintenance", maintenanceRoutes);
 
 app.use("/api/dashboard", dashboardRoutes);
 

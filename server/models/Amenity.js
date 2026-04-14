@@ -27,12 +27,12 @@ const amenitySchema = new mongoose.Schema(
       default: 1,
     },
 
-    location: { 
-      type : String,
-    },  
+    location: {
+      type: String,
+    },
 
     operatingHours: {
-      start: { type: String }, 
+      start: { type: String },
       end: { type: String },
     },
 
@@ -45,18 +45,21 @@ const amenitySchema = new mongoose.Schema(
     priority: {
       type: String,
       enum: ["low", "medium", "high"],
-      default: "medium",
+      
+      required: function () {
+        return this.status === "maintenance";
+      },
     },
 
-    maintenanceDate: {
-    type: Date,
-    default: null,
-  },
+    upcomingMaintenanceDate: {
+      type: Date,
+      default: null,
+    },
 
     images: {
       type: [String],
-      default: []
-    }
+      default: [],
+    },
   },
   { timestamps: true },
 );

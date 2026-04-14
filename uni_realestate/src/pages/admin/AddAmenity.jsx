@@ -19,8 +19,8 @@ export default function AddAmenity() {
       end: ""
     },
     status: "operational",
-    priority: "Medium",
-    maintenanceDate: ""
+    priority: "medium",
+    upcomingMaintenanceDate: ""
   });
 
   const [images, setImages] = useState([]);
@@ -43,8 +43,8 @@ export default function AddAmenity() {
             end: data.operatingHours?.end?.slice(0,5) || ""
           },
           status: data.status || "operational",
-          priority: data.priority || "Medium",
-          maintenanceDate: data.maintenanceDate || ""
+          priority: data.priority || "medium",
+          upcomingMaintenanceDate: data.upcomingMaintenanceDate || ""
         });
 
         setExistingImages(data.images || []);
@@ -261,6 +261,8 @@ export default function AddAmenity() {
           <option value="maintenance">Maintenance</option>
         </select>
 
+        {/* Priority Dropdown */  }
+        {formData.status === "maintenance" && (
         <select
           name="priority"
           value={formData.priority}
@@ -271,13 +273,14 @@ export default function AddAmenity() {
           <option value="medium">Medium</option>
           <option value="high">High</option>
         </select>
+        )}
 
         <Input
           className="flex items-center gap-2"
-          name="maintenanceDate"
+          name="upcomingMaintenanceDate"
           type="date"
-          placeholder="Maintenance Date"
-          value={formData.maintenanceDate}
+          placeholder="Upcoming Maintenance Date"
+          value={formData.upcomingMaintenanceDate}
           onChange={handleChange}
         />
 

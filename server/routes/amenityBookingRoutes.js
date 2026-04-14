@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const authMiddleware = require("../middleware/authMiddleware");
+const authorizeRoles = require("../middleware/authorizeRoles");
 
 const {
   createAmenityBooking,
@@ -9,10 +11,10 @@ const {
   getAvailableAmenities,
 } = require("../controllers/amenityBookingController");
 
-router.post("/", createAmenityBooking);
+router.post("/", authMiddleware, createAmenityBooking);
 router.get("/", getAllAmenityBookings);
 router.get("/amenity/:amenityId", getBookingsByAmenity);
-router.delete("/:id", deleteAmenityBooking);
+router.delete("/:id", authMiddleware, authorizeRoles(["admin"]), deleteAmenityBooking);
 router.get("/available-amenities", getAvailableAmenities);
 
 

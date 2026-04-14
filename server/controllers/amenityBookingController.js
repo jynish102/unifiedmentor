@@ -3,9 +3,22 @@ const AmenityBooking = require("../models/AmenityBooking");
 // CREATE BOOKING (with conflict check)
 exports.createAmenityBooking = async (req, res) => {
   try {
-    const { amenity, user, date, startTime, endTime } = req.body;
+    const { amenity,  date, startTime, endTime } = req.body;
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        message: "User not authenticated",
+      });
+    }
+    const user = req.user.id;
 
-    // 🔥 Conflict check
+    if (!amenity || !date || !startTime || !endTime) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
+    }
+
+
+    // Conflict check
     const existing = await AmenityBooking.findOne({
       amenity,
       date,
@@ -16,12 +29,6 @@ exports.createAmenityBooking = async (req, res) => {
     if (existing) {
       return res.status(400).json({
         message: "Amenity already booked for this time",
-      });
-    }
-
-    if (!startTime || !endTime) {
-      return res.status(400).json({
-        message: "Time slots are required",
       });
     }
 

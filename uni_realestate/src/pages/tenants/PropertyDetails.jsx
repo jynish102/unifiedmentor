@@ -31,15 +31,16 @@ export default function PropertyDetails() {
   return (
     <div className="p-6 space-y-4">
       <h2 className="text-2xl font-bold">{property.title}</h2>
+
       <button
         onClick={() => navigate(`/tenant/properties/booking/${property._id}`)}
         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
       >
-        Book Now
+        Book Property
       </button>
 
       <button
-        onClick={() => navigate("/tenant/properties")}
+        onClick={() => navigate("/tenants/properties")}
         className="bg-gray-500 text-white px-3 py-1 rounded"
       >
         Close
@@ -78,9 +79,11 @@ export default function PropertyDetails() {
       <p>
         <b>Deposit:</b> {property.deposit}
       </p>
-      <p>
-        <b>Payment Frequency:</b> {property.paymentFrequency}
-      </p>
+      {property.listingType === "rent" && property.paymentFrequency && (
+        <p>
+          <b>Payment Frequency:</b> {property.paymentFrequency}
+        </p>
+      )}
       <p>
         <b>Category:</b> {property.category}
       </p>

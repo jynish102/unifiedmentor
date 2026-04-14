@@ -15,6 +15,13 @@ export default function AddBooking() {
     status: "pending",
     paymentStatus: "pending",
   });
+  
+  const userId = localStorage.getItem("userId");
+  console.log({
+    property: propertyId,
+    user: userId,
+    ...formData,
+  });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
 
-export default function BookingRequests() {
+export default function AllBooking() {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [bookings, setBookings] = useState([]);
@@ -211,14 +211,9 @@ export default function BookingRequests() {
                   {/* Buttons (Always visible as you requested) */}
                   <div className="flex gap-2 pt-2">
                     <Button className="flex-1 bg-green-600 hover:bg-green-700">
-                      Approve
+                      Cancel Booking
                     </Button>
-                    <Button
-                      variant="outline"
-                      className="flex-1 text-red-600 border-red-200"
-                    >
-                      Reject
-                    </Button>
+                    
                   </div>
                 </CardContent>
               </Card>

@@ -46,6 +46,7 @@ import PropertyBooking from "./pages/tenants/PropertyBooking";
 import TenantAmenities  from "./pages/tenants/TenantAmenities";
 import TenantAmenityDetails from "./pages/tenants/AmenityDetails";
 import AmenityBooking from "./pages/tenants/AmenityBooking";
+import AllBooking from "./pages/tenants/AllBookings";
 import TenantMaintenance  from "./pages/tenants/TenantMaintenance";
 
 
@@ -140,6 +141,7 @@ function App() {
             path="/tenant/amenities/booking/:amenityId"
             element={<AmenityBooking />}
           />
+          <Route path="/tenant/bookings" element={<AllBooking />} />
           <Route path="maintenance" element={<TenantMaintenance />} />
           <Route path="profile" element={<Profile />} />
         </Route>

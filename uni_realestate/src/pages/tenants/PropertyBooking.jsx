@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
@@ -15,14 +15,22 @@ export default function AddBooking() {
     status: "pending",
     paymentStatus: "pending",
   });
-  
-  const userId = localStorage.getItem("userId");
-  console.log({
-    property: propertyId,
-    user: userId,
-    ...formData,
-  });
 
+  useEffect(() => {
+    const fetchProperty = async () => {
+      const res = await API.get(`/property/${propertyId}`);
+
+      setFormData((prev) => ({
+        ...prev,
+        rentAmount: res.data.price,
+        paymentFrequency: res.data.paymentFrequency,
+        
+      }));
+    };
+
+    fetchProperty();
+  }, [propertyId]);
+  
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -30,12 +38,12 @@ export default function AddBooking() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Date validation
+    //  Date validation
     if (new Date(formData.startDate) >= new Date(formData.endDate)) {
       alert("End date must be after start date");
       return;
     }
-    console.log("PROPERTY ID:", propertyId);
+    // console.log("PROPERTY ID:", propertyId);
 
     try {
       const token = localStorage.getItem("token");
@@ -89,13 +97,12 @@ export default function AddBooking() {
         />
 
         {/* Rent Amount */}
-        <Input
-          name="rentAmount"
-          type="number"
-          placeholder="Rent Amount"
-          value={formData.rentAmount}
-          onChange={handleChange}
-        />
+       
+          <p className="text-sm text-slate-500">Rent</p>
+          <p className="text-lg font-bold text-slate-900">
+            ₹{formData.rentAmount?.toLocaleString()} / {formData.paymentFrequency}
+          </p>
+      
 
         {/* status */}
         <select
@@ -122,7 +129,6 @@ export default function AddBooking() {
           <option value="paid">Paid</option>
           <option value="unpaid">Unpaid</option>
         </select>
-
 
         <Button type="submit" className="w-full">
           Request Booking

@@ -44,8 +44,14 @@ const amenityBookingSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["booked", "cancelled", "completed"],
-      default: "booked",
+      enum: ["pending", "approved", "rejected", "completed", "cancelled"],
+      default: "pending",
+    },
+    
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "unpaid"],
+      default: "pending",
     },
   },
   { timestamps: true },

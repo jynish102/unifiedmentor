@@ -17,6 +17,8 @@ export default function BookAmenity() {
     endTime: "",
     guests: 1,
     note: "",
+    status: "pending",
+    paymentStatus: "pending",
   });
 
   // Fetch Amenity Details (for price)
@@ -32,11 +34,11 @@ export default function BookAmenity() {
     fetchAmenity();
   }, [amenityId]);
  
-  console.log({
-    amenity: amenityId,
+  // console.log({
+  //   amenity: amenityId,
     
-    ...formData,
-  });
+  //   ...formData,
+  // });
 
   const handleChange = (e) => {
     setFormData({
@@ -62,6 +64,8 @@ export default function BookAmenity() {
           endTime: endDateTime,
           guests: formData.guests,
           note: formData.note,
+          status: formData.status,
+          paymentStatus: formData.paymentStatus,
         },
         {
           headers: {
@@ -132,9 +136,35 @@ export default function BookAmenity() {
           onChange={handleChange}
         />
 
+        {/* status */}
+        <select
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+          className="border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="rejected">Rejected</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+
+        {/* paymentStatus */}
+        <select
+          name="paymentStatus"
+          value={formData.paymentStatus}
+          onChange={handleChange}
+          className="border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="pending">Pending</option>
+          <option value="paid">Paid</option>
+          <option value="unpaid">Unpaid</option>
+        </select>
+
         {/* Submit */}
         <Button type="submit" className="w-full">
-          Confirm Booking
+          Request Booking
         </Button>
       </form>
     </div>

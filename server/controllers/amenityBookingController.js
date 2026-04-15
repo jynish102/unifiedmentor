@@ -58,9 +58,6 @@ exports.getAllAmenityBookings = async (req, res) => {
   const bookings = await AmenityBooking.find()
     .populate("amenity", "name")
     .populate("user", "fullname email");
-
-   
-
   res.json({ success: true, data: bookings });
 };
 

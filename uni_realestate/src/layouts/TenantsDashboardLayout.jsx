@@ -6,6 +6,7 @@ import {
   User,
   Menu,
   Bell,
+  Dumbbell,
 } from "lucide-react";
 
 import { Button } from "../components/ui/button";
@@ -16,7 +17,8 @@ import { tenantData } from "../components/data/mockData";
 const navigation = [
   { path: "/tenant/dashboard", name: "Dashboard", icon: Home },
   { path: "/tenant/properties", name: "Properties", icon: Home },
-  { path: "/tenant/amenities", name: "Amenities", icon: Calendar },
+  { path: "/tenant/amenities", name: "Amenities", icon: Dumbbell },
+  { path: "/tenant/bookings", name: "Bookings", icon: Calendar },
   { path: "/tenant/maintenance", name: "Maintenance", icon: Wrench },
   { path: "/tenant/profile", name: "Profile", icon: User },
 ];

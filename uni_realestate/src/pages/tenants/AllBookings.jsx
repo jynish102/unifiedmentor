@@ -17,7 +17,7 @@ export default function AllBooking() {
         let res;
 
         if (activeTab === "property") {
-          res = await API.get("/bookings");
+          res = await API.get("/property-bookings");
 
           // add type manually
           const data = res.data.data.map((b) => ({
@@ -38,7 +38,7 @@ export default function AllBooking() {
         } else {
           // ALL → call both APIs
           const [propertyRes, amenityRes] = await Promise.all([
-            API.get("/bookings"),
+            API.get("/property-bookings"),
             API.get("/amenity-bookings"),
           ]);
 
@@ -79,6 +79,34 @@ export default function AllBooking() {
   const propertyCount = bookings.filter((b) => b.type === "property").length;
 
   const amenityCount = bookings.filter((b) => b.type === "amenity").length;
+
+  const handleStatusChange = async (id, type, status) => {
+    try {
+      let url =
+        type === "property"
+          ? `/property-bookings/${id}/status`
+          : `/amenity-bookings/${id}/status`;
+      const token = localStorage.getItem("token");   
+
+      await API.put(
+        url,
+        { status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      // update UI instantly
+      setBookings((prev) =>
+        prev.map((b) => (b._id === id ? { ...b, status } : b)),
+      );
+    } catch (err) {
+  console.error("ERROR:", err.response?.data || err.message);
+
+    }
+  };
 
   return (
     <div className="space-y-6 bg-white p-6 rounded-xl">
@@ -210,10 +238,15 @@ export default function AllBooking() {
 
                   {/* Buttons (Always visible as you requested) */}
                   <div className="flex gap-2 pt-2">
-                    <Button className="flex-1 bg-green-600 hover:bg-green-700">
+                  
+                    <Button
+                      className="flex-1 bg-green-600 hover:bg-green-700"
+                      onClick={() =>
+                        handleStatusChange(b._id, b.type, "cancelled")
+                      }
+                    >
                       Cancel Booking
                     </Button>
-                    
                   </div>
                 </CardContent>
               </Card>

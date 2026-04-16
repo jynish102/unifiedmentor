@@ -119,16 +119,67 @@ exports.getUserBookings = async (req, res) => {
 
 // UPDATE BOOKING STATUS
 exports.updateBookingStatus = async (req, res) => {
-  const booking = await Booking.findByIdAndUpdate(
-    req.params.id,
-    { status: req.body.status },
-    { new: true },
-  );
+  try {
+    const { status } = req.body;
+    const { id } = req.params;
 
-  res.json({
-    success: true,
-    data: booking,
-  });
+    // validate status
+    const validStatus = ["pending", "approved", "rejected", "cancelled"];
+    console.log("USER:", req.user);
+    console.log("STATUS:", req.body.status);
+
+    if (!validStatus.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status value",
+      });
+    }
+
+    const booking = await Booking.findById(id);
+    // check exists
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    // Admin can approve/reject
+    if (
+      req.user.role === "admin" &&
+      ["approved", "rejected"].includes(status)
+    ) {
+      booking.status = status;
+    }
+
+    // Tenant can cancel only THEIR booking
+    else if (
+      req.user.role === "Tenant" &&
+      status === "cancelled" &&
+      booking.user.toString() === req.user.id
+      
+    ) {
+      booking.status = status;
+    } else {
+      return res.status(403).json({
+        message: "Not allowed to perform this action",
+      });
+    }
+    console.log("BOOKING USER:", booking.user.toString());
+    console.log("LOGGED USER:", req.user.id);
+
+    await booking.save();
+
+    res.json({
+      success: true,
+      data: booking,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
 };
 
 // DELETE BOOKING

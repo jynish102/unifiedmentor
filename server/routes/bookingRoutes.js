@@ -18,7 +18,7 @@ router.get("/", getAllBookings);
 
 router.get("/my-bookings", authMiddleware, getUserBookings);
 
-router.put("/:id", authMiddleware, authorizeRoles(["admin"]), updateBookingStatus);
+router.put("/:id/status", authMiddleware, updateBookingStatus);
 
 router.delete("/:id", authMiddleware, authorizeRoles(["admin"]), deleteBooking);
 

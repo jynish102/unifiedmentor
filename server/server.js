@@ -32,7 +32,7 @@ app.use("/uploads", express.static("uploads"));
 
 app.use("/api/amenity", amenityRoutes);
 
-app.use("/api/bookings", bookingRoutes);
+app.use("/api/property-bookings", bookingRoutes);
 
 app.use("/api/amenity-bookings", amenityBookingRoutes);
 

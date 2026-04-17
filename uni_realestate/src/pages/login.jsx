@@ -42,8 +42,10 @@ const Login = () => {
       localStorage.setItem("token", res.data.token);
 
        //user Data
-       localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+        
 
+    console.log("LOGIN USER:", res.data.user);
       // success
       setError("");
 
@@ -53,9 +55,9 @@ const Login = () => {
 
       if (role === "admin") {
         navigate("/admin");
-      } else if (role === "Owner") {
+      } else if (role === "owner") {
         navigate("/owner");
-      } else if (role === "Tenant") {
+      } else if (role === "tenant") {
         navigate("/tenant");
       } else {
         navigate("/staff"); // default fallback

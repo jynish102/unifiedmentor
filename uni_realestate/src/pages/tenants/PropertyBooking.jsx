@@ -49,7 +49,7 @@ export default function AddBooking() {
       const token = localStorage.getItem("token");
 
       await API.post(
-        "/bookings",
+        "/property-bookings",
         {
           property: propertyId,
           

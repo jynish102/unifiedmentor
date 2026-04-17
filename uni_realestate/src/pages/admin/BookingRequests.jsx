@@ -88,7 +88,8 @@ export default function BookingRequests() {
           : `/amenity-bookings/${id}/status`;
       const token = localStorage.getItem("token");    
 
-      await API.put(url, { status }, {
+      await API.put(url, { status }, 
+        {
         headers: {
           Authorization: `Bearer ${token}`,
         },

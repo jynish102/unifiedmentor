@@ -10,6 +10,11 @@ export default function AllBooking() {
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [bookings, setBookings] = useState([]);
+  const [loadingId, setLoadingId] = useState(null);
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+  
+
+  console.log("Updated bookings:", bookings);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -74,6 +79,8 @@ export default function AllBooking() {
     }
   };
 
+  
+
   const pendingCount = bookings.filter((b) => b.status === "pending").length;
 
   const propertyCount = bookings.filter((b) => b.type === "property").length;
@@ -87,20 +94,18 @@ export default function AllBooking() {
           ? `/property-bookings/${id}/status`
           : `/amenity-bookings/${id}/status`;
       const token = localStorage.getItem("token");   
-
-      await API.put(
-        url,
-        { status },
+      setLoadingId(id); // set loading state for this booking
+      await API.put(url, { status },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
-      );
+        });
+      setLoadingId(null); // reset loading state  
 
       // update UI instantly
       setBookings((prev) =>
-        prev.map((b) => (b._id === id ? { ...b, status } : b)),
+        prev.map((b) => (b._id.toString() === id.toString() ? { ...b, status } : b)),
       );
     } catch (err) {
   console.error("ERROR:", err.response?.data || err.message);
@@ -218,7 +223,11 @@ export default function AllBooking() {
                   <div className="grid grid-cols-2 text-sm text-slate-600 gap-2">
                     <div>
                       <p className="text-slate-400">DATE & TIME</p>
-                      <p>{new Date(b.date).toLocaleDateString()}</p>
+                      <p>
+                        {b.startDate
+                          ? new Date(b.startDate).toLocaleDateString()
+                          : new Date(b.date).toLocaleDateString()}
+                      </p>
                     </div>
 
                     <div>
@@ -238,15 +247,27 @@ export default function AllBooking() {
 
                   {/* Buttons (Always visible as you requested) */}
                   <div className="flex gap-2 pt-2">
-                  
-                    <Button
-                      className="flex-1 bg-green-600 hover:bg-green-700"
-                      onClick={() =>
-                        handleStatusChange(b._id, b.type, "cancelled")
-                      }
-                    >
-                      Cancel Booking
-                    </Button>
+                    {b.status === "approved" &&
+                      (b.user?._id === currentUser?.id ||
+                        b.user === currentUser?.id) && (
+                        <Button
+                          className="w-full bg-red-600 hover:bg-red-700"
+                          disabled={loadingId === b._id}
+                          onClick={() =>
+                            handleStatusChange(b._id, b.type, "cancelled")
+                          }
+                        >
+                          {loadingId === b._id
+                            ? "Cancelling..."
+                            : "Cancel Booking"}
+                        </Button>
+                      )}
+
+                    {b.status === "cancelled" && (
+                      <div className="w-full text-center py-2 rounded-md bg-gray-100 text-gray-600 font-medium">
+                        Booking Cancelled
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>

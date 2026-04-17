@@ -123,11 +123,10 @@ exports.updateBookingStatus = async (req, res) => {
     const { status } = req.body;
     const { id } = req.params;
 
-    // validate status
-    const validStatus = ["pending", "approved", "rejected", "cancelled"];
-    console.log("USER:", req.user);
-    console.log("STATUS:", req.body.status);
+    const role = req.user.role.toLowerCase();
+    console.log("ROLE:", role);
 
+    const validStatus = ["pending", "approved", "rejected", "cancelled"];
     if (!validStatus.includes(status)) {
       return res.status(400).json({
         success: false,
@@ -136,7 +135,10 @@ exports.updateBookingStatus = async (req, res) => {
     }
 
     const booking = await Booking.findById(id);
-    // check exists
+     console.log("BOOKING USER:", booking.user.toString());
+     console.log("LOGGED USER:", req.user.id.toString());
+    
+
     if (!booking) {
       return res.status(404).json({
         success: false,
@@ -144,29 +146,28 @@ exports.updateBookingStatus = async (req, res) => {
       });
     }
 
-    // Admin can approve/reject
-    if (
-      req.user.role === "admin" &&
-      ["approved", "rejected"].includes(status)
-    ) {
+    //  Admin
+    if (role === "admin" && ["approved", "rejected"].includes(status)) {
       booking.status = status;
     }
 
-    // Tenant can cancel only THEIR booking
+    // Tenant (FIXED HERE)
     else if (
-      req.user.role === "Tenant" &&
+      role === "tenant" &&
       status === "cancelled" &&
-      booking.user.toString() === req.user.id
+      booking.user.toString() === req.user.id.toString()
       
-    ) {
+
+    ) 
+    {
       booking.status = status;
     } else {
       return res.status(403).json({
         message: "Not allowed to perform this action",
       });
     }
-    console.log("BOOKING USER:", booking.user.toString());
-    console.log("LOGGED USER:", req.user.id);
+   
+    
 
     await booking.save();
 

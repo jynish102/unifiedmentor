@@ -214,7 +214,9 @@ export default function BookingRequests() {
                   <div className="grid grid-cols-2 text-sm text-slate-600 gap-2">
                     <div>
                       <p className="text-slate-400">DATE & TIME</p>
-                      <p>{new Date(b.date).toLocaleDateString()}</p>
+                      {b.startDate
+                        ? new Date(b.startDate).toLocaleDateString()
+                        : new Date(b.date).toLocaleDateString()}
                     </div>
 
                     <div>
@@ -234,28 +236,28 @@ export default function BookingRequests() {
 
                   {/* Buttons (Always visible as you requested) */}
                   <div className="flex gap-2 pt-2">
-                  {b.status === "pending" && (
-                    <Button
-                      className="flex-1 bg-green-600 hover:bg-green-700"
-                      onClick={() =>
-                        handleStatusChange(b._id, b.type, "approved")
-                      }
-                    >
-                      Approve
-                    </Button>
-                  )}
+                    {b.status === "pending" && (
+                      <Button
+                        className="flex-1 bg-green-600 hover:bg-green-700"
+                        onClick={() =>
+                          handleStatusChange(b._id, b.type, "approved")
+                        }
+                      >
+                        Approve
+                      </Button>
+                    )}
 
-                  {b.status === "pending" && (
-                    <Button
-                      variant="outline"
-                      className="flex-1 text-red-600 border-red-200"
-                      onClick={() =>
-                        handleStatusChange(b._id, b.type, "rejected")
-                      }
-                    >
-                      Reject
-                    </Button>
-                  )}
+                    {b.status === "pending" && (
+                      <Button
+                        variant="outline"
+                        className="flex-1 text-red-600 border-red-200"
+                        onClick={() =>
+                          handleStatusChange(b._id, b.type, "rejected")
+                        }
+                      >
+                        Reject
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>

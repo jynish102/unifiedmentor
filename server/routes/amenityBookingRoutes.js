@@ -7,6 +7,7 @@ const {
   createAmenityBooking,
   getAllAmenityBookings,
   getBookingsByAmenity,
+  getUserBookings,
   updateBookingStatus,
   deleteAmenityBooking,
   getAvailableAmenities,
@@ -15,6 +16,8 @@ const {
 router.post("/", authMiddleware, createAmenityBooking);
 router.get("/", getAllAmenityBookings);
 router.get("/amenity/:amenityId", getBookingsByAmenity);
+router.get("/my-amenity-bookings", authMiddleware, getUserBookings);
+
 router.put(
   "/:id/status",
   authMiddleware,

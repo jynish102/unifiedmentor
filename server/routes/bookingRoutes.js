@@ -16,7 +16,7 @@ router.post("/", authMiddleware, createBooking);
 
 router.get("/", getAllBookings);
 
-router.get("/my-bookings", authMiddleware, getUserBookings);
+router.get("/my-property-bookings", authMiddleware, getUserBookings);
 
 router.put("/:id/status", authMiddleware, updateBookingStatus);
 

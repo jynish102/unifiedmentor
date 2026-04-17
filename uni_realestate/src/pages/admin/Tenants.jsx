@@ -12,18 +12,25 @@ import {
 } from "../../components/ui/table";
 import { Plus, Search, Mail, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../../utils/api";
 
 export function Tenants() {
   const [searchTerm, setSearchTerm] = useState("");
   const [tenants, setTenants] = useState([]);
+  const [counts, setCounts] = useState({
+    total: 0,
+    active: 0,
+    expired: 0,
+    upcoming: 0,
+  });
 
-  // ✅ Fetch from backend
+  //  Fetch from backend
   useEffect(() => {
     const fetchTenants = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/tenants");
-        setTenants(res.data);
+        const res = await API.get("/tenants");
+        setTenants(res.data.tenants || []);
+        setCounts(res.data.counts || {});
       } catch (err) {
         console.error("Error fetching tenants", err);
       }
@@ -32,7 +39,7 @@ export function Tenants() {
     fetchTenants();
   }, []);
 
-  // ✅ Filter
+  // Filter
   const filteredTenants = tenants.filter(
     (tenant) =>
       tenant.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -45,7 +52,7 @@ export function Tenants() {
     switch (status) {
       case "active":
         return "bg-green-100 text-green-700";
-      case "pending":
+      case "upcoming":
         return "bg-yellow-100 text-yellow-700";
       case "expired":
         return "bg-red-100 text-red-700";
@@ -153,15 +160,19 @@ export function Tenants() {
                     {/* Lease */}
                     <TableCell>
                       <div className="text-sm">
-                        <p className="text-slate-900">{tenant.leaseStart}</p>
-                        <p className="text-slate-500">to {tenant.leaseEnd}</p>
+                        <p className="text-slate-900">
+                          {new Date(tenant.leaseStart).toLocaleDateString()}
+                        </p>
+                        <p className="text-slate-500">
+                          to {new Date(tenant.leaseEnd).toLocaleDateString()}
+                        </p>
                       </div>
                     </TableCell>
 
                     {/* Rent */}
                     <TableCell>
                       <span className="font-medium">
-                        ₹{tenant.rent?.toLocaleString()}
+                        ₹{tenant.rentAmount?.toLocaleString()}
                       </span>
                     </TableCell>
 
@@ -180,6 +191,26 @@ export function Tenants() {
                     </TableCell>
                   </TableRow>
                 ))}
+
+                {filteredTenants.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={7}
+                      className="text-center py-6 text-slate-500"
+                    >
+                      No tenants found
+                    </TableCell>
+                  </TableRow>
+                )}
+
+                <div className="flex gap-4">
+                  <div>Total: {counts.total}</div>
+                  <div className="text-green-600">Active: {counts.active}</div>
+                  <div className="text-yellow-600">
+                    Upcoming: {counts.upcoming}
+                  </div>
+                  <div className="text-red-600">Expired: {counts.expired}</div>
+                </div>
               </TableBody>
             </Table>
           </div>

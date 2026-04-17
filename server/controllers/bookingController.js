@@ -107,14 +107,24 @@ exports.getAllBookings = async (req, res) => {
 
 // GET BOOKING BY USER
 exports.getUserBookings = async (req, res) => {
-  const bookings = await Booking.find({
-    user: req.user.id,
-  }).populate("property", "title address ");
+  try{
+    const bookings = await Booking.find({
+      user: req.user.id,
+    })
+      .populate("property", "title address price") 
+      .populate("user", "fullname email"); 
 
-  res.json({
-    success: true,
-    data: bookings,
-  });
+    res.json({
+      success: true,
+      count: bookings.length,
+      data: bookings,
+    });
+  }catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
 };
 
 // UPDATE BOOKING STATUS

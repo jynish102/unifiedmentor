@@ -8,62 +8,43 @@ import API from "../../utils/api";
 
 export default function AllBooking() {
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("property");
   const [bookings, setBookings] = useState([]);
   const [loadingId, setLoadingId] = useState(null);
-  const currentUser = JSON.parse(localStorage.getItem("user"));
+  
   
 
   console.log("Updated bookings:", bookings);
 
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetchMyBookings = async () => {
       try {
         let res;
+        let data = [];
 
         if (activeTab === "property") {
-          res = await API.get("/property-bookings");
+          res = await API.get("/property-Bookings/my-property-bookings");
 
-          // add type manually
-          const data = res.data.data.map((b) => ({
+          data = res.data.data.map((b) => ({
             ...b,
             type: "property",
           }));
-
-          setBookings(data);
         } else if (activeTab === "amenity") {
-          res = await API.get("/amenity-bookings");
+          res = await API.get("/amenity-Bookings/my-amenity-bookings");
 
-          const data = res.data.data.map((b) => ({
+          data = res.data.data.map((b) => ({
             ...b,
             type: "amenity",
           }));
-
-          setBookings(data);
-        } else {
-          // ALL → call both APIs
-          const [propertyRes, amenityRes] = await Promise.all([
-            API.get("/property-bookings"),
-            API.get("/amenity-bookings"),
-          ]);
-
-          const propertyData = propertyRes.data.data.map((b) => ({
-            ...b,
-            type: "property",
-          }));
-
-          const amenityData = amenityRes.data.data.map((b) => ({
-            ...b,
-            type: "amenity",
-          }));
-
-          setBookings([...propertyData, ...amenityData]);
         }
+
+        setBookings(data);
       } catch (err) {
         console.error(err);
       }
     };
-    fetchBookings();
+
+    fetchMyBookings();
   }, [activeTab]);
 
   const getStatusColor = (status) => {
@@ -166,7 +147,7 @@ export default function AllBooking() {
 
         {/* Tabs */}
         <div className="flex gap-2">
-          {["all", "property", "amenity"].map((tab) => (
+          {["property", "amenity"].map((tab) => (
             <Button
               key={tab}
               variant={activeTab === tab ? "default" : "outline"}
@@ -177,9 +158,7 @@ export default function AllBooking() {
               }`}
               onClick={() => setActiveTab(tab)}
             >
-              {tab === "all"
-                ? "All Bookings"
-                : tab === "property"
+              { tab === "property"
                   ? "Properties"
                   : "Amenities"}
             </Button>
@@ -247,9 +226,7 @@ export default function AllBooking() {
 
                   {/* Buttons (Always visible as you requested) */}
                   <div className="flex gap-2 pt-2">
-                    {b.status === "approved" &&
-                      (b.user?._id === currentUser?.id ||
-                        b.user === currentUser?.id) && (
+                    {b.status === "approved" &&(
                         <Button
                           className="w-full bg-red-600 hover:bg-red-700"
                           disabled={loadingId === b._id}

@@ -79,6 +79,28 @@ exports.getBookingsByAmenity = async (req, res) => {
   res.json({ success: true, data: bookings });
 };
 
+// GET BOOKING BY USER
+exports.getUserBookings = async (req, res) => {
+  try{
+    const bookings = await AmenityBooking.find({
+      user: req.user.id,
+    })
+      .populate("amenity", "name address price") 
+      .populate("user", "fullname email"); 
+
+    res.json({
+      success: true,
+      count: bookings.length,
+      data: bookings,
+    });
+  }catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 // UPDATE BOOKING STATUS
 exports.updateBookingStatus = async (req, res) => {
   try {

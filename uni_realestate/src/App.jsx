@@ -39,7 +39,7 @@ import { Settings } from "./pages/owner/Settings";
 
 //tenants
 import { Dashboard as TenantsDashboard } from "./pages/tenants/Dashboard";
-import { Profile } from "./pages/tenants/Profile";
+import Profile  from "./pages/tenants/Profile";
 import TenantProperty from "./pages/tenants/Property";
 import TenantPropertyDetails from "./pages/tenants/PropertyDetails";
 import PropertyBooking from "./pages/tenants/PropertyBooking";

@@ -1,30 +1,94 @@
-import { User, Home, CreditCard, Calendar, FileText, Phone, Mail, MapPin, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import {
+  User,
+  Home,
+  CreditCard,
+  Calendar,
+  FileText,
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  Pencil,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 export default function TenantProfile() {
   const [tenants, setTenants] = useState([]);
   const [tenant, setTenant] = useState(null);
   const [counts, setCounts] = useState(null);
+  const [preview, setPreview] = useState(null);
 
   useEffect(() => {
     const fetchTenantData = async () => {
       try {
         const res = await API.get("/tenants");
+
+        console.log("API:", res.data);
+
         setTenants(res.data.tenants);
-        setTenant(res.data.tenants[0]); //  important
+
+        if (res.data.tenants.length > 0) {
+          setTenant(res.data.tenants[0]);
+        } else {
+          setTenant({});
+        }
+
         setCounts(res.data.counts);
       } catch (error) {
-        console.error("Error fetching tenant data:", error);
+        console.error(error);
       }
     };
 
     fetchTenantData();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
   if (!tenant) {
     return <div className="min-h-screen bg-muted/30">Loading...</div>;
   }
 
+
+  const handleImageUpload = async (file) => {
+  if (!file) return;
+  const token = localStorage.getItem("token");
+
+  // 1. Show preview instantly
+  const previewUrl = URL.createObjectURL(file);
+  setPreview(previewUrl);
+
+  try {
+    // 2. Upload to backend
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await API.put("/auth/profile-image", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    
+
+    // 3. Update real image from server
+    setTenant((prev) => ({
+      ...prev,
+      profileImage: res.data.profileImage,
+    }));
+
+    // 4. Clear preview (optional)
+    setPreview(null);
+
+  } catch (err) {
+    console.error(err);
+  }
+};
   return (
     <div className="min-h-screen bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
@@ -33,16 +97,39 @@ export default function TenantProfile() {
           <div className="h-32 bg-gradient-to-r from-primary/10 to-primary/5"></div>
           <div className="px-6 pb-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 -mt-16">
-              <img
-                src={tenant.profileImage}
-                alt={tenant.name}
-                className="w-32 h-32 rounded-full border-4 border-card object-cover shadow-md"
-              />
+              <div className="relative w-32 h-32">
+                {/* Profile Image */}
+                <img
+                  src={
+                    preview
+                      ? preview
+                      : tenant?.profileImage
+                        ? `http://localhost:5000/${tenant.profileImage}`
+                        : "/default-avatar.jpg"
+                  }
+                  className="w-32 h-32 rounded-full object-cover border-4 border-card shadow-md"
+                />
+
+                {/* Edit Icon */}
+                <label className="absolute bottom-1 right-1 bg-white p-2 rounded-full shadow cursor-pointer hover:bg-gray-100">
+                  <Pencil className="w-4 h-4 text-gray-700" />
+
+                  {/* Hidden Input */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleImageUpload(e.target.files[0])}
+                  />
+                </label>
+              </div>
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div>
                     <h1 className="text-foreground">{tenant.name}</h1>
-                    <p className="text-muted-foreground">Tenant since {tenant.joinDate}</p>
+                    <p className="text-muted-foreground">
+                      Tenant since {tenant.joinDate}
+                    </p>
                   </div>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-700 rounded-full w-fit">
                     <CheckCircle className="w-4 h-4" />
@@ -91,14 +178,14 @@ export default function TenantProfile() {
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-foreground">{tenant.units}</p>
+                    <p className="text-foreground">{tenant.unit}</p>
                     <p className="text-muted-foreground">{tenant.address}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <div>
                     <p className="text-muted-foreground">Move-in Date</p>
-                    <p className="text-foreground">{tenant.moveInDate}</p>
+                    <p className="text-foreground">{tenant.leaseStart}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Lease End</p>
@@ -110,83 +197,60 @@ export default function TenantProfile() {
                   </div>
                   <div>
                     <p className="text-muted-foreground">Security Deposit</p>
-                    <p className="text-foreground">{tenant.securityDeposit}</p>
+                    <p className="text-foreground">{tenant.Deposit}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-          {/* Right Column */}
-          <div className="space-y-6">
-            {/* Amenity Access */}
-            <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Calendar className="w-5 h-5 text-primary" />
-                <h2 className="text-foreground">Amenity Access</h2>
-              </div>
-              <div className="space-y-3">
-                {tenant?.amenities?.map((amenity) => (
-                  <div key={amenity.id} className="p-3 bg-muted/30 rounded-lg border border-border">
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <p className="text-foreground">{amenity.name}</p>
-                      <span className={`px-2 py-0.5 rounded-full text-sm ${
-                        amenity.status === 'Active'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-blue-100 text-blue-700'
-                      }`}>
-                        {amenity.status}
-                      </span>
+            {/* Right Column */}
+            <div className="space-y-6">
+              {/* Amenity Access */}
+              <div className="bg-card rounded-lg shadow-sm border border-border p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Calendar className="w-5 h-5 text-primary" />
+                  <h2 className="text-foreground">Amenity Access</h2>
+                </div>
+                <div className="space-y-3">
+                  {tenant?.amenities?.map((amenity) => (
+                    <div
+                      key={amenity.id}
+                      className="p-3 bg-muted/30 rounded-lg border border-border"
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <p className="text-foreground">{amenity.name}</p>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-sm ${
+                            amenity.status === "Active"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-blue-100 text-blue-700"
+                          }`}
+                        >
+                          {amenity.status}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-muted-foreground">
+                        <Clock className="w-4 h-4" />
+                        <p>{amenity.lastUsed}</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1.5 text-muted-foreground">
-                      <Clock className="w-4 h-4" />
-                      <p>{amenity.lastUsed}</p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Emergency Contact */}
-            <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <AlertCircle className="w-5 h-5 text-primary" />
-                <h2 className="text-foreground">Emergency Contact</h2>
-              </div>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-muted-foreground">Name</p>
-                  <p className="text-foreground">{tenant.emergencyContact.name}</p>
+              {/* Quick Actions */}
+              <div className="bg-card rounded-lg shadow-sm border border-border p-6">
+                <h3 className="text-foreground mb-4">Quick Actions</h3>
+                <div className="space-y-2">
+                  <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+                    Edit Profile
+                  </button>
                 </div>
-                <div>
-                  <p className="text-muted-foreground">Relationship</p>
-                  <p className="text-foreground">{tenant.emergencyContact.relationship}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Phone</p>
-                  <p className="text-foreground">{tenant.emergencyContact.phone}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Email</p>
-                  <p className="text-foreground">{tenant.emergencyContact.email}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-              <h3 className="text-foreground mb-4">Quick Actions</h3>
-              <div className="space-y-2">
-                <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
-                  Edit Profile
-                </button>
-              
-      
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }

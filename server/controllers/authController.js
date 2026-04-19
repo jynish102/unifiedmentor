@@ -65,3 +65,26 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.updateProfileImage = async (req, res) => {
+  try {
+    console.log("FILE:", req.file);
+    console.log("USER:", req.user);
+    const userId = req.user.id; // from auth middleware
+
+    const imagePath = req.file.path.replace(/\\/g, "/"); //  important
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { profileImage: imagePath },
+      { new: true },
+    );
+
+    res.json({
+      message: "Profile image updated",
+      profileImage: user.profileImage,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

@@ -3,10 +3,12 @@ const AmenityBooking = require("../models/AmenityBooking");
 
 exports.getTenants = async (req, res) => {
   try {
+    console.log("PROPERTY:", b.property);
     // 1 Fetch bookings
     const bookings = await Booking.find()
       .populate("user", "fullname email phone profileImage")
-      .populate("property", "title");
+      .populate("property", "title address");
+      
 
     // 2 Fetch all amenity bookings
     const amenityBookings = await AmenityBooking.find()
@@ -35,7 +37,7 @@ exports.getTenants = async (req, res) => {
     const today = new Date();
 
     // 4 Filter confirmed bookings
-    const validBookings = bookings.filter((b) => b.status === "confirmed");
+    const validBookings = bookings;
 
     // 5 Map tenants
     const tenants = validBookings.map((b) => {
@@ -59,6 +61,7 @@ exports.getTenants = async (req, res) => {
 
         // property info
         property: b.property?.title,
+        address: b.property?.address || "N/A",
         unit: b.unit,
 
         //  lease

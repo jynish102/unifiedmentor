@@ -3,7 +3,7 @@ const AmenityBooking = require("../models/AmenityBooking");
 
 exports.getTenants = async (req, res) => {
   try {
-    console.log("PROPERTY:", b.property);
+    
     // 1 Fetch bookings
     const bookings = await Booking.find()
       .populate("user", "fullname email phone profileImage")
@@ -41,6 +41,7 @@ exports.getTenants = async (req, res) => {
 
     // 5 Map tenants
     const tenants = validBookings.map((b) => {
+      // console.log("PROPERTY:", b.property);
       const start = new Date(b.startDate);
       const end = new Date(b.endDate);
 
@@ -60,9 +61,9 @@ exports.getTenants = async (req, res) => {
         profileImage: b.user?.profileImage,
 
         // property info
-        property: b.property?.title,
+        property: b.property?.title || "N/A",
         address: b.property?.address || "N/A",
-        unit: b.unit,
+        unit: b.unit || "N/A",
 
         //  lease
         leaseStart: b.startDate,

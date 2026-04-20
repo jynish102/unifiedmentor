@@ -14,6 +14,7 @@ const maintenanceRoutes = require("./routes/maintenanceRoutes");
 const amenityBookingRoutes = require("./routes/amenityBookingRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const tenantRoutes = require("./routes/tenantRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -42,6 +43,8 @@ app.use("/api/maintenance", maintenanceRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 app.use("/api/tenants", tenantRoutes);
+
+app.use("/api" , profileRoutes);
 
 // Connect MongoDB
 mongoose

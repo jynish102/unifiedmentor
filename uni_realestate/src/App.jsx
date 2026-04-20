@@ -35,7 +35,7 @@ import OwnerAmenities  from "./pages/owner/Amenities";
 import OwnerAddAmenity from "./pages/owner/AddAmenity";
 import OwnerAmenityDetails from "./pages/owner/AmenityDetails";
 import { Financials } from "./pages/owner/Financials";
-import { Settings } from "./pages/owner/Settings";
+import Settings from "./pages/owner/Settings";
 
 //tenants
 import { Dashboard as TenantsDashboard } from "./pages/tenants/Dashboard";

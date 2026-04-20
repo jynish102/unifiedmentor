@@ -15,33 +15,30 @@ import {
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 export default function TenantProfile() {
-  const [tenants, setTenants] = useState([]);
   const [tenant, setTenant] = useState(null);
-  const [counts, setCounts] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [counts, setCounts] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    email: tenant?.email || "",
+    phone: tenant?.phone || "",
+  });
 
   useEffect(() => {
-    const fetchTenantData = async () => {
+    const fetchProfile = async () => {
       try {
-        const res = await API.get("/tenants");
+        const res = await API.get("/me");
 
         console.log("API:", res.data);
 
-        setTenants(res.data.tenants);
-
-        if (res.data.tenants.length > 0) {
-          setTenant(res.data.tenants[0]);
-        } else {
-          setTenant({});
-        }
-
+        setTenant(res.data.user); 
         setCounts(res.data.counts);
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchTenantData();
+    fetchProfile();
   }, []);
 
   useEffect(() => {
@@ -50,11 +47,35 @@ export default function TenantProfile() {
     };
   }, [preview]);
 
+  useEffect(() => {
+    if (tenant) {
+      setFormData({
+        email: tenant.email || "",
+        phone: tenant.phone || "",
+      });
+    }
+  }, [tenant]);
+
   if (!tenant) {
     return <div className="min-h-screen bg-muted/30">Loading...</div>;
   }
 
+const handleChange = (e) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+};
 
+const handleSave = async () => {
+  try {
+    await API.put("/me", formData); // your update API
+    setTenant({ ...tenant, ...formData });
+    setIsEditing(false);
+  } catch (err) {
+    console.error(err);
+  }
+};
   const handleImageUpload = async (file) => {
   if (!file) return;
   const token = localStorage.getItem("token");
@@ -146,23 +167,73 @@ export default function TenantProfile() {
           <div className="lg:col-span-2 space-y-6">
             {/* Personal Information */}
             <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <User className="w-5 h-5 text-primary" />
-                <h2 className="text-foreground">Personal Information</h2>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <User className="w-5 h-5 text-primary" />
+                  <h2 className="text-foreground">Personal Information</h2>
+                </div>
+
+                {!isEditing ? (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="text-sm px-3 py-1 border rounded-md hover:bg-muted"
+                  >
+                    Edit
+                  </button>
+                ) : (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleSave}
+                      className="text-sm px-3 py-1 bg-primary text-white rounded-md"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="text-sm px-3 py-1 border rounded-md"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
               </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* EMAIL */}
                 <div className="flex items-start gap-3">
                   <Mail className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div>
+                  <div className="w-full">
                     <p className="text-muted-foreground">Email</p>
-                    <p className="text-foreground">{tenant.email}</p>
+
+                    {isEditing ? (
+                      <input
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full border rounded px-2 py-1"
+                      />
+                    ) : (
+                      <p className="text-foreground">{tenant.email}</p>
+                    )}
                   </div>
                 </div>
+
+                {/* PHONE */}
                 <div className="flex items-start gap-3">
                   <Phone className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div>
+                  <div className="w-full">
                     <p className="text-muted-foreground">Phone</p>
-                    <p className="text-foreground">{tenant.phone}</p>
+
+                    {isEditing ? (
+                      <input
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="w-full border rounded px-2 py-1"
+                      />
+                    ) : (
+                      <p className="text-foreground">{tenant.phone}</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -178,7 +249,7 @@ export default function TenantProfile() {
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-foreground">{tenant.unit}</p>
+                    <p className="text-foreground">{tenant.title}</p>
                     <p className="text-muted-foreground">{tenant.address}</p>
                   </div>
                 </div>

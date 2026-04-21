@@ -73,7 +73,7 @@ exports.getProfileData = async (req, res) => {
     // 5. Tenant response
     const tenantData = {
       ...user.toObject(),
-       name: user.fullName,
+       name: user.fullname,
 
       property: booking?.property?.title,
       address: booking?.property?.address,

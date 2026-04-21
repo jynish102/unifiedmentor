@@ -20,16 +20,23 @@ export default function TenantProfile() {
   const [counts, setCounts] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    email: tenant?.email || "",
-    phone: tenant?.phone || "",
+    email:  "",
+    phone: "",
   });
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await API.get("/me");
+        const token = localStorage.getItem("token");
+        const res = await API.get("/profile-data",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        console.log("API:", res.data);
+        // console.log("API:", res.data);
 
         setTenant(res.data.user); 
         setCounts(res.data.counts);
@@ -69,12 +76,39 @@ const handleChange = (e) => {
 
 const handleSave = async () => {
   try {
-    await API.put("/me", formData); // your update API
-    setTenant({ ...tenant, ...formData });
+    const token = localStorage.getItem("token");
+
+    const res = await API.put("/update-profile-data", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // update UI with latest backend response
+    setTenant(res.data.user || { ...tenant, ...formData });
+
     setIsEditing(false);
+    alert("Profile updated successfully ");
   } catch (err) {
     console.error(err);
+    alert(" updated Failed ");
   }
+};
+
+const handleEdit = () => {
+  setFormData({
+    email: tenant.email || "",
+    phone: tenant.phone || "",
+  });
+  setIsEditing(true);
+};
+
+const handleCancel = () => {
+  setFormData({
+    email: tenant.email || "",
+    phone: tenant.phone || "",
+  });
+  setIsEditing(false);
 };
   const handleImageUpload = async (file) => {
   if (!file) return;
@@ -147,7 +181,7 @@ const handleSave = async () => {
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div>
-                    <h1 className="text-foreground">{tenant.name}</h1>
+                    <h1 className="text-foreground">{tenant.fullname}</h1>
                     <p className="text-muted-foreground">
                       Tenant since {tenant.joinDate}
                     </p>
@@ -175,8 +209,8 @@ const handleSave = async () => {
 
                 {!isEditing ? (
                   <button
-                    onClick={() => setIsEditing(true)}
-                    className="text-sm px-3 py-1 border rounded-md hover:bg-muted"
+                    onClick={handleEdit}
+                    className="text-sm px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                   >
                     Edit
                   </button>
@@ -184,13 +218,13 @@ const handleSave = async () => {
                   <div className="flex gap-2">
                     <button
                       onClick={handleSave}
-                      className="text-sm px-3 py-1 bg-primary text-white rounded-md"
+                      className="text-sm px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700"
                     >
                       Save
                     </button>
                     <button
-                      onClick={() => setIsEditing(false)}
-                      className="text-sm px-3 py-1 border rounded-md"
+                      onClick={handleCancel}
+                      className="text-sm px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-gray-900"
                     >
                       Cancel
                     </button>
@@ -249,73 +283,37 @@ const handleSave = async () => {
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
                   <div>
-                    <p className="text-foreground">{tenant.title}</p>
+                    <p className="text-foreground">{tenant.property}</p>
                     <p className="text-muted-foreground">{tenant.address}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                   <div>
                     <p className="text-muted-foreground">Move-in Date</p>
-                    <p className="text-foreground">{tenant.leaseStart}</p>
+                    <p className="text-foreground">
+                      {tenant.leaseStart
+                        ? new Date(tenant.leaseStart).toLocaleDateString()
+                        : "N/A"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Lease End</p>
-                    <p className="text-foreground">{tenant.leaseEnd}</p>
+                    <p className="text-foreground">
+                      {tenant.leaseEnd
+                        ? new Date(tenant.leaseEnd).toLocaleDateString()
+                        : "N/A"}
+                    </p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Monthly Rent</p>
-                    <p className="text-foreground">{tenant.rentAmount}</p>
+                    <p className="text-foreground">
+                      ₹{tenant.rentAmount?.toLocaleString()}/{tenant.paymentFrequency}
+                    </p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Security Deposit</p>
-                    <p className="text-foreground">{tenant.Deposit}</p>
+                    <p className="text-foreground">₹{tenant.deposit?.toLocaleString()}</p>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column */}
-            <div className="space-y-6">
-              {/* Amenity Access */}
-              <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Calendar className="w-5 h-5 text-primary" />
-                  <h2 className="text-foreground">Amenity Access</h2>
-                </div>
-                <div className="space-y-3">
-                  {tenant?.amenities?.map((amenity) => (
-                    <div
-                      key={amenity.id}
-                      className="p-3 bg-muted/30 rounded-lg border border-border"
-                    >
-                      <div className="flex items-start justify-between gap-2 mb-2">
-                        <p className="text-foreground">{amenity.name}</p>
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-sm ${
-                            amenity.status === "Active"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-blue-100 text-blue-700"
-                          }`}
-                        >
-                          {amenity.status}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <Clock className="w-4 h-4" />
-                        <p>{amenity.lastUsed}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Quick Actions */}
-              <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-                <h3 className="text-foreground mb-4">Quick Actions</h3>
-                <div className="space-y-2">
-                  <button className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
-                    Edit Profile
-                  </button>
                 </div>
               </div>
             </div>

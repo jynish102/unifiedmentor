@@ -8,7 +8,14 @@ export default function ProfileCard() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await API.get("/profile"); // your API endpoint
+        const token = localStorage.getItem("token");
+        const res = await API.get("/profile-data",
+          { 
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        ); // your API endpoint
         setUser(res.data);
       } catch (err) {
         console.error("Error fetching profile", err);
@@ -33,7 +40,7 @@ export default function ProfileCard() {
 
         {/* User Info */}
         <div>
-          <h2 className="text-lg font-semibold">{user.name}</h2>
+          <h2 className="text-lg font-semibold">{user.fullname}</h2>
           <p className="text-sm text-gray-500">{user.role}</p>
 
           <div className="text-sm text-gray-600 mt-1">

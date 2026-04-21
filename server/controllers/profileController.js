@@ -2,7 +2,7 @@ const User = require("../models/User");
 const Booking = require("../models/Booking");
 const AmenityBooking = require("../models/AmenityBooking");
 
-exports.getMe = async (req, res) => {
+exports.getProfileData = async (req, res) => {
   try {
     const userId = req.user.id;
 
@@ -73,9 +73,11 @@ exports.getMe = async (req, res) => {
     // 5. Tenant response
     const tenantData = {
       ...user.toObject(),
+       name: user.fullName,
 
       property: booking?.property?.title,
       address: booking?.property?.address,
+      paymentFrequency : booking?.property?.paymentFrequency,
       unit: booking?.unit,
 
       leaseStart: booking?.startDate,
@@ -90,6 +92,39 @@ exports.getMe = async (req, res) => {
     };
 
     res.json({ user: tenantData });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+exports.updateProfileData = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const { email, phone } = req.body;
+
+    // 1. Validate (basic)
+    if (!email && !phone) {
+      return res.status(400).json({ message: "Nothing to update" });
+    }
+
+    // 2. Build update object (only allowed fields)
+    const updateData = {};
+    if (email) updateData.email = email;
+    if (phone) updateData.phone = phone;
+
+    // 3. Update user
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
+
+    res.json({
+      success: true,
+      user: updatedUser,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });

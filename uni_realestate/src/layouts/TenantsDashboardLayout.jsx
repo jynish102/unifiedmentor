@@ -13,6 +13,8 @@ import { Button } from "../components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import { Badge } from "../components/ui/badge";
 import { tenantData } from "../components/data/mockData";
+import { useEffect, useState } from "react";
+import API from "../utils/api";
 
 const navigation = [
   { path: "/tenant/dashboard", name: "Dashboard", icon: Home },
@@ -54,9 +56,28 @@ function NavLinks({ location }) {
   );
 }
 
-// ✅ MAIN COMPONENT
+// MAIN COMPONENT
 export function TenantsDashboardLayout() {
   const location = useLocation();
+  const [tenant, setTenant] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await API.get("/profile-data", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setTenant(res.data.user);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -64,7 +85,9 @@ export function TenantsDashboardLayout() {
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r">
         <div className="p-6 border-b">
           <h1 className="text-2xl font-bold text-blue-600">TenantHub</h1>
-          <p className="text-sm text-gray-600 mt-1">{tenantData.building}</p>
+          <p className="text-sm text-gray-600 mt-1">
+            {tenant?.property || "Building"}
+          </p>
         </div>
 
         <nav className="flex-1 p-4 space-y-2">
@@ -74,16 +97,17 @@ export function TenantsDashboardLayout() {
         <div className="p-4 border-t">
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
             <div className="size-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-              {tenantData.name
+              {tenant?.fullname ?
+                  tenant.fullname
                 .split(" ")
                 .map((n) => n[0])
-                .join("")}
+                .join(""):"U"}
             </div>
 
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate">{tenantData.name}</p>
+              <p className="font-medium text-sm truncate">{tenant?.fullname || "user"}</p>
               <p className="text-xs text-gray-600 truncate">
-                {tenantData.unit}
+                {tenant?.unit || "no unit"}
               </p>
             </div>
           </div>
@@ -105,7 +129,7 @@ export function TenantsDashboardLayout() {
               <div className="p-6 border-b">
                 <h1 className="text-2xl font-bold text-blue-600">TenantHub</h1>
                 <p className="text-sm text-gray-600 mt-1">
-                  {tenantData.building}
+                  {tenant?.property || "building"}
                 </p>
               </div>
 

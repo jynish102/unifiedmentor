@@ -13,7 +13,7 @@ const {
 } = require("../controllers/maintenanceController");
 
 // CREATE REQUEST
-router.post("/", createMaintenance);
+router.post("/", authMiddleware, createMaintenance);
 
 // GET ALL
 router.get("/", authMiddleware, getAllMaintenance);

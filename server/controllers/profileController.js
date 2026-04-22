@@ -103,15 +103,16 @@ exports.updateProfileData = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const { email, phone } = req.body;
+    const {fullname,  email, phone } = req.body;
 
     // 1. Validate (basic)
-    if (!email && !phone) {
+    if (!fullname && !email && !phone) {
       return res.status(400).json({ message: "Nothing to update" });
     }
 
     // 2. Build update object (only allowed fields)
     const updateData = {};
+    if (fullname) updateData.fullname =  fullname;
     if (email) updateData.email = email;
     if (phone) updateData.phone = phone;
 

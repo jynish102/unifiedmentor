@@ -78,7 +78,6 @@ export default function Properties() {
           <h2 className="text-3xl font-bold text-gray-900">Properties</h2>
           <p className="text-gray-600 mt-1">Manage your rental properties</p>
         </div>
-        
       </div>
 
       <Card>
@@ -173,6 +172,16 @@ export default function Properties() {
                   View
                 </Button>
 
+                <button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() =>
+                    navigate(`/tenant/properties/create/${property._id}`)
+                  }
+                >
+                  Report Issue
+                </button>
               </div>
             </CardContent>
           </Card>

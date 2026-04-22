@@ -20,6 +20,7 @@ export default function TenantProfile() {
   const [counts, setCounts] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
+    fullname: "",
     email:  "",
     phone: "",
   });
@@ -57,6 +58,7 @@ export default function TenantProfile() {
   useEffect(() => {
     if (tenant) {
       setFormData({
+        name: tenant.fullname || "",
         email: tenant.email || "",
         phone: tenant.phone || "",
       });
@@ -97,6 +99,7 @@ const handleSave = async () => {
 
 const handleEdit = () => {
   setFormData({
+    fullname : tenant.fullname || "",
     email: tenant.email || "",
     phone: tenant.phone || "",
   });
@@ -105,6 +108,7 @@ const handleEdit = () => {
 
 const handleCancel = () => {
   setFormData({
+    fullname : tenant.fullname || "" ,
     email: tenant.email || "",
     phone: tenant.phone || "",
   });
@@ -181,10 +185,72 @@ const handleCancel = () => {
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div>
-                    <h1 className="text-foreground">{tenant.fullname}</h1>
-                    <p className="text-muted-foreground">
-                      Tenant since {tenant.joinDate}
-                    </p>
+                    {/* NAME */}
+                    {isEditing ? (
+                      <input
+                        name="fullname"
+                        value={formData.fullname || ""}
+                        onChange={handleChange}
+                        className="text-xl font-bold border px-2 py-1 rounded"
+                      />
+                    ) : (
+                      <h2 className="text-2xl font-bold">{tenant.fullname}</h2>
+                    )}
+
+                    <p className="text-gray-500 capitalize">{tenant.role}</p>
+
+                    {/* EMAIL */}
+                    <div className="mt-2">
+                      {isEditing ? (
+                        <input
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className="border px-2 py-1 rounded w-full"
+                        />
+                      ) : (
+                        <p className="text-gray-700">📧 {tenant.email}</p>
+                      )}
+                    </div>
+
+                    {/* PHONE */}
+                    <div>
+                      {isEditing ? (
+                        <input
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          className="border px-2 py-1 rounded w-full"
+                        />
+                      ) : (
+                        <p className="text-gray-700">📞 {tenant.phone}</p>
+                      )}
+                    </div>
+                    <div>
+                      {!isEditing ? (
+                        <button
+                          onClick={handleEdit}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                        >
+                          Edit Profile
+                        </button>
+                      ) : (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={handleSave}
+                            className="px-4 py-2 bg-green-600 text-white rounded-md"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={handleCancel}
+                            className="px-4 py-2 bg-gray-800 text-white rounded-md"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-700 rounded-full w-fit">
                     <CheckCircle className="w-4 h-4" />
@@ -199,80 +265,7 @@ const handleCancel = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Personal Information */}
-            <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <User className="w-5 h-5 text-primary" />
-                  <h2 className="text-foreground">Personal Information</h2>
-                </div>
-
-                {!isEditing ? (
-                  <button
-                    onClick={handleEdit}
-                    className="text-sm px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                  >
-                    Edit
-                  </button>
-                ) : (
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handleSave}
-                      className="text-sm px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={handleCancel}
-                      className="text-sm px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-gray-900"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* EMAIL */}
-                <div className="flex items-start gap-3">
-                  <Mail className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div className="w-full">
-                    <p className="text-muted-foreground">Email</p>
-
-                    {isEditing ? (
-                      <input
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="w-full border rounded px-2 py-1"
-                      />
-                    ) : (
-                      <p className="text-foreground">{tenant.email}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* PHONE */}
-                <div className="flex items-start gap-3">
-                  <Phone className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div className="w-full">
-                    <p className="text-muted-foreground">Phone</p>
-
-                    {isEditing ? (
-                      <input
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="w-full border rounded px-2 py-1"
-                      />
-                    ) : (
-                      <p className="text-foreground">{tenant.phone}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
+           
             {/* Current Rental */}
             <div className="bg-card rounded-lg shadow-sm border border-border p-6">
               <div className="flex items-center gap-2 mb-4">
@@ -307,12 +300,15 @@ const handleCancel = () => {
                   <div>
                     <p className="text-muted-foreground">Monthly Rent</p>
                     <p className="text-foreground">
-                      ₹{tenant.rentAmount?.toLocaleString()}/{tenant.paymentFrequency}
+                      ₹{tenant.rentAmount?.toLocaleString()}/
+                      {tenant.paymentFrequency}
                     </p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Security Deposit</p>
-                    <p className="text-foreground">₹{tenant.deposit?.toLocaleString()}</p>
+                    <p className="text-foreground">
+                      ₹{tenant.deposit?.toLocaleString()}
+                    </p>
                   </div>
                 </div>
               </div>

@@ -6,6 +6,15 @@ import { Pencil } from "lucide-react";
 export default function ProfileCard() {
   const [user, setUser] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [formData, setFormData] = useState({
+    fullname: "",
+    email: "",
+    phone: "",
+  });
+
+ 
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -19,7 +28,7 @@ export default function ProfileCard() {
             }
           }
         ); // your API endpoint
-        console.log("API RESPONSE:", res.data);
+        console.log("API RESPONSE:", res.data);//
         setUser(res.data.user);
       } catch (err) {
         console.error("Error fetching profile", err);
@@ -28,6 +37,56 @@ export default function ProfileCard() {
 
     fetchProfile();
   }, []);
+
+   useEffect(() => {
+     if (user) {
+       setFormData({
+         fullname: user.fullname || "",
+         email: user.email || "",
+         phone: user.phone || "",
+       });
+     }
+   }, [user]);
+
+   const handleChange = (e) => {
+     setFormData({
+       ...formData,
+       [e.target.name]: e.target.value,
+     });
+   };
+
+   const handleEdit = () => {
+     setIsEditing(true);
+   };
+
+   const handleCancel = () => {
+     setFormData({
+       fullname: user.fullname || "",
+       email: user.email || "",
+       phone: user.phone || "",
+     });
+     setIsEditing(false);
+   };
+
+   const handleSave = async () => {
+     try {
+       const token = localStorage.getItem("token");
+
+       const res = await API.put("/update-profile-data", formData, {
+         headers: {
+           Authorization: `Bearer ${token}`,
+         },
+       });
+
+       setUser(res.data.user || { ...user, ...formData });
+       setIsEditing(false);
+
+       alert("Profile updated successfully ");
+     } catch (err) {
+       console.error(err);
+       alert("Update failed ");
+     }
+   };
 
   if (!user) return <p>Loading...</p>;
 
@@ -52,7 +111,7 @@ export default function ProfileCard() {
       });
 
       // 3. Update real image from server
-      setTenant((prev) => ({
+      setUser((prev) => ({
         ...prev,
         profileImage: res.data.profileImage,
       }));
@@ -97,20 +156,59 @@ export default function ProfileCard() {
 
         {/* User Info */}
         <div>
-          <h2 className="text-2xl md:text-3xl  font-semibold">
-            {user.fullname}
-          </h2>
+          {isEditing ? (
+            <input
+              name="fullname"
+              value={formData.fullname}
+              onChange={handleChange}
+              className="text-2xl font-semibold border px-2 py-1 rounded"
+            />
+          ) : (
+            <h2 className="text-2xl font-semibold">{user.fullname}</h2>
+          )}
           <p className="text-lg text-gray-500">{user.role}</p>
 
           <div className="text-lg text-gray-600 mt-2 space-y-1">
-            <p>📧 {user.email}</p>
-            <p>📞 {user.phone}</p>
+            {isEditing ? (
+              <input
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="border px-2 py-1 rounded"
+              />
+            ) : (
+              <p>📧 {user.email}</p>
+            )}
+
+            {isEditing ? (
+              <input
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="border px-2 py-1 rounded"
+              />
+            ) : (
+              <p>📞 {user.phone}</p>
+            )}
           </div>
         </div>
       </div>
 
       {/* Right Section */}
-      <Button variant="outline">Edit Profile</Button>
+      {!isEditing ? (
+        <Button onClick={handleEdit} className="bg-blue-600 text-white">
+          Edit Profile
+        </Button>
+      ) : (
+        <div className="flex gap-2">
+          <Button onClick={handleSave} className="bg-green-600 text-white">
+            Save
+          </Button>
+          <Button onClick={handleCancel} className="bg-gray-800 text-white">
+            Cancel
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

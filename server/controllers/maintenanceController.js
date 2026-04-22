@@ -1,9 +1,12 @@
 const Maintenance = require("../models/Maintenance");
 const Property = require("../models/Property");
+const User = require("../models/User");
 
 // CREATE MAINTENANCE REQUEST
 exports.createMaintenance = async (req, res) => {
   try {
+    console.log("USER:", req.user);
+    const userId = req.user.id;
     const property = await Property.findById(req.body.property);
 
     if (!property) {
@@ -14,7 +17,7 @@ exports.createMaintenance = async (req, res) => {
 
     const maintenance = new Maintenance({
       property: req.body.property,
-      tenant: req.body.tenant,
+      tenant: userId,
       title: req.body.title,
       description: req.body.description,
       priority: req.body.priority
@@ -27,6 +30,7 @@ exports.createMaintenance = async (req, res) => {
       data: maintenance,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       message: error.message,
     });

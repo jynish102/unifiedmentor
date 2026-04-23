@@ -40,7 +40,7 @@ exports.createMaintenance = async (req, res) => {
 // GET ALL MAINTENANCE REQUESTS
 exports.getAllMaintenance = async (req, res) => {
   const maintenance = await Maintenance.aggregate([
-    // ✅ Priority logic
+    // Priority logic
     {
       $addFields: {
         priorityValue: {
@@ -57,10 +57,10 @@ exports.getAllMaintenance = async (req, res) => {
       },
     },
 
-    // ✅ Sort
+    // Sort
     { $sort: { priorityValue: -1 } },
 
-    // ✅ JOIN Property
+    // JOIN Property
     {
       $lookup: {
         from: "properties", // collection name in MongoDB
@@ -73,7 +73,7 @@ exports.getAllMaintenance = async (req, res) => {
     // convert array → object
     { $unwind: "$property" },
 
-    // ✅ JOIN Tenant (User)
+    // JOIN Tenant (User)
     {
       $lookup: {
         from: "users", // User collection
@@ -95,14 +95,37 @@ exports.getAllMaintenance = async (req, res) => {
 
 // GET MAINTENANCE BY PROPERTY
 exports.getMaintenanceByProperty = async (req, res) => {
-  const maintenance = await Maintenance.find({
-    property: req.params.propertyId,
-  });
+  try {
+    const ownerId = req.user.id;
+    const { propertyId } = req.params;
 
-  res.json({
-    success: true,
-    data: maintenance,
-  });
+    //  1. Check property exists & belongs to owner
+    const property = await Property.findOne({
+      _id: propertyId,
+      owner: ownerId,
+    });
+
+    if (!property) {
+      return res.status(403).json({
+        message: "Not authorized for this property",
+      });
+    }
+
+    // 2. Get maintenance for that property
+    const maintenance = await Maintenance.find({
+      property: propertyId,
+    })
+      .populate("tenant", "fullName email")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: maintenance,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
 };
 
 // GET MAINTENANCE BY TENANT
@@ -119,16 +142,22 @@ exports.getTenantMaintenance = async (req, res) => {
 
 // UPDATE MAINTENANCE STATUS
 exports.updateMaintenanceStatus = async (req, res) => {
-  const maintenance = await Maintenance.findByIdAndUpdate(
-    req.params.id,
-    { status: req.body.status },
-    { new: true },
-  );
+  try {
+    const { status } = req.body;
 
-  res.json({
-    success: true,
-    data: maintenance,
-  });
+    const maintenance = await Maintenance.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true },
+    );
+
+    res.json({
+      success: true,
+      data: maintenance,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 // DELETE MAINTENANCE REQUEST

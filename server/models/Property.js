@@ -105,7 +105,7 @@ const propertySchema = new mongoose.Schema(
 
     availableFrom: Date,
 
-    createdBy: {
+    owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },

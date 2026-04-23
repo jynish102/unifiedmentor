@@ -19,15 +19,15 @@ router.post("/", authMiddleware, createMaintenance);
 router.get("/", authMiddleware, getAllMaintenance);
 
 // GET BY PROPERTY
-router.get("/property/:propertyId", getMaintenanceByProperty);
+router.get("/property/:propertyId",authMiddleware, getMaintenanceByProperty);
 
 // GET BY TENANT
-router.get("/tenant/:tenantId", getTenantMaintenance);
+router.get("/tenant/:tenantId", authMiddleware, getTenantMaintenance);
 
 // UPDATE STATUS
-router.put("/:id", authMiddleware, authorizeRoles(["admin"]), updateMaintenanceStatus);
+router.put("/:id", authMiddleware, authorizeRoles(["owner"]), updateMaintenanceStatus);
 
 // DELETE
-router.delete("/:id", authMiddleware, authorizeRoles(["admin"]), deleteMaintenance);
+router.delete("/:id", authMiddleware, authorizeRoles(["owner"]), deleteMaintenance);
 
 module.exports = router;

@@ -68,8 +68,8 @@ exports.loginUser = async (req, res) => {
 
 exports.updateProfileImage = async (req, res) => {
   try {
-    console.log("FILE:", req.file);
-    console.log("USER:", req.user);
+    // console.log("FILE:", req.file);
+    // console.log("USER:", req.user);
     const userId = req.user.id; // from auth middleware
 
     const imagePath = req.file.path.replace(/\\/g, "/"); //  important

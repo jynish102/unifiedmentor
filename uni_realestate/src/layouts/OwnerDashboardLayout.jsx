@@ -18,7 +18,7 @@ export  function OwnerDashboardLayout() {
     { path: "/owner/ownerdashboard", name: "Dashboard", icon: LayoutDashboard },
     { path: "/owner/properties", name: "Properties", icon: Building2 },
     { path: "/owner/amenities", name: "Amenities", icon: Waves },
-    { path: "/owner/financials", name: "Financials", icon: DollarSign },
+    { path: "/owner/maintenance", name: "Maintenance", icon: DollarSign },
     { path: "/owner/settings", name: "Settings", icon: Settings },
   ];
 

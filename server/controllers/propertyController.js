@@ -1,5 +1,5 @@
 const Property = require("../models/Property");
-
+const mongoose = require("mongoose");
 exports.addProperty = async (req, res) => {
   try {
     // console.log("BODY:", req.body);
@@ -15,7 +15,7 @@ exports.addProperty = async (req, res) => {
     const property = await Property.create({
       ...req.body,
       images: imagePaths,
-      createdBy: req.user.id,
+      owner: req.user.id,
       
     });
 
@@ -33,7 +33,7 @@ exports.addProperty = async (req, res) => {
 exports.getProperties = async (req, res) => {
   try {
     const properties = await Property.find().populate(
-      "createdBy",
+      "owner",
       "fullname email",
     );
 
@@ -45,15 +45,47 @@ exports.getProperties = async (req, res) => {
 
 exports.getPropertyById = async (req, res) => {
   try {
-    const property = await Property.findById(req.params.id);
+    const ownerId = req.user._id;
+    const propertyId = req.params.id;
+
+    // Only fetch if property belongs to owner
+    const property = await Property.findOne({
+      _id: propertyId,
+      owner: ownerId,
+    });
 
     if (!property) {
-      return res.status(404).json({ message: "Property not found" });
+      return res.status(404).json({
+        message: "Property not found or not authorized",
+      });
     }
 
     res.json(property);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+//owner specific all properties
+// GET owner properties
+exports.getMyProperties = async (req, res) => {
+  try {
+    const ownerId = req.user.id;
+    console.log("USER:", req.user);
+
+    console.log("TOKEN ID:", req.user.id);
+    console.log("DB OWNER SAMPLE:", (await Property.findOne()).owner);
+
+    const properties = await Property.find({
+      owner: ownerId,
+    });
+
+    res.json({
+      success: true,
+      data: properties,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -70,7 +102,7 @@ exports.updateProperty = async (req, res) => {
 
     // Admin OR property owner
     if (
-      property.createdBy.toString() !== req.user.id &&
+      property.owner.toString() !== req.user.id &&
       req.user.role !== "admin"
     ) {
       return res

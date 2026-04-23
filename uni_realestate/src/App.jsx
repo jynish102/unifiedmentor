@@ -34,7 +34,7 @@ import  OwnerPropertyDetails  from "./pages/owner/PropertyDetails";
 import OwnerAmenities  from "./pages/owner/Amenities";
 import OwnerAddAmenity from "./pages/owner/AddAmenity";
 import OwnerAmenityDetails from "./pages/owner/AmenityDetails";
-import { Financials } from "./pages/owner/Financials";
+import OwnerMaintenance from "./pages/owner/Maintenance";
 import Settings from "./pages/owner/Settings";
 
 //tenants
@@ -116,7 +116,7 @@ function App() {
             path="/owner/amenities/:id"
             element={<OwnerAmenityDetails />}
           />
-          <Route path="financials" element={<Financials />} />
+          <Route path="/owner/maintenance" element={<OwnerMaintenance />} />
           <Route path="settings" element={<Settings />} />
         </Route>
 

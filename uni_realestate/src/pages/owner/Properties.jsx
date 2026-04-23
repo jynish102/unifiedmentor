@@ -23,7 +23,7 @@ import { ImageWithFallback } from "../../components/ui/imageWithFallback";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 
 
 
@@ -42,8 +42,12 @@ export  default function Properties() {
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/property");
-        setProperties(res.data);
+        const res = await API.get("/property/my-properties", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setProperties(res.data.data);
       } catch (err) {
         console.error("Error fetching properties", err);
       }
@@ -134,7 +138,27 @@ export  default function Properties() {
           </div>
         </CardContent>
       </Card>
+      { filteredProperties.length === 0 ? (
+  <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
+    <p className="text-5xl mb-3">🏠</p>
 
+    <h2 className="text-xl font-semibold text-gray-700">
+      No Properties Found
+    </h2>
+
+    <p className="text-gray-500 mt-2">
+      You haven’t added any properties yet.
+    </p>
+
+     <Button
+      className="mt-4"
+      onClick={() => navigate("/owner/properties/add-property")}
+    >
+      <Plus className="size-4 mr-2" />
+      Add Property
+    </Button>
+  </div>
+) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProperties.map((property) => (
           <Card
@@ -234,6 +258,7 @@ export  default function Properties() {
           </Card>
         ))}
       </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
@@ -259,7 +284,7 @@ export  default function Properties() {
               $
               {properties
                 .filter((p) => p.status === "occupied")
-                .reduce((sum, p) => sum + p.rent, 0)
+                .reduce((sum, p) => sum + p.price, 0)
                 .toLocaleString()}
             </p>
           </CardContent>

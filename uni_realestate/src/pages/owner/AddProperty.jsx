@@ -44,7 +44,12 @@ export default function AddProperty() {
   useEffect(() => {
     if (id) {
       const fetchProperty = async () => {
-        const res = await API.get(`/property/${id}`);
+        const token = localStorage.getItem("token");
+        const res = await API.get(`/property/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         const data = res.data;
         // console.log("API DATA:", data);
         setFormData({
@@ -163,8 +168,10 @@ export default function AddProperty() {
       alert("Max 5 images allowed");
       return;
     }
-
-    if (formData.occupied > formData.units) {
+     
+    console.log("units:", formData.units, typeof formData.units);
+    console.log("occupied:", formData.occupied, typeof formData.occupied);
+    if (Number(formData.occupied) > Number(formData.units)) {
       alert("Occupied cannot exceed total units");
       return;
     }

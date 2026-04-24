@@ -17,7 +17,7 @@ const {
 router.post(
   "/add",
   authMiddleware,
-  authorizeRoles(["owner"]),
+  authorizeRoles("owner"),
   upload.array("images", 5),
   addProperty,
 );
@@ -30,10 +30,10 @@ router.get("/:id", authMiddleware, getPropertyById);
 router.put(
   "/:id",
   authMiddleware,
-  authorizeRoles(["owner"]),
+  authorizeRoles("owner"),
   upload.array("images", 5),
   updateProperty,
 );
-router.delete("/:id", authMiddleware, authorizeRoles(["owner"]), deleteProperty);
+router.delete("/:id", authMiddleware, authorizeRoles("owner"), deleteProperty);
 
 module.exports = router;

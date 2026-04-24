@@ -45,7 +45,7 @@ exports.getProperties = async (req, res) => {
 
 exports.getPropertyById = async (req, res) => {
   try {
-    const ownerId = req.user._id;
+    const ownerId = req.user.id;
     const propertyId = req.params.id;
 
     // Only fetch if property belongs to owner
@@ -71,10 +71,10 @@ exports.getPropertyById = async (req, res) => {
 exports.getMyProperties = async (req, res) => {
   try {
     const ownerId = req.user.id;
-    console.log("USER:", req.user);
+    // console.log("USER:", req.user);
 
-    console.log("TOKEN ID:", req.user.id);
-    console.log("DB OWNER SAMPLE:", (await Property.findOne()).owner);
+    // console.log("TOKEN ID:", req.user.id);
+    // console.log("DB OWNER SAMPLE:", (await Property.findOne()).owner);
 
     const properties = await Property.find({
       owner: ownerId,

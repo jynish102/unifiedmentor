@@ -69,14 +69,14 @@ const Register = () => {
         password: formData.password,
       });
 
-      alert("User Registered ✅");
+      alert("User Registered ");
 
        navigate("/Login");
 
       console.log(res.data);
     } catch (err) {
       console.error(err.response?.data || err.message);
-      alert("Registration Failed ❌");
+      alert("Registration Failed ");
     }
   };
 

@@ -135,7 +135,7 @@ export default function ProfileCard() {
                 ? preview
                 : user?.profileImage
                   ? `http://localhost:5000/${user.profileImage}`
-                  : "/default-avatar.jpg"
+                  : "/default-user.webp"
             }
             alt="profile"
             className="w-32 h-32 rounded-full object-cover border-4 border-card shadow-md"

@@ -17,7 +17,14 @@ export default function PropertyDetails() {
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const res = await API.get(`/property/${id}`);
+         const token = localStorage.getItem("token");
+         console.log("ID:", id);
+         console.log("TOKEN:", token);
+         const res = await API.get(`/property/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         setProperty(res.data);
       } catch (err) {
         console.error(err);

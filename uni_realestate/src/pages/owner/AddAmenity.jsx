@@ -32,7 +32,7 @@ export default function AddAmenity() {
         const res = await API.get(`/amenity/${id}`);
         const data = res.data.data;
 
-        console.log("API DATA:", data);
+        // console.log("API DATA:", data);
         setFormData({
           name: data.name || "",
           description: data.description || "",

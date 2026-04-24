@@ -5,9 +5,23 @@ const User = require("../models/User");
 // CREATE MAINTENANCE REQUEST
 exports.createMaintenance = async (req, res) => {
   try {
-    console.log("USER:", req.user);
+    const mongoose = require("mongoose");
+
+    const propertyId = req.body.property;
     const userId = req.user.id;
-    const property = await Property.findById(req.body.property);
+
+    console.log("USER:", req.user);
+    console.log("PROPERTY ID:", propertyId);
+
+    // Validate property ID
+    if (!mongoose.Types.ObjectId.isValid(propertyId)) {
+      return res.status(400).json({
+        message: "Invalid property ID",
+      });
+    }
+
+    //  Check property exists
+    const property = await Property.findById(propertyId);
 
     if (!property) {
       return res.status(404).json({
@@ -15,12 +29,13 @@ exports.createMaintenance = async (req, res) => {
       });
     }
 
+    //  Create maintenance
     const maintenance = new Maintenance({
-      property: req.body.property,
+      property: propertyId,
       tenant: userId,
       title: req.body.title,
       description: req.body.description,
-      priority: req.body.priority
+      priority: req.body.priority,
     });
 
     await maintenance.save();
@@ -30,7 +45,7 @@ exports.createMaintenance = async (req, res) => {
       data: maintenance,
     });
   } catch (error) {
-    console.error(error);
+    console.error("ERROR:", error);
     res.status(500).json({
       message: error.message,
     });
@@ -96,7 +111,7 @@ exports.getAllMaintenance = async (req, res) => {
 // GET MAINTENANCE BY PROPERTY
 exports.getMaintenanceByProperty = async (req, res) => {
   try {
-    const ownerId = req.user.id;
+    const ownerId = req.user._id;
     const { propertyId } = req.params;
 
     //  1. Check property exists & belongs to owner
@@ -115,7 +130,7 @@ exports.getMaintenanceByProperty = async (req, res) => {
     const maintenance = await Maintenance.find({
       property: propertyId,
     })
-      .populate("tenant", "fullName email")
+      .populate("tenant", "fullname email")
       .sort({ createdAt: -1 });
 
     res.json({
@@ -138,6 +153,33 @@ exports.getTenantMaintenance = async (req, res) => {
     success: true,
     data: maintenance,
   });
+};
+
+//owner get my maintenance requests
+exports.getOwnerMaintenance = async (req, res) => {
+  try {
+    const ownerId = req.user._id;
+
+    // 1. Get all owner properties
+    const properties = await Property.find({ owner: ownerId });
+
+    const propertyIds = properties.map((p) => p._id);
+
+    // 2. Get all maintenance for those properties
+    const maintenance = await Maintenance.find({
+      property: { $in: propertyIds },
+    })
+      .populate("tenant", "fullname email")
+      .populate("property", "title address")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: maintenance,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 // UPDATE MAINTENANCE STATUS

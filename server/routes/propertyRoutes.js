@@ -24,7 +24,12 @@ router.post(
 
 router.get("/", getProperties);
 router.get("/my-properties", authMiddleware, getMyProperties);
-router.get("/:id", authMiddleware, getPropertyById);
+router.get(
+  "/:id",
+  authMiddleware,
+  authorizeRoles("owner", "tenant"),
+  getPropertyById,
+);
 
 
 router.put(

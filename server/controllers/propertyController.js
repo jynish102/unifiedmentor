@@ -43,20 +43,36 @@ exports.getProperties = async (req, res) => {
   }
 };
 
+// exports.getPropertyById = async (req, res) => {
+//   try {
+//     const user = req.user;
+//     const propertyId = req.params.id;
+
+//     // Only fetch if property belongs to owner
+//     const property = await Property.findOne({
+//       _id: propertyId,
+//       user: user.id,
+//     });
+
+//     if (!property) {
+//       return res.status(404).json({
+//         message: "Property not found or not authorized",
+//       });
+//     }
+
+//     res.json(property);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 exports.getPropertyById = async (req, res) => {
   try {
-    const ownerId = req.user.id;
-    const propertyId = req.params.id;
-
-    // Only fetch if property belongs to owner
-    const property = await Property.findOne({
-      _id: propertyId,
-      owner: ownerId,
-    });
+    const property = await Property.findById(req.params.id);
 
     if (!property) {
       return res.status(404).json({
-        message: "Property not found or not authorized",
+        message: "Property not found",
       });
     }
 

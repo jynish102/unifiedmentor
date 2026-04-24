@@ -47,7 +47,7 @@ export default function Maintenance() {
     fetchData();
   }, []);
 
-  // ✅ FILTER LOGIC
+  // FILTER LOGIC
   const filteredRequests = requests.filter((request) => {
     const matchesSearch =
       request.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||

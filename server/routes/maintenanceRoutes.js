@@ -7,6 +7,7 @@ const {
   createMaintenance,
   getAllMaintenance,
   getMaintenanceByProperty,
+  getOwnerMaintenance,
   getTenantMaintenance,
   updateMaintenanceStatus,
   deleteMaintenance,
@@ -18,6 +19,9 @@ router.post("/", authMiddleware, createMaintenance);
 // GET ALL
 router.get("/", authMiddleware, getAllMaintenance);
 
+// GET BY OWNER
+router.get("/owner", authMiddleware, authorizeRoles("owner"), getOwnerMaintenance);
+
 // GET BY PROPERTY
 router.get("/property/:propertyId",authMiddleware, getMaintenanceByProperty);
 
@@ -25,9 +29,9 @@ router.get("/property/:propertyId",authMiddleware, getMaintenanceByProperty);
 router.get("/tenant/:tenantId", authMiddleware, getTenantMaintenance);
 
 // UPDATE STATUS
-router.put("/:id", authMiddleware, authorizeRoles(["owner"]), updateMaintenanceStatus);
+router.put("/:id", authMiddleware, authorizeRoles("owner"), updateMaintenanceStatus);
 
 // DELETE
-router.delete("/:id", authMiddleware, authorizeRoles(["owner"]), deleteMaintenance);
+router.delete("/:id", authMiddleware, authorizeRoles("owner"), deleteMaintenance);
 
 module.exports = router;

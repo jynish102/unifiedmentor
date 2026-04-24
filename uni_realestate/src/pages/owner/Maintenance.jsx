@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom"
 import API from "../../utils/api";
 
 export default function OwnerMaintenance() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  
 
   const fetchMaintenance = async () => {
     try {
       const token = localStorage.getItem("token");
+      console.log("TOKEN:", token);
+      
 
-      const res = await API.get("/maintenance/property/:propertyId", {
+      const res = await API.get(`/maintenance/owner`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -17,7 +21,7 @@ export default function OwnerMaintenance() {
 
       setData(res.data.data);
     } catch (err) {
-      console.error(err);
+      console.error("ERROR:", err.response?.data || err.message);
     } finally {
       setLoading(false);
     }

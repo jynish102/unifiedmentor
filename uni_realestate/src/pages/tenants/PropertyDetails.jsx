@@ -17,10 +17,13 @@ export default function PropertyDetails() {
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const res = await API.get(`/property/${id}`);
+        const token = localStorage.getItem("token");
+        const res = await API.get(`/property/${id}`,{
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setProperty(res.data);
       } catch (err) {
-        console.error(err);
+        console.error("ERROR:", err.response?.data || err.message);
       }
     };
     fetchProperty();
@@ -40,7 +43,7 @@ export default function PropertyDetails() {
       </button>
 
       <button
-        onClick={() => navigate("/tenants/properties")}
+        onClick={() => navigate("/tenant/properties")}
         className="bg-gray-500 text-white px-3 py-1 rounded"
       >
         Close

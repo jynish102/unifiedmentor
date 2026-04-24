@@ -169,8 +169,7 @@ export default function AddProperty() {
       return;
     }
      
-    console.log("units:", formData.units, typeof formData.units);
-    console.log("occupied:", formData.occupied, typeof formData.occupied);
+    
     if (Number(formData.occupied) > Number(formData.units)) {
       alert("Occupied cannot exceed total units");
       return;

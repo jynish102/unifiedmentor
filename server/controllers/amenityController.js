@@ -1,9 +1,23 @@
 const Amenity = require("../models/Amenity");
+const Property = require("../models/Property");
 
 exports.createAmenity = async (req, res) => {
   try {
-    //  console.log("BODY:", req.body);
-    //  console.log("FILES:", req.files);
+    
+    const propertyId = req.params.propertyId;
+    const ownerId = req.user.id;
+
+    //  CHECK: property belongs to owner
+    const property = await Property.findOne({
+      _id: propertyId,
+      owner: ownerId,
+    });
+
+    if (!property) {
+      return res.status(403).json({
+        message: "Not authorized to add amenity to this property",
+      });
+    }
 
      if (!req.body) {
        return res.status(400).json({ message: "No data received" });
@@ -101,11 +115,36 @@ exports.getAmenitiesByProperty = async (req, res) => {
   }
 };
 
+// get my amenity
+exports.getMyAmenities = async (req, res) => {
+  try {
+    const ownerId = req.user.id;
+
+    // 1. Find owner’s properties
+    const properties = await Property.find({ owner: ownerId }).select("_id");
+
+    const propertyIds = properties.map((p) => p._id);
+
+    // 2. Find amenities for those properties
+    const amenities = await Amenity.find({
+      property: { $in: propertyIds },
+    }).populate("property", "title address");
+
+    res.json({
+      success: true,
+      data: amenities,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // UPDATE AMENITY
 exports.updateAmenity = async (req, res) => {
   try {
     const fs = require("fs");
     const path = require("path");
+    const ownerId = req.user.id;
 
     //  1. GET OLD DATA FIRST
     const amenity = await Amenity.findById(req.params.id);
@@ -116,12 +155,24 @@ exports.updateAmenity = async (req, res) => {
       });
     }
 
-    // 2. Parse incoming images
+    // 2. Check if this amenity belongs to owner's property
+    const property = await Property.findOne({
+      _id: amenity.property,
+      owner: ownerId,
+    });
+
+    if (!property) {
+      return res.status(403).json({
+        message: "Not authorized to update this amenity",
+      });
+    }
+
+    // 3. Parse incoming images
     const existingImages = JSON.parse(req.body.existingImages || "[]");
 
     const oldImages = amenity.images || [];
 
-    //  3. Find deleted images
+    //  4. Find deleted images
     const deletedImages = oldImages.filter(
       (img) => !existingImages.includes(img),
     );
@@ -130,7 +181,7 @@ exports.updateAmenity = async (req, res) => {
     // console.log("NEW:", existingImages);
     // console.log("DELETE:", deletedImages);
 
-    //  4. Delete files from folder
+    //  5. Delete files from folder
     deletedImages.forEach((img) => {
       const filePath = path.join(__dirname, "..", img);
 
@@ -143,20 +194,20 @@ exports.updateAmenity = async (req, res) => {
       req.body.operatingHours = JSON.parse(req.body.operatingHours);
     }
 
-    //  5. Update fields
+    //  6. Update fields
     Object.keys(req.body).forEach((key) => {
       if (key !== "existingImages") {
         amenity[key] = req.body[key];
       }
     });
 
-    // 6. Update images
+    // 7. Update images
     amenity.images = [
       ...existingImages,
       ...(req.files?.map((file) => file.path) || []),
     ];
 
-    // ✅7. Save
+    // 8. Save
     await amenity.save();
 
     res.json({

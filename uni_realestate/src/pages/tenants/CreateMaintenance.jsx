@@ -4,6 +4,7 @@ import API from "../../utils/api";
 
 export default function CreateMaintenance() {
   const { propertyId } = useParams(); //  from URL
+  console.log(propertyId)
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -46,7 +47,7 @@ export default function CreateMaintenance() {
 
       navigate("/tenant/maintenance"); // go to list page
     } catch (err) {
-      console.error(err);
+      console.error("ERROR:", err.response?.data || err.message);;
       alert("Failed to create request ");
     } finally {
       setLoading(false);

@@ -27,7 +27,7 @@ export default function PropertyDetails() {
         });
         setProperty(res.data);
       } catch (err) {
-        console.error(err);
+        console.error("ERROR:", err.response?.data || err.message);
       }
     };
     fetchProperty();
@@ -56,7 +56,11 @@ export default function PropertyDetails() {
       </button>
 
       <img
-        src={getImageUrl(selectedImage || property.images?.[0])}
+        src={getImageUrl(
+          selectedImage || (property.images && property.images.length > 0)
+            ? property.images[0]
+            : null,
+        )}
         className="w-full max-w-md rounded-lg"
         alt="property"
         onError={(e) => {

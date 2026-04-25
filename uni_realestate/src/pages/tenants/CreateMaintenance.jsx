@@ -3,9 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import API from "../../utils/api";
 
 export default function CreateMaintenance() {
-  const { propertyId } = useParams(); //  from URL
-  console.log(propertyId)
+  const { propertyId, amenityId } = useParams(); //  from URL
+  console.log("propertyId:", propertyId);
+  console.log("amenityId:", amenityId);
   const navigate = useNavigate();
+
+  const { type, id } = useParams();
+  
 
   const [formData, setFormData] = useState({
     title: "",
@@ -29,13 +33,24 @@ export default function CreateMaintenance() {
       setLoading(true);
 
       const token = localStorage.getItem("token");
+      const payload = {
+        title : formData.title,
+        description : formData.description,
+        priority : formData.priority,
+      };
+
+      if (type === "property") {
+        payload.property = id;
+      }
+
+      if (type === "amenity") {
+        payload.amenity = id;
+      }
+
+      console.log("Payload:", payload);
 
       await API.post(
-        "/maintenance",
-        {
-          ...formData,
-          property: propertyId, //  auto link property
-        },
+        "/maintenance", payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,

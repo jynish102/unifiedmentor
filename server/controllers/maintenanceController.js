@@ -1,6 +1,8 @@
 const Maintenance = require("../models/Maintenance");
 const Property = require("../models/Property");
 const User = require("../models/User");
+const Amenity = require("../models/Amenity");
+const mongoose = require("mongoose");
 
 // CREATE MAINTENANCE REQUEST
 exports.createMaintenance = async (req, res) => {
@@ -8,30 +10,56 @@ exports.createMaintenance = async (req, res) => {
     const mongoose = require("mongoose");
 
     const propertyId = req.body.property;
-    const userId = req.user.id;
+    const amenityId = req.body.amenity;
+    const userId = req.user._id || req.user.id;
 
     console.log("USER:", req.user);
     console.log("PROPERTY ID:", propertyId);
+    console.log("AMENITY ID:", amenityId);
 
-    // Validate property ID
-    if (!mongoose.Types.ObjectId.isValid(propertyId)) {
+    //  At least one required
+    if (!propertyId && !amenityId) {
       return res.status(400).json({
-        message: "Invalid property ID",
+        message: "Property or Amenity is required",
       });
     }
 
-    //  Check property exists
-    const property = await Property.findById(propertyId);
+    // Validate property only if provided
+    if (propertyId) {
+      if (!mongoose.Types.ObjectId.isValid(propertyId)) {
+        return res.status(400).json({
+          message: "Invalid property ID",
+        });
+      }
 
-    if (!property) {
-      return res.status(404).json({
-        message: "Property not found",
-      });
+      const property = await Property.findById(propertyId);
+      if (!property) {
+        return res.status(404).json({
+          message: "Property not found",
+        });
+      }
     }
 
-    //  Create maintenance
+    // Validate amenity only if provided
+    if (amenityId) {
+      if (!mongoose.Types.ObjectId.isValid(amenityId)) {
+        return res.status(400).json({
+          message: "Invalid amenity ID",
+        });
+      }
+
+      const amenity = await Amenity.findById(amenityId);
+      if (!amenity) {
+        return res.status(404).json({
+          message: "Amenity not found",
+        });
+      }
+    }
+
+    // Create maintenance
     const maintenance = new Maintenance({
-      property: propertyId,
+      property: propertyId || null,
+      amenity: amenityId || null,
       tenant: userId,
       title: req.body.title,
       description: req.body.description,
@@ -155,22 +183,32 @@ exports.getTenantMaintenance = async (req, res) => {
   });
 };
 
-//owner get my maintenance requests
+//owner  maintenance requests
 exports.getOwnerMaintenance = async (req, res) => {
   try {
-    const ownerId = req.user._id;
+    const ownerId = req.user._id || req.user.id;
 
-    // 1. Get all owner properties
+    // 1 Get owner properties
     const properties = await Property.find({ owner: ownerId });
-
     const propertyIds = properties.map((p) => p._id);
 
-    // 2. Get all maintenance for those properties
-    const maintenance = await Maintenance.find({
+    // 2 Get amenities of those properties
+    const amenities = await Amenity.find({
       property: { $in: propertyIds },
+    });
+
+    const amenityIds = amenities.map((a) => a._id);
+
+    // 3 Fetch maintenance (property OR amenity)
+    const maintenance = await Maintenance.find({
+      $or: [
+        { property: { $in: propertyIds } },
+        { amenity: { $in: amenityIds } },
+      ],
     })
       .populate("tenant", "fullname email")
       .populate("property", "title address")
+      .populate("amenity", "name")
       .sort({ createdAt: -1 });
 
     res.json({
@@ -178,7 +216,43 @@ exports.getOwnerMaintenance = async (req, res) => {
       data: maintenance,
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error(err);
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
+exports.getMyMaintenance = async (req, res) => {
+  try {
+    // Get logged-in tenant ID from token
+    const tenantId = req.user._id || req.user.id;
+
+    //  Safety check
+    if (!tenantId) {
+      return res.status(401).json({
+        message: "Unauthorized - user not found",
+      });
+    }
+
+    // Fetch maintenance requests
+    const maintenance = await Maintenance.find({
+      tenant: tenantId,
+    })
+      .populate("property", "title address city") // show property info
+      .populate("amenity", "name location " )
+      .sort({ createdAt: -1 }); // latest first
+    console.log(JSON.stringify(maintenance, null, 2));
+
+    res.json({
+      success: true,
+      data: maintenance,
+    });
+  } catch (err) {
+    console.error("GET MY MAINTENANCE ERROR:", err);
+    res.status(500).json({
+      message: err.message,
+    });
   }
 };
 

@@ -9,6 +9,7 @@ const {
   getMaintenanceByProperty,
   getOwnerMaintenance,
   getTenantMaintenance,
+  getMyMaintenance,
   updateMaintenanceStatus,
   deleteMaintenance,
 } = require("../controllers/maintenanceController");
@@ -27,6 +28,9 @@ router.get("/property/:propertyId",authMiddleware, getMaintenanceByProperty);
 
 // GET BY TENANT
 router.get("/tenant/:tenantId", authMiddleware, getTenantMaintenance);
+
+//my requests
+router.get("/my-maintenance", authMiddleware, authorizeRoles("tenant"), getMyMaintenance);
 
 // UPDATE STATUS
 router.put("/:id", authMiddleware, authorizeRoles("owner"), updateMaintenanceStatus);

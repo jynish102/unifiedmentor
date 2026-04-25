@@ -5,7 +5,12 @@ const maintenanceSchema = new mongoose.Schema(
     property: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Property",
-      required: true,
+      
+    },
+
+    amenity: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Amenity",
     },
 
     tenant: {

@@ -172,6 +172,17 @@ export default function Amenities() {
                       <Eye size={14} />
                       View
                     </Button>
+
+                    <button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() =>
+                        navigate(`/tenant/maintenance/create/amenity/${amenity._id}`)
+                      }
+                    >
+                      Report Issue
+                    </button>
                   </div>
                 </CardContent>
               </Card>

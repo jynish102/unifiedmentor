@@ -1,4 +1,5 @@
 import { MapPin, Mail, Phone, Facebook, Twitter, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
 const Footer =() => {
     return (
       <>
@@ -21,18 +22,18 @@ const Footer =() => {
             <div>
               <h4 className="text-white font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-sm">
-                <li className="hover:text-white transition cursor-pointer">
+                <Link to="/" className="hover:text-white transition cursor-pointer">
                   Home
-                </li>
+                </Link>
                 <li className="hover:text-white transition cursor-pointer">
                   Properties
                 </li>
                 <li className="hover:text-white transition cursor-pointer">
                   Amenities
                 </li>
-                <li className="hover:text-white transition cursor-pointer">
+                <Link to="/contact" className="hover:text-white transition cursor-pointer">
                   Contact
-                </li>
+                </Link>
               </ul>
             </div>
 
@@ -40,18 +41,18 @@ const Footer =() => {
             <div>
               <h4 className="text-white font-semibold mb-4">User Access</h4>
               <ul className="space-y-2 text-sm">
-                <li className="hover:text-white transition cursor-pointer">
+                <Link to="/login" className="hover:text-white transition cursor-pointer">
                   Admin Login
-                </li>
-                <li className="hover:text-white transition cursor-pointer">
+                </Link>
+                <Link to="/login" className="hover:text-white transition cursor-pointer">
                   Owner Login
-                </li>
-                <li className="hover:text-white transition cursor-pointer">
+                </Link>
+                <Link to="/login" className="hover:text-white transition cursor-pointer">
                   Tenant Login
-                </li>
-                <li className="hover:text-white transition cursor-pointer">
+                </Link>
+                <Link to="/login" className="hover:text-white transition cursor-pointer">
                   Staff Login
-                </li>
+                </Link>
               </ul>
             </div>
 

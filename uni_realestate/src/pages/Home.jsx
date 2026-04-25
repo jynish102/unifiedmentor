@@ -1,8 +1,9 @@
-
 import partyplot from "../assets/party-plot.jpg";
 import Maintenance from '../assets/Maintenance.webp'
 import office from '../assets/officeplace.webp'
 import Amenities from "../assets/Amenities.jpg";
+import { useNavigate } from "react-router-dom";
+
 
 
 import {
@@ -27,10 +28,9 @@ import {
 import { useEffect, useState } from "react";
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-      
-
       {/* Hero Section */}
       <section className="flex flex-col md:flex-row items-center justify-between px-8 py-20">
         <div className="md:w-1/2 space-y-6">
@@ -47,7 +47,10 @@ const Home = () => {
             <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
               Explore Properties
             </button>
-            <button className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600">
+            <button
+              className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600"
+              onClick={() => navigate(`/register`)}
+            >
               Get Started
             </button>
           </div>
@@ -556,13 +559,16 @@ const Home = () => {
             Join today and experience real-time property control.
           </p>
 
-          <button className="bg-white text-blue-600 font-semibold px-10 py-4 rounded-full shadow-lg hover:scale-105 hover:shadow-2xl transition duration-300">
+          <button
+            className="bg-white text-blue-600 font-semibold px-10 py-4 rounded-full shadow-lg hover:scale-105 hover:shadow-2xl transition duration-300"
+            onClick={() =>
+              navigate(`register`)
+            }
+          >
             Create Account Now
           </button>
         </div>
       </section>
-
-      
     </div>
   );
 };

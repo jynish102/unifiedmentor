@@ -143,7 +143,7 @@ function App() {
             element={<AmenityBooking />}
           />
           <Route path="/tenant/bookings" element={<AllBooking />} />
-          <Route path="/tenant/properties/create/:propertyId" element={<CreateMaintenance/>} />
+          <Route path="/tenant/maintenance/create/:type/:id" element={<CreateMaintenance/>} />
           <Route path="/tenant/maintenance" element={<TenantMaintenance />} />
           <Route path="profile" element={<Profile />} />
         </Route>

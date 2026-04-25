@@ -177,7 +177,7 @@ export default function Properties() {
                   size="sm"
                   className="flex-1"
                   onClick={() =>
-                    navigate(`/tenant/properties/create/${property._id}`)
+                    navigate(`/tenant/maintenance/create/property/${property._id}`)
                   }
                 >
                   Report Issue

@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../utils/api";
+import toast from "react-hot-toast";
 
 export default function CreateMaintenance() {
-  const { propertyId, amenityId } = useParams(); //  from URL
-  console.log("propertyId:", propertyId);
-  console.log("amenityId:", amenityId);
-  const navigate = useNavigate();
-
   const { type, id } = useParams();
-  
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -27,43 +23,62 @@ export default function CreateMaintenance() {
     });
   };
 
-  // submit form
+  // validation function
+  const validateForm = () => {
+    if (!formData.title.trim()) {
+      toast.error("Title is required");
+      return false;
+    }
+
+    if (formData.title.length < 5) {
+      toast.error("Title must be at least 5 characters");
+      return false;
+    }
+
+    if (!formData.description.trim()) {
+      toast.error("Description is required");
+      return false;
+    }
+
+    if (!type || !id) {
+      toast.error("Invalid request");
+      return false;
+    }
+
+    return true;
+  };
+
+  // submit
   const handleSubmit = async () => {
+    if (!validateForm()) return;
+
     try {
       setLoading(true);
 
       const token = localStorage.getItem("token");
+
       const payload = {
-        title : formData.title,
-        description : formData.description,
-        priority : formData.priority,
+        title: formData.title,
+        description: formData.description,
+        priority: formData.priority,
+        ...(type === "property" && { property: id }),
+        ...(type === "amenity" && { amenity: id }),
       };
 
-      if (type === "property") {
-        payload.property = id;
-      }
-
-      if (type === "amenity") {
-        payload.amenity = id;
-      }
-
-      console.log("Payload:", payload);
-
-      await API.post(
-        "/maintenance", payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      await API.post("/maintenance", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
-      alert("Maintenance request created ");
+      toast.success("Maintenance request created successfully");
 
-      navigate("/tenant/maintenance"); // go to list page
+      setTimeout(() => {
+        navigate("/tenant/maintenance");
+      }, 1000);
     } catch (err) {
-      console.error("ERROR:", err.response?.data || err.message);;
-      alert("Failed to create request ");
+      console.error(err);
+      toast.error(err.response?.data?.message || "Failed to create request");
     } finally {
       setLoading(false);
     }
@@ -79,8 +94,8 @@ export default function CreateMaintenance() {
           name="title"
           value={formData.title}
           onChange={handleChange}
-          placeholder="Issue Title (e.g., AC not working)"
-          className="w-full border px-3 py-2 rounded"
+          placeholder="Issue Title"
+          className="w-full border px-3 py-2 rounded focus:outline-blue-500"
         />
 
         {/* DESCRIPTION */}
@@ -89,7 +104,7 @@ export default function CreateMaintenance() {
           value={formData.description}
           onChange={handleChange}
           placeholder="Describe the issue..."
-          className="w-full border px-3 py-2 rounded"
+          className="w-full border px-3 py-2 rounded focus:outline-blue-500"
         />
 
         {/* PRIORITY */}
@@ -109,7 +124,11 @@ export default function CreateMaintenance() {
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          className={`w-full py-2 rounded text-white transition ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
           {loading ? "Submitting..." : "Submit Request"}
         </button>

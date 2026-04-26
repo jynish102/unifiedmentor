@@ -33,7 +33,7 @@ router.get("/tenant/:tenantId", authMiddleware, getTenantMaintenance);
 router.get("/my-maintenance", authMiddleware, authorizeRoles("tenant"), getMyMaintenance);
 
 // UPDATE STATUS
-router.put("/:id", authMiddleware, authorizeRoles("owner"), updateMaintenanceStatus);
+router.put("/:id/status", authMiddleware, authorizeRoles("owner"), updateMaintenanceStatus);
 
 // DELETE
 router.delete("/:id", authMiddleware, authorizeRoles("owner"), deleteMaintenance);

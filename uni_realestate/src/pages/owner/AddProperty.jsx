@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
+import toast from "react-hot-toast";
 
 export default function AddProperty() {
   const navigate = useNavigate();
@@ -107,7 +108,7 @@ export default function AddProperty() {
     const validImages = files.filter((file) => file.type.startsWith("image/"));
 
     if (validImages.length !== files.length) {
-      alert("Only image files allowed!");
+      toast.error("Only image files allowed!");
       e.target.value = ""; // reset input
       return;
     }
@@ -115,7 +116,7 @@ export default function AddProperty() {
     const totalImages =
       existingImages.length + images.length + validImages.length;
     if (totalImages > 5) {
-      alert("Maximum 5 images allowed!");
+      toast.error("Maximum 5 images allowed!");
       e.target.value = "";
       return;
     }
@@ -165,13 +166,13 @@ export default function AddProperty() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (existingImages.length + images.length > 5) {
-      alert("Max 5 images allowed");
+      toast.error("Max 5 images allowed");
       return;
     }
      
     
     if (Number(formData.occupied) > Number(formData.units)) {
-      alert("Occupied cannot exceed total units");
+      toast.error("Occupied cannot exceed total units");
       return;
     }
 
@@ -202,13 +203,13 @@ export default function AddProperty() {
         await API.put(`/property/${id}`, data, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        alert("Property Updated ");
+        toast.success("Property Updated ");
       } else {
         // ADD
         await API.post("/property/add", data, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        alert("Property Added ");
+        toast.success("Property Added ");
       }
 
       navigate("/owner/properties");
@@ -219,7 +220,7 @@ export default function AddProperty() {
         err.message || // axios error
         "Something went wrong ";
 
-      alert(message);
+      toast.error(message);
     }
   };
 

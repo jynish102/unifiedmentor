@@ -13,50 +13,45 @@ exports.createMaintenance = async (req, res) => {
     const amenityId = req.body.amenity;
     const userId = req.user._id || req.user.id;
 
-    console.log("USER:", req.user);
-    console.log("PROPERTY ID:", propertyId);
-    console.log("AMENITY ID:", amenityId);
+    //  Both not allowed
+    if (propertyId && amenityId) {
+      return res.status(400).json({
+        message: "Provide either property OR amenity, not both",
+      });
+    }
 
-    //  At least one required
+    // At least one required
     if (!propertyId && !amenityId) {
       return res.status(400).json({
         message: "Property or Amenity is required",
       });
     }
 
-    // Validate property only if provided
+    //  Validate property
     if (propertyId) {
       if (!mongoose.Types.ObjectId.isValid(propertyId)) {
-        return res.status(400).json({
-          message: "Invalid property ID",
-        });
+        return res.status(400).json({ message: "Invalid property ID" });
       }
 
       const property = await Property.findById(propertyId);
       if (!property) {
-        return res.status(404).json({
-          message: "Property not found",
-        });
+        return res.status(404).json({ message: "Property not found" });
       }
     }
 
-    // Validate amenity only if provided
+    // Validate amenity
     if (amenityId) {
       if (!mongoose.Types.ObjectId.isValid(amenityId)) {
-        return res.status(400).json({
-          message: "Invalid amenity ID",
-        });
+        return res.status(400).json({ message: "Invalid amenity ID" });
       }
 
       const amenity = await Amenity.findById(amenityId);
       if (!amenity) {
-        return res.status(404).json({
-          message: "Amenity not found",
-        });
+        return res.status(404).json({ message: "Amenity not found" });
       }
     }
 
-    // Create maintenance
+    // Create maintenance with tracking
     const maintenance = new Maintenance({
       property: propertyId || null,
       amenity: amenityId || null,
@@ -64,6 +59,16 @@ exports.createMaintenance = async (req, res) => {
       title: req.body.title,
       description: req.body.description,
       priority: req.body.priority,
+      status: "pending",
+
+      //  Tracking start
+      updates: [
+        {
+          message: "Maintenance request created",
+          status: "pending",
+          updatedBy: userId,
+        },
+      ],
     });
 
     await maintenance.save();
@@ -259,19 +264,58 @@ exports.getMyMaintenance = async (req, res) => {
 // UPDATE MAINTENANCE STATUS
 exports.updateMaintenanceStatus = async (req, res) => {
   try {
+    const { id } = req.params;
     const { status } = req.body;
+    const userId = req.user._id || req.user.id;
 
-    const maintenance = await Maintenance.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true },
-    );
+    // 1. Find maintenance
+    const maintenance = await Maintenance.findById(id);
+
+    if (!maintenance) {
+      return res.status(404).json({ message: "Maintenance not found" });
+    }
+
+    let isAuthorized = false;
+
+    // 2. If property-based maintenance
+    if (maintenance.property) {
+      const property = await Property.findById(maintenance.property);
+
+      if (property && property.owner.toString() === userId.toString()) {
+        isAuthorized = true;
+      }
+    }
+
+    // 3. If amenity-based maintenance
+    if (maintenance.amenity) {
+      const amenity = await Amenity.findById(maintenance.amenity);
+
+      if (amenity) {
+        const property = await Property.findById(amenity.property);
+
+        if (property && property.owner.toString() === userId.toString()) {
+          isAuthorized = true;
+        }
+      }
+    }
+
+    // 4. Final check
+    if (!isAuthorized) {
+      return res.status(403).json({
+        message: "Not authorized to update this maintenance",
+      });
+    }
+
+    // 5. Update status
+    maintenance.status = status;
+    await maintenance.save();
 
     res.json({
       success: true,
       data: maintenance,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 };

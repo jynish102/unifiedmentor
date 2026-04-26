@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
@@ -54,106 +55,124 @@ import TenantMaintenance  from "./pages/tenants/TenantMaintenance";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/features" element={<Features />} />
-          <Route path="/contact" element={<Contact />} />
-        </Route>
-        <Route element={<AuthLayout />}>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/ForgotPassword" element={<ForgotPassword />} />
-          <Route path="/ResetPassword/:token" element={<ResetPassword />} />
-        </Route>
+    <>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            padding: "16px 20px",
+            fontSize: "20px",
+            fontWeight: "500",
+            borderRadius: "10px",
+            minWidth: "300px",
+            minHeight: "100px",
+          },
+        }}
+      />
+      <Router>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/contact" element={<Contact />} />
+          </Route>
+          <Route element={<AuthLayout />}>
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/ForgotPassword" element={<ForgotPassword />} />
+            <Route path="/ResetPassword/:token" element={<ResetPassword />} />
+          </Route>
+          //admin routes
+          <Route path="/admin" element={<AdminDashboardLayout />}>
+            <Route path="overview" element={<Overview />} />
+            <Route path="properties" element={<Properties />} />
+            <Route path="properties/add-property" element={<AddProperty />} />
+            <Route
+              path="/admin/properties/edit/:id"
+              element={<AddProperty />}
+            />
+            <Route path="/admin/properties/:id" element={<PropertyDetails />} />
+            <Route path="amenities" element={<Amenities />} />
+            <Route
+              path="/admin/amenities/add-amenity/:propertyId"
+              element={<AddAmenity />}
+            />
+            <Route path="/admin/amenities/edit/:id" element={<AddAmenity />} />
+            <Route path="/admin/amenities/:id" element={<AmenityDetails />} />
+            <Route path="tenants" element={<Tenants />} />
+            <Route path="bookings" element={<BookingRequests />} />
+            <Route path="maintenance" element={<Maintenance />} />
+          </Route>
+          //owner routes
+          <Route path="/owner" element={<OwnerDashboardLayout />}>
+            <Route path="ownerdashboard" element={<OwnerDashboard />} />
+            <Route path="properties" element={<OwnerProperties />} />
+            <Route
+              path="properties/add-property"
+              element={<OwnerAddProperty />}
+            />
+            <Route
+              path="/owner/properties/edit/:id"
+              element={<OwnerAddProperty />}
+            />
+            <Route
+              path="/owner/properties/:id"
+              element={<OwnerPropertyDetails />}
+            />
+            <Route path="amenities" element={<OwnerAmenities />} />
+            <Route
+              path="/owner/amenities/add-amenity/:propertyId"
+              element={<OwnerAddAmenity />}
+            />
+            <Route
+              path="/owner/amenities/edit/:id"
+              element={<OwnerAddAmenity />}
+            />
+            <Route
+              path="/owner/amenities/:id"
+              element={<OwnerAmenityDetails />}
+            />
+            <Route path="/owner/maintenance" element={<OwnerMaintenance />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+          //tenant routes
+          <Route path="/tenant" element={<TenantsDashboardLayout />}>
+            <Route path="dashboard" element={<TenantsDashboard />} />
+            <Route path="properties" element={<TenantProperty />} />
+            <Route
+              path="/tenant/properties/:id"
+              element={<TenantPropertyDetails />}
+            />
+            <Route
+              path="/tenant/properties/booking/:propertyId"
+              element={<PropertyBooking />}
+            />
 
-        //admin routes
-        <Route path="/admin" element={<AdminDashboardLayout />}>
-          <Route path="overview" element={<Overview />} />
-          <Route path="properties" element={<Properties />} />
-          <Route path="properties/add-property" element={<AddProperty />} />
-          <Route path="/admin/properties/edit/:id" element={<AddProperty />} />
-          <Route path="/admin/properties/:id" element={<PropertyDetails />} />
-          <Route path="amenities" element={<Amenities />} />
-          <Route
-            path="/admin/amenities/add-amenity/:propertyId"
-            element={<AddAmenity />}
-          />
-          <Route path="/admin/amenities/edit/:id" element={<AddAmenity />} />
-          <Route path="/admin/amenities/:id" element={<AmenityDetails />} />
-          <Route path="tenants" element={<Tenants />} />
-          <Route path="bookings" element={<BookingRequests />} />
-          <Route path="maintenance" element={<Maintenance />} />
-        </Route>
-
-        //owner routes
-        <Route path="/owner" element={<OwnerDashboardLayout />}>
-          <Route path="ownerdashboard" element={<OwnerDashboard />} />
-          <Route path="properties" element={<OwnerProperties />} />
-          <Route
-            path="properties/add-property"
-            element={<OwnerAddProperty />}
-          />
-          <Route
-            path="/owner/properties/edit/:id"
-            element={<OwnerAddProperty />}
-          />
-          <Route
-            path="/owner/properties/:id"
-            element={<OwnerPropertyDetails />}
-          />
-          <Route path="amenities" element={<OwnerAmenities />} />
-          <Route
-            path="/owner/amenities/add-amenity/:propertyId"
-            element={<OwnerAddAmenity />}
-          />
-          <Route
-            path="/owner/amenities/edit/:id"
-            element={<OwnerAddAmenity />}
-          />
-          <Route
-            path="/owner/amenities/:id"
-            element={<OwnerAmenityDetails />}
-          />
-          <Route path="/owner/maintenance" element={<OwnerMaintenance />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-
-        //tenant routes
-        <Route path="/tenant" element={<TenantsDashboardLayout />}>
-          <Route path="dashboard" element={<TenantsDashboard />} />
-          <Route path="properties" element={<TenantProperty />} />
-          <Route
-            path="/tenant/properties/:id"
-            element={<TenantPropertyDetails />}
-          />
-          <Route
-            path="/tenant/properties/booking/:propertyId"
-            element={<PropertyBooking />}
-          />
-
-          <Route path="amenities" element={<TenantAmenities />} />
-          <Route
-            path="/tenant/amenities/:id"
-            element={<TenantAmenityDetails />}
-          />
-          <Route
-            path="/tenant/amenities/booking/:amenityId"
-            element={<AmenityBooking />}
-          />
-          <Route path="/tenant/bookings" element={<AllBooking />} />
-          <Route path="/tenant/maintenance/create/:type/:id" element={<CreateMaintenance/>} />
-          <Route path="/tenant/maintenance" element={<TenantMaintenance />} />
-          <Route path="profile" element={<Profile />} />
-        </Route>
-
-        //staff routes
-        <Route path="/staff" element={<StaffDashboardLayout />}>
-          {/* Define staff-specific routes here */}
-        </Route>
-      </Routes>
-    </Router>
+            <Route path="amenities" element={<TenantAmenities />} />
+            <Route
+              path="/tenant/amenities/:id"
+              element={<TenantAmenityDetails />}
+            />
+            <Route
+              path="/tenant/amenities/booking/:amenityId"
+              element={<AmenityBooking />}
+            />
+            <Route path="/tenant/bookings" element={<AllBooking />} />
+            <Route
+              path="/tenant/maintenance/create/:type/:id"
+              element={<CreateMaintenance />}
+            />
+            <Route path="/tenant/maintenance" element={<TenantMaintenance />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
+          //staff routes
+          <Route path="/staff" element={<StaffDashboardLayout />}>
+            {/* Define staff-specific routes here */}
+          </Route>
+        </Routes>
+      </Router>
+    </>
   );
 }
 

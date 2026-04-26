@@ -37,7 +37,7 @@ export default function OwnerMaintenance() {
       const token = localStorage.getItem("token");
 
       await API.put(
-        `/maintenance/${id}`,
+        `/maintenance/${id}/status`,
         { status },
         {
           headers: {
@@ -125,7 +125,7 @@ export default function OwnerMaintenance() {
                     onClick={() => updateStatus(item._id, "in-progress")}
                     className="px-3 py-1 bg-blue-600 text-white rounded"
                   >
-                    Start
+                    Start Work
                   </button>
 
                   <button
@@ -133,6 +133,13 @@ export default function OwnerMaintenance() {
                     className="px-3 py-1 bg-green-600 text-white rounded"
                   >
                     Complete
+                  </button>
+
+                  <button
+                    onClick={() => updateStatus(item._id, "rejected")}
+                    className="px-3 py-1 bg-red-600 text-white rounded"
+                  >
+                    Reject
                   </button>
                 </div>
               </div>

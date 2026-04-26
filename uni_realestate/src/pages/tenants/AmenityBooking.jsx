@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
+import toast from "react-hot-toast";
 
 export default function BookAmenity() {
   const navigate = useNavigate();
@@ -74,11 +75,11 @@ export default function BookAmenity() {
         },
       );
 
-      alert("Booking successful ");
+      toast.success("Booking successful ");
       navigate("/tenant/amenities");
     } catch (err) {
       console.error(err);
-      alert("Booking failed ");
+      toast.error("Booking failed ");
     }
   };
 

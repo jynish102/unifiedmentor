@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
+import toast from "react-hot-toast";
 
 export default function AddBooking() {
   const navigate = useNavigate();
@@ -60,11 +61,11 @@ export default function AddBooking() {
         },
       );
 
-      alert("Booking Requested ");
+      toast.success("Booking Requested ");
       navigate("/tenant/properties");
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || "Error creating booking");
+      toast.error(err.response?.data?.message || "Error creating booking");
     }
   };
 

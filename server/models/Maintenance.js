@@ -5,7 +5,6 @@ const maintenanceSchema = new mongoose.Schema(
     property: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Property",
-      
     },
 
     amenity: {
@@ -19,18 +18,22 @@ const maintenanceSchema = new mongoose.Schema(
       required: true,
     },
 
+    assignedTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+
     title: {
       type: String,
       required: true,
     },
 
-    description: {
-      type: String,
-    },
+    description: String,
 
     status: {
       type: String,
-      enum: ["pending", "in-progress", "completed"],
+      enum: ["pending", "assigned", "in-progress", "completed", "rejected"],
       default: "pending",
     },
 
@@ -39,8 +42,30 @@ const maintenanceSchema = new mongoose.Schema(
       enum: ["low", "medium", "high", "emergency"],
       default: "medium",
     },
+
+    updates: [
+      {
+        message: String,
+        status: String,
+        updatedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+
+    completedAt: Date,
+
+    rejectionReason: String,
+
+    proofImages: [String],
   },
   { timestamps: true },
 );
+
 
 module.exports = mongoose.model("Maintenance", maintenanceSchema);

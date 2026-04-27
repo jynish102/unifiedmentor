@@ -6,10 +6,9 @@ export function StaffDashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navItems = [
-    { to: "/", icon: Home, label: "Dashboard" },
-    { to: "/rentals", icon: Building2, label: "Rentals" },
-    { to: "/bookings", icon: ClipboardList, label: "Bookings" },
-    {to: "/maintenance", icon: ClipboardList, label: "Maintenance" },
+    { to: "/staff/dashboard", icon: Home, label: "Dashboard" },
+    { to: "/staff/maintenance", icon: ClipboardList, label: "Maintenance" },
+    { to: "/staff/profile", icon: Building2, label: "Profile" },
   ];
 
   return (

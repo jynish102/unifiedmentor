@@ -12,7 +12,7 @@ import {
 import { Button } from "../components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import { Badge } from "../components/ui/badge";
-import { tenantData } from "../components/data/mockData";
+
 import { useEffect, useState } from "react";
 import API from "../utils/api";
 

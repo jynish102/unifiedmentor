@@ -2,7 +2,7 @@ import { useState,useEffect } from "react";
 import logo from "../assets/logo2.png";
 import {Eye, EyeOff} from "lucide-react";
 import { Link , useNavigate} from "react-router-dom";
-import axios from "axios";
+import API from "../utils/api";
 
 
 const Register = () => {
@@ -61,7 +61,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await API.post("/auth/register", {
         fullname: formData.fullname,
         email: formData.email,
         phone: formData.phone,

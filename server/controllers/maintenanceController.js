@@ -332,6 +332,18 @@ exports.assignMaintenance = async (req, res) => {
     // 1. Check maintenance exists
     const maintenance = await Maintenance.findById(id);
 
+    if (maintenance.status === "rejected") {
+      return res.status(400).json({
+        message: "Cannot assign rejected request",
+      });
+    }
+
+    if (["rejected", "completed"].includes(maintenance.status)) {
+      return res.status(400).json({
+        message: "Cannot assign this request",
+      });
+    }
+
     if (!maintenance) {
       return res.status(404).json({
         message: "Maintenance not found",
@@ -360,7 +372,10 @@ exports.assignMaintenance = async (req, res) => {
     }
 
     // 4. Validate staff user
-    const staffUser = await User.findById(assignedTo);
+    const staffUser = await User.findOne({
+      _id: assignedTo,
+      owner: ownerId, 
+    });
 
     if (!staffUser) {
       return res.status(404).json({
@@ -378,10 +393,18 @@ exports.assignMaintenance = async (req, res) => {
     // 5. Assign
     maintenance.assignedTo = assignedTo;
 
+    const statusMessages = {
+      pending: "Request created",
+      assigned: "Assigned to staff",
+      "in-progress": "Work started",
+      completed: "Work completed",
+      rejected: "Request rejected",
+    };
+
     // 6. Add update log
     maintenance.updates.push({
       message: "Assigned to staff",
-      status: "pending",
+      status: statusMessages[newStatus],
       updatedBy: ownerId,
     });
 

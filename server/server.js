@@ -39,7 +39,7 @@ app.use("/api/property-bookings", bookingRoutes);
 
 app.use("/api/amenity-bookings", amenityBookingRoutes);
 
-app.use("/api/users", userRoutes);
+app.use("/api/staff", userRoutes);
 
 app.use("/api/maintenance", maintenanceRoutes);
 

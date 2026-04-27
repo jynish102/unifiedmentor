@@ -5,9 +5,9 @@ import toast from "react-hot-toast";
 export default function OwnerMaintenance() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [assignInputs, setAssignInputs] = useState({}); // store staffId per item
+  const [assignInputs, setAssignInputs] = useState({}); 
+  const [staffList, setStaffList] = useState([]);
 
-  // 🔥 Fetch maintenance
   const fetchMaintenance = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -27,11 +27,28 @@ export default function OwnerMaintenance() {
     }
   };
 
-  useEffect(() => {
-    fetchMaintenance();
-  }, []);
+  const fetchStaff = async () => {
+    try {
+      const token = localStorage.getItem("token");
 
-  // 🔥 Update status
+      const res = await API.get("/staff/my-staff", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setStaffList(res.data.data);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to fetch staff");
+    }
+  };
+
+   useEffect(() => {
+     fetchMaintenance();
+     fetchStaff();
+   }, []);
+  
   const updateStatus = async (id, status) => {
     try {
       const token = localStorage.getItem("token");
@@ -54,7 +71,7 @@ export default function OwnerMaintenance() {
     }
   };
 
-  // 🔥 Assign maintenance
+  // Assign maintenance
   const assignMaintenance = async (id) => {
     try {
       const staffId = assignInputs[id];
@@ -155,12 +172,10 @@ export default function OwnerMaintenance() {
                 </span>
               </div>
 
-              {/* 🔥 ASSIGN INPUT */}
-              {!item.assignedTo && (
+              {/*  ASSIGN INPUT */}
+              {!item.assignedTo  && item.status !== "rejected" &&(
                 <div className="mt-3 flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Enter Staff ID"
+                  <select
                     className="border px-2 py-1 rounded w-full"
                     value={assignInputs[item._id] || ""}
                     onChange={(e) =>
@@ -169,7 +184,15 @@ export default function OwnerMaintenance() {
                         [item._id]: e.target.value,
                       })
                     }
-                  />
+                  >
+                    <option value="">Select Staff</option>
+
+                    {staffList.map((s) => (
+                      <option key={s._id} value={s._id}>
+                        {s.fullname} ({s.specialization})
+                      </option>
+                    ))}
+                  </select>
                   <button
                     onClick={() => assignMaintenance(item._id)}
                     className="px-3 py-1 bg-purple-600 text-white rounded"
@@ -179,7 +202,8 @@ export default function OwnerMaintenance() {
                 </div>
               )}
 
-              {/* 🔥 ACTION BUTTONS */}
+              {/*  ACTION BUTTONS */}
+              {item.status !== "rejected" && (
               <div className="flex gap-2 mt-4">
                 {item.assignedTo && item.status === "pending" && (
                   <button
@@ -208,8 +232,9 @@ export default function OwnerMaintenance() {
                   </button>
                 )}
               </div>
+              )}
 
-              {/* 🔥 UPDATES TIMELINE */}
+              {/*  UPDATES TIMELINE */}
               <div className="mt-4 text-sm">
                 <p className="font-medium">Updates:</p>
                 {item.updates?.length > 0 ? (
@@ -218,6 +243,7 @@ export default function OwnerMaintenance() {
                   <p>No updates yet</p>
                 )}
               </div>
+              
             </div>
           ))}
         </div>

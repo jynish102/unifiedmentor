@@ -7,15 +7,14 @@ export const tenantData = {
   leaseStart: "2024-01-01",
   leaseEnd: "2025-12-31",
   rentAmount: 2500,
-  nextPaymentDue: "2026-04-01", // optional: keep or remove
+  nextPaymentDue: "2026-04-01",
 };
 
 export const amenities = [
   {
     id: 1,
     name: "Gym & Fitness Center",
-    description:
-      "Fully equipped fitness center with cardio and weight training equipment",
+    description: "Fully equipped fitness center with cardio and weight training equipment",
     available: true,
     hours: "6:00 AM - 10:00 PM",
     capacity: 15,
@@ -92,6 +91,49 @@ export const bookings = [
   },
 ];
 
+export const payments = [
+  {
+    id: 1,
+    date: "2026-03-01",
+    description: "Monthly Rent - March 2026",
+    amount: 2500,
+    status: "paid",
+    method: "Auto-Pay",
+  },
+  {
+    id: 2,
+    date: "2026-02-01",
+    description: "Monthly Rent - February 2026",
+    amount: 2500,
+    status: "paid",
+    method: "Auto-Pay",
+  },
+  {
+    id: 3,
+    date: "2026-01-01",
+    description: "Monthly Rent - January 2026",
+    amount: 2500,
+    status: "paid",
+    method: "Auto-Pay",
+  },
+  {
+    id: 4,
+    date: "2025-12-15",
+    description: "Security Deposit",
+    amount: 2500,
+    status: "paid",
+    method: "Bank Transfer",
+  },
+  {
+    id: 5,
+    date: "2026-04-01",
+    description: "Monthly Rent - April 2026",
+    amount: 2500,
+    status: "pending",
+    method: "Auto-Pay",
+  },
+];
+
 export const maintenanceRequests = [
   {
     id: 1,
@@ -129,25 +171,31 @@ export const announcements = [
   {
     id: 1,
     title: "Pool Maintenance Scheduled",
-    message:
-      "The swimming pool will be closed for maintenance on April 5th from 8 AM to 2 PM.",
+    message: "The swimming pool will be closed for maintenance on April 5th from 8 AM to 2 PM.",
     date: "2026-03-28",
     type: "maintenance",
   },
   {
     id: 2,
     title: "New Parcel Locker System",
-    message:
-      "We've installed new smart parcel lockers in the main lobby for package deliveries.",
+    message: "We've installed new smart parcel lockers in the main lobby for package deliveries.",
     date: "2026-03-25",
     type: "update",
   },
   {
     id: 3,
     title: "Rent Increase Notice",
-    message:
-      "Starting June 2026, monthly rent will increase by 3% as per your lease agreement.",
+    message: "Starting June 2026, monthly rent will increase by 3% as per your lease agreement.",
     date: "2026-03-20",
     type: "important",
   },
+];
+
+export const paymentHistory = [
+  { month: "Oct", amount: 2500 },
+  { month: "Nov", amount: 2500 },
+  { month: "Dec", amount: 2500 },
+  { month: "Jan", amount: 2500 },
+  { month: "Feb", amount: 2500 },
+  { month: "Mar", amount: 2500 },
 ];

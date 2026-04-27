@@ -13,21 +13,32 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const existingPhone = await User.findOne({ phone });
+    if (existingPhone) {
+      return res.status(400).json({ message: "Phone already exists" });
+    }
+
+    
 
     await User.create({
       fullname,
       email,
       phone,
-      role: role || "Tenant",
-      password: hashedPassword,
+      role: role || "tenant",
+      password,
     });
 
     res.status(201).json({ message: "User registered successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+  if (err.code === 11000) {
+    const field = Object.keys(err.keyValue)[0];
+    return res.status(400).json({
+      message: `${field} already exists`,
+    });
   }
+
+  res.status(500).json({ message: err.message });
+}
 };
 
 // LOGIN

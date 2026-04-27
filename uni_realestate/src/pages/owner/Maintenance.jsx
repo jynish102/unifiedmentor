@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
-
 import API from "../../utils/api";
+import toast from "react-hot-toast";
 
 export default function OwnerMaintenance() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+  const [assignInputs, setAssignInputs] = useState({}); // store staffId per item
 
+  // 🔥 Fetch maintenance
   const fetchMaintenance = async () => {
     try {
       const token = localStorage.getItem("token");
-      console.log("TOKEN:", token);
-      
 
-      const res = await API.get(`/maintenance/owner`, {
+      const res = await API.get("/maintenance/owner", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -21,7 +20,8 @@ export default function OwnerMaintenance() {
 
       setData(res.data.data);
     } catch (err) {
-      console.error("ERROR:", err.response?.data || err.message);
+      console.error(err);
+      toast.error("Failed to fetch maintenance");
     } finally {
       setLoading(false);
     }
@@ -31,7 +31,7 @@ export default function OwnerMaintenance() {
     fetchMaintenance();
   }, []);
 
-  //  update status
+  // 🔥 Update status
   const updateStatus = async (id, status) => {
     try {
       const token = localStorage.getItem("token");
@@ -46,11 +46,40 @@ export default function OwnerMaintenance() {
         },
       );
 
-      // refresh
+      toast.success("Status updated");
       fetchMaintenance();
     } catch (err) {
       console.error(err);
-      alert("Failed to update");
+      toast.error("Failed to update status");
+    }
+  };
+
+  // 🔥 Assign maintenance
+  const assignMaintenance = async (id) => {
+    try {
+      const staffId = assignInputs[id];
+
+      if (!staffId) {
+        return toast.error("Enter staff ID");
+      }
+
+      const token = localStorage.getItem("token");
+
+      await API.put(
+        `/maintenance/${id}/assign`,
+        { assignedTo: staffId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      toast.success("Assigned successfully");
+      fetchMaintenance();
+    } catch (err) {
+      console.error(err);
+      toast.error("Assignment failed");
     }
   };
 
@@ -74,7 +103,7 @@ export default function OwnerMaintenance() {
                 <div>
                   <h2 className="text-lg font-semibold">{item.title}</h2>
                   <p className="text-sm text-gray-500">
-                    {item.property?.title}
+                    {item.property?.title || item.amenity?.name}
                   </p>
                 </div>
 
@@ -104,44 +133,90 @@ export default function OwnerMaintenance() {
                 Tenant: {item.tenant?.fullname} ({item.tenant?.email})
               </p>
 
-              {/* STATUS + ACTION */}
-              <div className="flex items-center justify-between mt-4">
-                {/* STATUS */}
+              {/* ASSIGNED */}
+              <p className="mt-1 text-sm text-gray-500">
+                Assigned To: {item.assignedTo?.fullname || "Not Assigned"}
+              </p>
+
+              {/* STATUS */}
+              <div className="mt-3">
                 <span
                   className={`px-3 py-1 rounded-full text-sm ${
                     item.status === "pending"
                       ? "bg-gray-200"
                       : item.status === "in-progress"
                         ? "bg-blue-100 text-blue-700"
-                        : "bg-green-100 text-green-700"
+                        : item.status === "completed"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
                   }`}
                 >
                   {item.status}
                 </span>
+              </div>
 
-                {/* ACTION BUTTONS */}
-                <div className="flex gap-2">
+              {/* 🔥 ASSIGN INPUT */}
+              {!item.assignedTo && (
+                <div className="mt-3 flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Enter Staff ID"
+                    className="border px-2 py-1 rounded w-full"
+                    value={assignInputs[item._id] || ""}
+                    onChange={(e) =>
+                      setAssignInputs({
+                        ...assignInputs,
+                        [item._id]: e.target.value,
+                      })
+                    }
+                  />
+                  <button
+                    onClick={() => assignMaintenance(item._id)}
+                    className="px-3 py-1 bg-purple-600 text-white rounded"
+                  >
+                    Assign
+                  </button>
+                </div>
+              )}
+
+              {/* 🔥 ACTION BUTTONS */}
+              <div className="flex gap-2 mt-4">
+                {item.assignedTo && item.status === "pending" && (
                   <button
                     onClick={() => updateStatus(item._id, "in-progress")}
                     className="px-3 py-1 bg-blue-600 text-white rounded"
                   >
                     Start Work
                   </button>
+                )}
 
+                {item.status === "in-progress" && (
                   <button
                     onClick={() => updateStatus(item._id, "completed")}
                     className="px-3 py-1 bg-green-600 text-white rounded"
                   >
                     Complete
                   </button>
+                )}
 
+                {item.status !== "completed" && (
                   <button
                     onClick={() => updateStatus(item._id, "rejected")}
                     className="px-3 py-1 bg-red-600 text-white rounded"
                   >
                     Reject
                   </button>
-                </div>
+                )}
+              </div>
+
+              {/* 🔥 UPDATES TIMELINE */}
+              <div className="mt-4 text-sm">
+                <p className="font-medium">Updates:</p>
+                {item.updates?.length > 0 ? (
+                  item.updates.map((u, i) => <p key={i}>• {u.message}</p>)
+                ) : (
+                  <p>No updates yet</p>
+                )}
               </div>
             </div>
           ))}

@@ -45,8 +45,8 @@ const maintenanceSchema = new mongoose.Schema(
 
     updates: [
       {
-        message: String,
-        status: String,
+        message: "string",
+        status : "string",
         updatedBy: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",

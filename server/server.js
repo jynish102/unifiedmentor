@@ -15,6 +15,7 @@ const amenityBookingRoutes = require("./routes/amenityBookingRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const tenantRoutes = require("./routes/tenantRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -37,6 +38,8 @@ app.use("/api/amenity", amenityRoutes);
 app.use("/api/property-bookings", bookingRoutes);
 
 app.use("/api/amenity-bookings", amenityBookingRoutes);
+
+app.use("/api/users", userRoutes);
 
 app.use("/api/maintenance", maintenanceRoutes);
 

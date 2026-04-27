@@ -214,6 +214,8 @@ exports.getOwnerMaintenance = async (req, res) => {
       .populate("tenant", "fullname email")
       .populate("property", "title address")
       .populate("amenity", "name")
+      .populate("assignedTo", "fullname email") 
+      .populate("updates.updatedBy", "fullname")
       .sort({ createdAt: -1 });
 
     res.json({
@@ -317,6 +319,83 @@ exports.updateMaintenanceStatus = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });
+  }
+};
+
+//assign maintenance to staff
+exports.assignMaintenance = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { assignedTo } = req.body;
+    const ownerId = req.user._id || req.user.id;
+
+    // 1. Check maintenance exists
+    const maintenance = await Maintenance.findById(id);
+
+    if (!maintenance) {
+      return res.status(404).json({
+        message: "Maintenance not found",
+      });
+    }
+
+    // 2. Get property (for authorization)
+    let propertyId = maintenance.property;
+
+    // If maintenance is for amenity → get property from amenity
+    if (!propertyId && maintenance.amenity) {
+      const amenity = await Amenity.findById(maintenance.amenity);
+      propertyId = amenity?.property;
+    }
+
+    // 3. Check owner owns this property
+    const property = await Property.findOne({
+      _id: propertyId,
+      owner: ownerId,
+    });
+
+    if (!property) {
+      return res.status(403).json({
+        message: "Not authorized",
+      });
+    }
+
+    // 4. Validate staff user
+    const staffUser = await User.findById(assignedTo);
+
+    if (!staffUser) {
+      return res.status(404).json({
+        message: "Staff not found",
+      });
+    }
+
+    // (Optional) check role
+    if (staffUser.role !== "staff") {
+      return res.status(400).json({
+        message: "User is not staff",
+      });
+    }
+
+    // 5. Assign
+    maintenance.assignedTo = assignedTo;
+
+    // 6. Add update log
+    maintenance.updates.push({
+      message: "Assigned to staff",
+      status: "pending",
+      updatedBy: ownerId,
+    });
+
+    await maintenance.save();
+
+    res.json({
+      success: true,
+      data: maintenance,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: err.message,
+    });
   }
 };
 

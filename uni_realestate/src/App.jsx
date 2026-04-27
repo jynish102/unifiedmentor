@@ -35,6 +35,7 @@ import  OwnerPropertyDetails  from "./pages/owner/PropertyDetails";
 import OwnerAmenities  from "./pages/owner/Amenities";
 import OwnerAddAmenity from "./pages/owner/AddAmenity";
 import OwnerAmenityDetails from "./pages/owner/AmenityDetails";
+import StaffList from "./pages/owner/StaffManagement";
 import OwnerMaintenance from "./pages/owner/Maintenance";
 import Settings from "./pages/owner/Settings";
 
@@ -133,6 +134,7 @@ function App() {
               path="/owner/amenities/:id"
               element={<OwnerAmenityDetails />}
             />
+            <Route path="/owner/staff" element={<StaffList />} />
             <Route path="/owner/maintenance" element={<OwnerMaintenance />} />
             <Route path="settings" element={<Settings />} />
           </Route>
@@ -166,6 +168,7 @@ function App() {
             <Route path="/tenant/maintenance" element={<TenantMaintenance />} />
             <Route path="profile" element={<Profile />} />
           </Route>
+          
           //staff routes
           <Route path="/staff" element={<StaffDashboardLayout />}>
             {/* Define staff-specific routes here */}

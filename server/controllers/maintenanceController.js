@@ -214,7 +214,7 @@ exports.getOwnerMaintenance = async (req, res) => {
       .populate("tenant", "fullname email")
       .populate("property", "title address")
       .populate("amenity", "name")
-      .populate("assignedTo", "fullname email") 
+      .populate("assignedTo", "fullname email")
       .populate("updates.updatedBy", "fullname")
       .sort({ createdAt: -1 });
 
@@ -247,7 +247,7 @@ exports.getMyMaintenance = async (req, res) => {
       tenant: tenantId,
     })
       .populate("property", "title address city") // show property info
-      .populate("amenity", "name location " )
+      .populate("amenity", "name location ")
       .sort({ createdAt: -1 }); // latest first
     console.log(JSON.stringify(maintenance, null, 2));
 
@@ -263,54 +263,23 @@ exports.getMyMaintenance = async (req, res) => {
   }
 };
 
-// UPDATE MAINTENANCE STATUS
-exports.updateMaintenanceStatus = async (req, res) => {
+exports.getMyAssignments = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { status } = req.body;
     const userId = req.user._id || req.user.id;
 
-    // 1. Find maintenance
-    const maintenance = await Maintenance.findById(id);
-
-    if (!maintenance) {
-      return res.status(404).json({ message: "Maintenance not found" });
-    }
-
-    let isAuthorized = false;
-
-    // 2. If property-based maintenance
-    if (maintenance.property) {
-      const property = await Property.findById(maintenance.property);
-
-      if (property && property.owner.toString() === userId.toString()) {
-        isAuthorized = true;
-      }
-    }
-
-    // 3. If amenity-based maintenance
-    if (maintenance.amenity) {
-      const amenity = await Amenity.findById(maintenance.amenity);
-
-      if (amenity) {
-        const property = await Property.findById(amenity.property);
-
-        if (property && property.owner.toString() === userId.toString()) {
-          isAuthorized = true;
-        }
-      }
-    }
-
-    // 4. Final check
-    if (!isAuthorized) {
+    if (req.user.role !== "staff") {
       return res.status(403).json({
-        message: "Not authorized to update this maintenance",
+        message: "Only staff can access this",
       });
     }
 
-    // 5. Update status
-    maintenance.status = status;
-    await maintenance.save();
+    //  Only maintenance assigned to logged-in staff
+    const maintenance = await Maintenance.find({
+      assignedTo: userId,
+    })
+      .populate("property", "title")
+      .populate("amenity", "name")
+      .populate("tenant", "fullname email");
 
     res.json({
       success: true,
@@ -318,7 +287,9 @@ exports.updateMaintenanceStatus = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      message: err.message,
+    });
   }
 };
 
@@ -332,21 +303,15 @@ exports.assignMaintenance = async (req, res) => {
     // 1. Check maintenance exists
     const maintenance = await Maintenance.findById(id);
 
-    if (maintenance.status === "rejected") {
-      return res.status(400).json({
-        message: "Cannot assign rejected request",
+    if (!maintenance) {
+      return res.status(404).json({
+        message: "Maintenance not found",
       });
     }
 
     if (["rejected", "completed"].includes(maintenance.status)) {
       return res.status(400).json({
         message: "Cannot assign this request",
-      });
-    }
-
-    if (!maintenance) {
-      return res.status(404).json({
-        message: "Maintenance not found",
       });
     }
 
@@ -374,7 +339,7 @@ exports.assignMaintenance = async (req, res) => {
     // 4. Validate staff user
     const staffUser = await User.findOne({
       _id: assignedTo,
-      owner: ownerId, 
+      owner: ownerId,
     });
 
     if (!staffUser) {
@@ -391,7 +356,9 @@ exports.assignMaintenance = async (req, res) => {
     }
 
     // 5. Assign
+    const newStatus = "assigned";
     maintenance.assignedTo = assignedTo;
+    maintenance.status = newStatus;
 
     const statusMessages = {
       pending: "Request created",
@@ -403,8 +370,8 @@ exports.assignMaintenance = async (req, res) => {
 
     // 6. Add update log
     maintenance.updates.push({
-      message: "Assigned to staff",
-      status: statusMessages[newStatus],
+      message: statusMessages[newStatus],
+      status: newStatus,
       updatedBy: ownerId,
     });
 
@@ -419,6 +386,126 @@ exports.assignMaintenance = async (req, res) => {
     res.status(500).json({
       message: err.message,
     });
+  }
+};
+
+// UPDATE MAINTENANCE STATUS
+exports.updateMaintenanceStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const userId = req.user._id || req.user.id;
+    const role = req.user.role;
+
+    const maintenance = await Maintenance.findById(id);
+
+    if (!maintenance) {
+      return res.status(404).json({ message: "Maintenance not found" });
+    }
+
+    //  AUTH CHECK FIRST
+    let isAuthorized = false;
+
+    if (maintenance.property) {
+      const property = await Property.findById(maintenance.property);
+      if (property && property.owner.toString() === userId.toString()) {
+        isAuthorized = true;
+      }
+    }
+
+    if (maintenance.amenity) {
+      const amenity = await Amenity.findById(maintenance.amenity);
+      if (amenity) {
+        const property = await Property.findById(amenity.property);
+        if (property && property.owner.toString() === userId.toString()) {
+          isAuthorized = true;
+        }
+      }
+    }
+
+    // VALID STATUS LIST
+    const allowed = [
+      "pending",
+      "assigned",
+      "in-progress",
+      "completed",
+      "rejected",
+    ];
+
+    if (!allowed.includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    // PREVENT INVALID FLOW
+    const current = maintenance.status;
+
+    const validTransitions = {
+      pending: ["assigned", "rejected"],
+      assigned: ["in-progress", "rejected"],
+      "in-progress": ["completed", "rejected"],
+      completed: [],
+      rejected: [],
+    };
+
+    if (!validTransitions[current].includes(status)) {
+      return res.status(400).json({
+        message: `Cannot change status from ${current} to ${status}`,
+      });
+    }
+
+    // VALID STATUS MESSAGES
+    const statusMessages = {
+      pending: "Request created",
+      assigned: "Assigned to staff",
+      "in-progress": "Work started",
+      completed: "Work completed",
+      rejected: "Request rejected",
+    };
+
+    // Only assigned staff can update
+    if (role === "owner") {
+      if (status !== "rejected") {
+        return res.status(403).json({
+          message: "Owner can only reject maintenance",
+        });
+      }
+    }
+
+    if (role === "staff") {
+      if (!["in-progress", "completed"].includes(status)) {
+        return res.status(403).json({
+          message: "Staff can only update work status",
+        });
+      }
+    }
+
+    if (
+      !maintenance.assignedTo &&
+      maintenance.assignedTo.toString() !== userId.toString()
+    ) {
+      return res.status(403).json({
+        message: "Not assigned to this maintenance",
+      });
+    }
+
+    // UPDATE
+    maintenance.status = status;
+
+    maintenance.updates.push({
+      message: statusMessages[status],
+      status: status,
+      updatedBy: userId,
+    });
+
+    await maintenance.save();
+
+    res.json({
+      success: true,
+      data: maintenance,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
   }
 };
 

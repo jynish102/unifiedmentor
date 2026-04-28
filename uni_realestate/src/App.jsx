@@ -52,6 +52,9 @@ import AllBooking from "./pages/tenants/AllBookings";
 import  CreateMaintenance   from "./pages/tenants/CreateMaintenance";
 import TenantMaintenance  from "./pages/tenants/TenantMaintenance";
 
+import StaffProfile from "./pages/staff/StaffProfile";
+import StaffMaintenance from "./pages/staff/AssignMaintenance";
+
 
 
 function App() {
@@ -171,7 +174,8 @@ function App() {
           
           //staff routes
           <Route path="/staff" element={<StaffDashboardLayout />}>
-            {/* Define staff-specific routes here */}
+          <Route path="/staff/maintenance" element={<StaffMaintenance />} />
+           <Route path="/staff/profile" element={<StaffProfile />} />
           </Route>
         </Routes>
       </Router>

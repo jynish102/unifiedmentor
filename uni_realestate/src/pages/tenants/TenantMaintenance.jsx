@@ -7,6 +7,7 @@ import { Badge } from "../../components/ui/badge";
 export default function TenantMaintenance() {
   const [maintenance, setMaintenance] = useState([]);
   const [loading, setLoading] = useState(true);
+  const steps = ["pending", "assigned", "in-progress", "completed"];
 
   useEffect(() => {
     const fetchMaintenance = async () => {
@@ -93,6 +94,73 @@ export default function TenantMaintenance() {
               {/* Property info */}
               <p className="text-sm text-gray-500">🏠 {item.property?.title}</p>
 
+              {/* STEPPER START */}
+              <div className="mt-3">
+                {item.status === "rejected" ? (
+                  <div className="text-center text-red-600 font-medium">
+                    Request Rejected
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between">
+                      {["pending", "assigned", "in-progress", "completed"].map(
+                        (step, index) => {
+                          const currentIndex = [
+                            "pending",
+                            "assigned",
+                            "in-progress",
+                            "completed",
+                          ].indexOf(item.status);
+
+                          return (
+                            <div
+                              key={step}
+                              className="flex-1 flex items-center"
+                            >
+                              <div
+                                className={`w-7 h-7 flex items-center justify-center rounded-full text-xs
+                    ${
+                      index < currentIndex
+                        ? "bg-green-500 text-white"
+                        : index === currentIndex
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-300 text-gray-600"
+                    }`}
+                              >
+                                {index + 1}
+                              </div>
+
+                              {index !== 3 && (
+                                <div
+                                  className={`flex-1 h-1 mx-1 ${
+                                    index < currentIndex
+                                      ? "bg-green-500"
+                                      : "bg-gray-300"
+                                  }`}
+                                ></div>
+                              )}
+                            </div>
+                          );
+                        },
+                      )}
+                    </div>
+
+                    <div className="flex justify-between mt-1 text-[10px] text-gray-500">
+                      {["pending", "assigned", "in-progress", "completed"].map(
+                        (step) => (
+                          <span
+                            key={step}
+                            className="flex-1 text text-xs text-gray-600"
+                          >
+                            {step}
+                          </span>
+                        ),
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+              {/*  STEPPER END */}
               <div className="flex justify-between items-center text-sm">
                 <Badge className={getPriorityColor(item.priority)}>
                   {item.priority}

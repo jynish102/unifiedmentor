@@ -5,8 +5,9 @@ import toast from "react-hot-toast";
 export default function OwnerMaintenance() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [assignInputs, setAssignInputs] = useState({}); 
+  const [assignInputs, setAssignInputs] = useState({});
   const [staffList, setStaffList] = useState([]);
+  const steps = ["pending", "assigned", "in-progress", "completed"];
 
   const fetchMaintenance = async () => {
     try {
@@ -44,11 +45,11 @@ export default function OwnerMaintenance() {
     }
   };
 
-   useEffect(() => {
-     fetchMaintenance();
-     fetchStaff();
-   }, []);
-  
+  useEffect(() => {
+    fetchMaintenance();
+    fetchStaff();
+  }, []);
+
   const updateStatus = async (id, status) => {
     try {
       const token = localStorage.getItem("token");
@@ -67,7 +68,7 @@ export default function OwnerMaintenance() {
       fetchMaintenance();
     } catch (err) {
       console.error(err);
-      toast.error("Failed to update status");
+      toast.error("Error fetching maintenance:", err);
     }
   };
 
@@ -161,11 +162,13 @@ export default function OwnerMaintenance() {
                   className={`px-3 py-1 rounded-full text-sm ${
                     item.status === "pending"
                       ? "bg-gray-200"
-                      : item.status === "in-progress"
-                        ? "bg-blue-100 text-blue-700"
-                        : item.status === "completed"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
+                      : item.status === "assigned"
+                        ? "bg-purple-100 text-purple-700"
+                        : item.status === "in-progress"
+                          ? "bg-blue-100 text-blue-700"
+                          : item.status === "completed"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
                   }`}
                 >
                   {item.status}
@@ -173,7 +176,7 @@ export default function OwnerMaintenance() {
               </div>
 
               {/*  ASSIGN INPUT */}
-              {!item.assignedTo  && item.status !== "rejected" &&(
+              {!item.assignedTo && item.status !== "rejected" && (
                 <div className="mt-3 flex gap-2">
                   <select
                     className="border px-2 py-1 rounded w-full"
@@ -204,46 +207,100 @@ export default function OwnerMaintenance() {
 
               {/*  ACTION BUTTONS */}
               {item.status !== "rejected" && (
-              <div className="flex gap-2 mt-4">
-                {item.assignedTo && item.status === "pending" && (
-                  <button
-                    onClick={() => updateStatus(item._id, "in-progress")}
-                    className="px-3 py-1 bg-blue-600 text-white rounded"
-                  >
-                    Start Work
-                  </button>
-                )}
-
-                {item.status === "in-progress" && (
-                  <button
-                    onClick={() => updateStatus(item._id, "completed")}
-                    className="px-3 py-1 bg-green-600 text-white rounded"
-                  >
-                    Complete
-                  </button>
-                )}
-
-                {item.status !== "completed" && (
-                  <button
-                    onClick={() => updateStatus(item._id, "rejected")}
-                    className="px-3 py-1 bg-red-600 text-white rounded"
-                  >
-                    Reject
-                  </button>
-                )}
-              </div>
+                <div className="flex gap-2 mt-4" >
+                  {item.status !== "completed" && (
+                    <button
+                      onClick={() => updateStatus(item._id, "rejected")}
+                      className="px-3 py-1 bg-red-600 text-white rounded"
+                    >
+                      Reject
+                    </button>
+                  )}
+                </div>
               )}
 
               {/*  UPDATES TIMELINE */}
-              <div className="mt-4 text-sm">
-                <p className="font-medium">Updates:</p>
-                {item.updates?.length > 0 ? (
-                  item.updates.map((u, i) => <p key={i}>• {u.message}</p>)
-                ) : (
-                  <p>No updates yet</p>
-                )}
+              <div className="mt-4">
+                {(() => {
+                  const statusMap = {
+                    pending: "pending",
+                    assigned: "assigned",
+                    "in-progress": "in-progress",
+                    inprogress: "in-progress",
+                    completed: "completed",
+                    rejected: "rejected",
+                  };
+
+                  const normalizedStatus =
+                    statusMap[item.status?.toLowerCase().trim()] || "pending";
+
+                  const isRejected = normalizedStatus === "rejected";
+
+                  const currentIndex = isRejected
+                    ? 0 // force no active step
+                    : steps.indexOf(normalizedStatus);
+
+                  console.log("STATUS:", item.status, "INDEX:", currentIndex);
+
+                  return (
+                    <>
+                      {isRejected ? (
+                        <p className="text-center text-red-600 font-semibold bg-red-50 py-2 rounded">
+                          Request Rejected
+                        </p>
+                      ) : (
+                        <>
+                          <div className="flex items-center justify-between">
+                            {steps.map((step, index) => (
+                              <div
+                                key={step}
+                                className="flex-1 flex items-center"
+                              >
+                                {/* Circle */}
+                                <div
+                                  className={`w-8 h-8 flex items-center justify-center rounded-full text-xs font-semibold
+                ${
+                  index < currentIndex
+                    ? "bg-green-500 text-white"
+                    : index === currentIndex
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-300 text-gray-600"
+                }`}
+                                >
+                                  {index + 1}
+                                </div>
+
+                                {/* Line */}
+                                {index !== steps.length - 1 && (
+                                  <div
+                                    className={`flex-1 h-1 mx-2 ${
+                                      index < currentIndex
+                                        ? "bg-green-500"
+                                        : "bg-gray-300"
+                                    }`}
+                                  />
+                                )}
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Labels */}
+                          <div className="flex justify-between mt-2 text-xs text-gray-600">
+                            {steps.map((step) => (
+                              <span
+                                key={step}
+                                className="flex-1 text text-xs text-gray-600"
+                              >
+                                {step.replace("-", " ")}
+                              </span>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
-              
             </div>
           ))}
         </div>

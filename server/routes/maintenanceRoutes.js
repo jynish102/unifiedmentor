@@ -12,6 +12,7 @@ const {
   getMyMaintenance,
   updateMaintenanceStatus,
   assignMaintenance,
+  getMyAssignments,
   deleteMaintenance,
 } = require("../controllers/maintenanceController");
 
@@ -34,10 +35,12 @@ router.get("/tenant/:tenantId", authMiddleware, getTenantMaintenance);
 router.get("/my-maintenance", authMiddleware, authorizeRoles("tenant"), getMyMaintenance);
 
 // UPDATE STATUS
-router.put("/:id/status", authMiddleware, authorizeRoles("owner"), updateMaintenanceStatus);
+router.put("/:id/status", authMiddleware, authorizeRoles("owner" , "staff"), updateMaintenanceStatus);
 
 // ASSIGN MAINTENANCE
 router.put("/:id/assign", authMiddleware, authorizeRoles("owner"), assignMaintenance);
+
+router.get("/my-assignments", authMiddleware, authorizeRoles("staff"), getMyAssignments);
 
 // DELETE
 router.delete("/:id", authMiddleware, authorizeRoles("owner"), deleteMaintenance);

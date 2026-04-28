@@ -14,8 +14,8 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
-export default function TenantProfile() {
-  const [tenant, setTenant] = useState(null);
+export default function StaffProfile() {
+  const [staff, setStaff] = useState(null);
   const [preview, setPreview] = useState(null);
   const [counts, setCounts] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -37,7 +37,7 @@ export default function TenantProfile() {
 
         // console.log("API:", res.data);
 
-        setTenant(res.data.user);
+        setStaff(res.data.user);
         setCounts(res.data.counts);
       } catch (error) {
         console.error(error);
@@ -54,16 +54,16 @@ export default function TenantProfile() {
   }, [preview]);
 
   useEffect(() => {
-    if (!tenant) return;
+    if (!staff) return;
 
     setFormData({
-      fullname: tenant.fullname ?? "",
-      email: tenant.email ?? "",
-      phone: tenant.phone ?? "",
+      fullname: staff.fullname ?? "",
+      email: staff.email ?? "",
+      phone: staff.phone ?? "",
     });
-  }, [tenant]);
+  }, [staff]);
 
-  if (!tenant) {
+  if (!staff) {
     return <div className="min-h-screen bg-muted/30">Loading...</div>;
   }
 
@@ -85,7 +85,7 @@ export default function TenantProfile() {
       });
 
       // update UI with latest backend response
-      setTenant(res.data.user || { ...tenant, ...formData });
+      setStaff(res.data.user || { ...staff, ...formData });
 
       setIsEditing(false);
       alert("Profile updated successfully ");
@@ -97,18 +97,18 @@ export default function TenantProfile() {
 
   const handleEdit = () => {
     setFormData({
-      fullname: tenant.fullname || "",
-      email: tenant.email || "",
-      phone: tenant.phone || "",
+      fullname: staff.fullname || "",
+      email: staff.email || "",
+      phone: staff.phone || "",
     });
     setIsEditing(true);
   };
 
   const handleCancel = () => {
     setFormData({
-      fullname: tenant.fullname || "",
-      email: tenant.email || "",
-      phone: tenant.phone || "",
+      fullname: staff.fullname || "",
+      email: staff.email || "",
+      phone: staff.phone || "",
     });
     setIsEditing(false);
   };
@@ -133,7 +133,7 @@ export default function TenantProfile() {
       });
 
       // 3. Update real image from server
-      setTenant((prev) => ({
+      setStaff((prev) => ({
         ...prev,
         profileImage: res.data.profileImage,
       }));
@@ -158,8 +158,8 @@ export default function TenantProfile() {
                   src={
                     preview
                       ? preview
-                      : tenant?.profileImage
-                        ? `http://localhost:5000/${tenant.profileImage}`
+                      : staff?.profileImage
+                        ? `http://localhost:5000/${staff.profileImage}`
                         : "/default-avatar.jpg"
                   }
                   className="w-32 h-32 rounded-full object-cover border-4 border-card shadow-md"
@@ -190,10 +190,10 @@ export default function TenantProfile() {
                         className="text-xl font-bold border px-2 py-1 rounded"
                       />
                     ) : (
-                      <h2 className="text-2xl font-bold">{tenant.fullname}</h2>
+                      <h2 className="text-2xl font-bold">{staff.fullname}</h2>
                     )}
 
-                    <p className="text-gray-500 capitalize">{tenant.role}</p>
+                    <p className="text-gray-500 capitalize">{staff.role}</p>
 
                     {/* EMAIL */}
                     <div className="mt-2">
@@ -205,7 +205,7 @@ export default function TenantProfile() {
                           className="border px-2 py-1 rounded w-full"
                         />
                       ) : (
-                        <p className="text-gray-700">📧 {tenant.email}</p>
+                        <p className="text-gray-700">📧 {staff.email}</p>
                       )}
                     </div>
 
@@ -219,7 +219,7 @@ export default function TenantProfile() {
                           className="border px-2 py-1 rounded w-full"
                         />
                       ) : (
-                        <p className="text-gray-700">📞 {tenant.phone}</p>
+                        <p className="text-gray-700">📞 {staff.phone}</p>
                       )}
                     </div>
                     <div>
@@ -250,7 +250,7 @@ export default function TenantProfile() {
                   </div>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-700 rounded-full w-fit">
                     <CheckCircle className="w-4 h-4" />
-                    {tenant.status}
+                    {staff.status}
                   </span>
                 </div>
               </div>
@@ -263,50 +263,12 @@ export default function TenantProfile() {
           <div className="lg:col-span-2 space-y-6">
             {/* Current Rental */}
             <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Home className="w-5 h-5 text-primary" />
-                <h2 className="text-foreground">Current Rental</h2>
-              </div>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-foreground">{tenant.property}</p>
-                    <p className="text-muted-foreground">{tenant.address}</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                  <div>
-                    <p className="text-muted-foreground">Move-in Date</p>
-                    <p className="text-foreground">
-                      {tenant.leaseStart
-                        ? new Date(tenant.leaseStart).toLocaleDateString()
-                        : "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Lease End</p>
-                    <p className="text-foreground">
-                      {tenant.leaseEnd
-                        ? new Date(tenant.leaseEnd).toLocaleDateString()
-                        : "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Monthly Rent</p>
-                    <p className="text-foreground">
-                      ₹{tenant.rentAmount?.toLocaleString()}/
-                      {tenant.paymentFrequency}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Security Deposit</p>
-                    <p className="text-foreground">
-                      ₹{tenant.deposit?.toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <div className="flex items-center gap-2 mb-4"></div>
+              <p>🛠 Specialization: {staff.specialization}</p>
+              <p>
+                📅 Joined: {new Date(staff.createdAt).toLocaleDateString()}
+              </p>
+              
             </div>
           </div>
         </div>

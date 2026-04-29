@@ -8,6 +8,7 @@ export default function OwnerMaintenance() {
   const [assignInputs, setAssignInputs] = useState({});
   const [staffList, setStaffList] = useState([]);
   const steps = ["pending", "assigned", "in-progress", "completed"];
+  const [previewImg, setPreviewImg] = useState(null);
 
   const fetchMaintenance = async () => {
     try {
@@ -205,9 +206,49 @@ export default function OwnerMaintenance() {
                 </div>
               )}
 
+              {previewImg && (
+                <div
+                  className="fixed inset-0 bg-white bg-opacity-70 flex items-center justify-center z-50"
+                  onClick={() => setPreviewImg(null)}
+                >
+                  <img
+                    src={previewImg}
+                    onClick={(e) => e.stopPropagation()}
+                    className="max-w-[90%] max-h-[90%] rounded shadow-lg"
+                  />
+                  <button
+                    className="absolute top-5 right-5 text-red-500 text-3xl"
+                    onClick={() => setPreviewImg(null)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+
+              {/* Proof Images - TENANT VIEW */}
+              {item.proofImages?.length > 0 && (
+                <div className="mt-3">
+                  <p className="text-sm font-medium text-gray-600">
+                    Work Proof:
+                  </p>
+                  <div className="flex gap-2 flex-wrap mt-1">
+                    {item.proofImages.map((img, i) => (
+                      <img
+                        key={i}
+                        src={`http://localhost:5000/${img}`}
+                        onClick={() =>
+                          setPreviewImg(`http://localhost:5000/${img}`)
+                        }
+                        className="w-20 h-20 rounded object-cover cursor-pointer hover:scale-105 transition"
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/*  ACTION BUTTONS */}
-              {item.status !== "rejected" && (
-                <div className="flex gap-2 mt-4" >
+              {item.status !== "rejected" &&  (
+                <div className="flex gap-2 mt-4">
                   {item.status !== "completed" && (
                     <button
                       onClick={() => updateStatus(item._id, "rejected")}

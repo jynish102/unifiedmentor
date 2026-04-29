@@ -488,6 +488,23 @@ exports.updateMaintenanceStatus = async (req, res) => {
       });
     }
 
+    //  Prevent complete without proof images
+    if (status === "completed") {
+      if (!maintenance.proofImages || maintenance.proofImages.length === 0) {
+        return res.status(400).json({
+          message: "Upload proof images before marking as completed",
+        });
+      }
+    }
+
+    if (status === "completed") {
+      if (!maintenance.proofImages || maintenance.proofImages.length === 0) {
+        return res.status(400).json({
+          message: "Upload proof images before marking as completed",
+        });
+      }
+    }
+
     // UPDATE
     maintenance.status = status;
 
@@ -505,6 +522,100 @@ exports.updateMaintenanceStatus = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//uplodad proof images
+exports.uploadProof = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id || req.user.id;
+
+    const maintenance = await Maintenance.findById(id);
+
+    if (!maintenance) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    // ✅ Only assigned staff can upload proof
+    if (
+      !maintenance.assignedTo ||
+      maintenance.assignedTo.toString() !== userId.toString()
+    ) {
+      return res.status(403).json({
+        message: "Only assigned staff can upload proof",
+      });
+    }
+
+    // ✅ Only allow upload in "in-progress"
+    if (maintenance.status !== "in-progress") {
+      return res.status(400).json({
+        message: "Proof can only be uploaded during in-progress",
+      });
+    }
+
+    // ✅ Validate files
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "No images uploaded" });
+    }
+
+    // ✅ Limit total images to 5
+    const existingImages = maintenance.proofImages.length;
+    const newImages = req.files.length;
+
+    if (existingImages + newImages > 5) {
+      return res.status(400).json({
+        message: `Maximum 5 images allowed. You already have ${existingImages}`,
+      });
+    }
+
+    // ✅ Save images
+    const imagePaths = req.files.map((file) => file.path);
+    maintenance.proofImages.push(...imagePaths);
+
+    await maintenance.save();
+
+    res.json({
+      success: true,
+      data: maintenance,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//delet proof
+exports.deleteProofImage = async (req, res) => {
+  try {
+    const { id, image } = req.body; // maintenanceId + image path
+
+    const maintenance = await Maintenance.findById(id);
+
+    if (!maintenance) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    // Only allow when in-progress
+    if (maintenance.status !== "in-progress") {
+      return res.status(400).json({
+        message: "Cannot delete image after completion",
+      });
+    }
+
+    // Remove image from array
+    maintenance.proofImages = maintenance.proofImages.filter(
+      (img) => img !== image,
+    );
+
+    await maintenance.save();
+
+    res.json({
+      success: true,
+      data: maintenance,
+    });
+  } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };

@@ -5,8 +5,9 @@ import toast from "react-hot-toast";
 export default function StaffMaintenance() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const steps = ["pending", "assigned", "in-progress", "completed"];
+  const [files, setFiles] = useState({});
+  const [previewImg, setPreviewImg] = useState(null);
 
   //  Fetch ONLY assigned maintenance
   const fetchMaintenance = async () => {
@@ -32,7 +33,7 @@ export default function StaffMaintenance() {
     fetchMaintenance();
   }, []);
 
-  // 🔥 Update status (staff actions)
+  //  Update status (staff actions)
   const updateStatus = async (id, status) => {
     try {
       const token = localStorage.getItem("token");
@@ -55,6 +56,59 @@ export default function StaffMaintenance() {
     }
   };
 
+  const uploadProof = async (id) => {
+    try {
+      const selectedFiles = files[id];
+
+      if (!selectedFiles || selectedFiles.length === 0) {
+        return toast.error("Select images first");
+      }
+
+      const token = localStorage.getItem("token");
+
+      const formData = new FormData();
+
+      selectedFiles.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      await API.put(`/maintenance/${id}/upload-proof`, formData, {
+        headers: {
+          
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      toast.success("Images uploaded");
+      fetchMaintenance();
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || "Upload failed");
+    }
+  };
+
+
+  const deleteImage = async (id, image) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await API.put(
+        "/maintenance/delete-proof",
+        { id, image },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      toast.success("Image removed");
+      fetchMaintenance();
+    } catch (err) {
+      console.error(err);
+      toast.error("Delete failed");
+    }
+  };
   if (loading) return <p className="p-6">Loading...</p>;
 
   return (
@@ -117,7 +171,7 @@ export default function StaffMaintenance() {
                 </span>
               </div>
 
-              {/* 🔥 ACTION BUTTONS (STAFF ONLY) */}
+              {/*  ACTION BUTTONS (STAFF ONLY) */}
               <div className="flex gap-2 mt-4">
                 {item.status === "assigned" && (
                   <button
@@ -131,14 +185,92 @@ export default function StaffMaintenance() {
                 {item.status === "in-progress" && (
                   <button
                     onClick={() => updateStatus(item._id, "completed")}
-                    className="px-3 py-1 bg-green-600 text-white rounded"
+                    disabled={
+                      !item.proofImages || item.proofImages.length === 0
+                    }
+                    className={`px-3 py-1 text-white rounded ${
+                      !item.proofImages || item.proofImages.length === 0
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-green-600"
+                    }`}
                   >
                     Complete
                   </button>
                 )}
               </div>
 
-              {/* 🔥 TRACKER */}
+              {/* IMAGE UPLOAD (ONLY DURING IN-PROGRESS) */}
+              {item.status === "in-progress" && (
+                <div className="mt-4 space-y-2">
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(e) =>
+                      setFiles({
+                        ...files,
+                        [item._id]: Array.from(e.target.files),
+                      })
+                    }
+                    className="border p-2 rounded w-full"
+                  />
+
+                  <button
+                    onClick={() => uploadProof(item._id)}
+                    className="px-3 py-1 bg-purple-600 text-white rounded"
+                  >
+                    Upload Proof
+                  </button>
+                </div>
+              )}
+
+              {previewImg && (
+                <div
+                  className="fixed inset-0 bg-white bg-opacity-70 flex items-center justify-center z-50"
+                  onClick={() => setPreviewImg(null)}
+                >
+                  <img
+                    src={previewImg}
+                    onClick={(e) => e.stopPropagation()}
+                    className="max-w-[90%] max-h-[90%] rounded shadow-lg"
+                  />
+                  <button
+                    className="absolute top-5 right-5 text-red-500 text-3xl"
+                    onClick={() => setPreviewImg(null)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+
+              {/* Uploaded Images - STAFF VIEW */}
+              {item.proofImages?.length > 0 && (
+                <div className="mt-3 flex gap-2 flex-wrap">
+                  {item.proofImages.map((img, i) => (
+                    <div key={i} className="relative">
+                      <img
+                        src={`http://localhost:5000/${img}`}
+                        onClick={() =>
+                          setPreviewImg(`http://localhost:5000/${img}`)
+                        }
+                        className="w-20 h-20 rounded object-cover cursor-pointer"
+                      />
+
+                      {/* DELETE BUTTON */}
+                      {item.status === "in-progress" && (
+                        <button
+                          onClick={() => deleteImage(item._id, img)}
+                          className="absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* TRACKER */}
               <div className="mt-4">
                 {(() => {
                   const statusMap = {
@@ -190,10 +322,7 @@ export default function StaffMaintenance() {
                       {/* Labels */}
                       <div className="flex justify-between mt-2 text-xs text-gray-600">
                         {steps.map((step) => (
-                          <span
-                            key={step}
-                            className="capitalize flex-1 text"
-                          >
+                          <span key={step} className="capitalize flex-1 text">
                             {step}
                           </span>
                         ))}

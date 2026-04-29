@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+
+const upload = require("../middleware/uploadPropertyImages");
 const authMiddleware = require("../middleware/authMiddleware");
 const authorizeRoles = require("../middleware/authorizeRoles");
 
@@ -13,6 +15,8 @@ const {
   updateMaintenanceStatus,
   assignMaintenance,
   getMyAssignments,
+  uploadProof,
+  deleteProofImage,
   deleteMaintenance,
 } = require("../controllers/maintenanceController");
 
@@ -41,6 +45,16 @@ router.put("/:id/status", authMiddleware, authorizeRoles("owner" , "staff"), upd
 router.put("/:id/assign", authMiddleware, authorizeRoles("owner"), assignMaintenance);
 
 router.get("/my-assignments", authMiddleware, authorizeRoles("staff"), getMyAssignments);
+
+router.put(
+  "/:id/upload-proof",
+  authMiddleware,
+  authorizeRoles("staff"),
+  upload.array("images", 5),
+  uploadProof,
+);
+
+router.put("/maintenance/delete-proof", authMiddleware, authorizeRoles("staff"), deleteProofImage);
 
 // DELETE
 router.delete("/:id", authMiddleware, authorizeRoles("owner"), deleteMaintenance);

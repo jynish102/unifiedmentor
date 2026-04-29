@@ -46,7 +46,7 @@ const maintenanceSchema = new mongoose.Schema(
     updates: [
       {
         message: "string",
-        status : "string",
+        status: "string",
         updatedBy: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
@@ -62,7 +62,16 @@ const maintenanceSchema = new mongoose.Schema(
 
     rejectionReason: String,
 
-    proofImages: [String],
+    proofImages: [
+      {
+        url: String,
+        status: String, // "in-progress" OR "completed"
+        uploadedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
   { timestamps: true },
 );

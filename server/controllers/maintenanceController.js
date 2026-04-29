@@ -526,7 +526,7 @@ exports.updateMaintenanceStatus = async (req, res) => {
   }
 };
 
-//uplodad proof images
+//upload proof images
 exports.uploadProof = async (req, res) => {
   try {
     const { id } = req.params;
@@ -538,7 +538,7 @@ exports.uploadProof = async (req, res) => {
       return res.status(404).json({ message: "Not found" });
     }
 
-    // ✅ Only assigned staff can upload proof
+    //  Only assigned staff can upload proof
     if (
       !maintenance.assignedTo ||
       maintenance.assignedTo.toString() !== userId.toString()
@@ -548,19 +548,19 @@ exports.uploadProof = async (req, res) => {
       });
     }
 
-    // ✅ Only allow upload in "in-progress"
+    // Only allow upload in "in-progress"
     if (maintenance.status !== "in-progress") {
       return res.status(400).json({
         message: "Proof can only be uploaded during in-progress",
       });
     }
 
-    // ✅ Validate files
+    //  Validate files
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: "No images uploaded" });
     }
 
-    // ✅ Limit total images to 5
+    //  Limit total images to 5
     const existingImages = maintenance.proofImages.length;
     const newImages = req.files.length;
 
@@ -570,9 +570,16 @@ exports.uploadProof = async (req, res) => {
       });
     }
 
-    // ✅ Save images
-    const imagePaths = req.files.map((file) => file.path);
+    //  Save images
+    const imagePaths = req.files.map((file) => ({
+      url: file.path,
+      status: maintenance.status,
+    }));
+
     maintenance.proofImages.push(...imagePaths);
+    console.log("IMG PATH:", imagePaths);
+    
+    console.log("Saved Images:", maintenance.proofImages); //
 
     await maintenance.save();
 
@@ -580,21 +587,35 @@ exports.uploadProof = async (req, res) => {
       success: true,
       data: maintenance,
     });
+
+     console.log("Sending Images:", maintenance.proofImages);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });
   }
+ 
 };
 
-//delet proof
+//delete proof
 exports.deleteProofImage = async (req, res) => {
   try {
-    const { id, image } = req.body; // maintenanceId + image path
-
+    const { id } = req.params;
+    const { image} = req.body; // maintenanceId + image path
+    const userId = req.user._id || req.user.id;
+   
     const maintenance = await Maintenance.findById(id);
 
     if (!maintenance) {
       return res.status(404).json({ message: "Not found" });
+    }
+
+    if (
+      !maintenance.assignedTo ||
+      maintenance.assignedTo.toString() !== userId.toString()
+    ) {
+      return res.status(403).json({
+        message: "Access denied: Not your assignment",
+      });
     }
 
     // Only allow when in-progress
@@ -603,6 +624,14 @@ exports.deleteProofImage = async (req, res) => {
         message: "Cannot delete image after completion",
       });
     }
+
+    if (!maintenance.proofImages.includes(image)) {
+      return res.status(400).json({
+        message: "Image not found in record",
+      });
+    }
+
+    
 
     // Remove image from array
     maintenance.proofImages = maintenance.proofImages.filter(

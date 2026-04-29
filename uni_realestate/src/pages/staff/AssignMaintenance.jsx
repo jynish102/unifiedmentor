@@ -19,6 +19,7 @@ export default function StaffMaintenance() {
           Authorization: `Bearer ${token}`,
         },
       });
+       console.log("FRONTEND DATA:", res.data.data); 
 
       setData(res.data.data);
     } catch (err) {
@@ -74,7 +75,6 @@ export default function StaffMaintenance() {
 
       await API.put(`/maintenance/${id}/upload-proof`, formData, {
         headers: {
-          
           Authorization: `Bearer ${token}`,
         },
       });
@@ -87,15 +87,17 @@ export default function StaffMaintenance() {
     }
   };
 
-
   const deleteImage = async (id, image) => {
     try {
       const token = localStorage.getItem("token");
+      console.log("Deleting image:", image, "from maintenance ID:", id);
+      console.log("Token:", token);
 
-      await API.put(
-        "/maintenance/delete-proof",
-        { id, image },
+      await API.delete(
+        `/maintenance/${id}/delete-proof`,
+
         {
+          data: { image },
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -106,7 +108,7 @@ export default function StaffMaintenance() {
       fetchMaintenance();
     } catch (err) {
       console.error(err);
-      toast.error("Delete failed");
+      toast.error(err.response?.data?.message || "Upload failed");
     }
   };
   if (loading) return <p className="p-6">Loading...</p>;
@@ -202,16 +204,26 @@ export default function StaffMaintenance() {
               {/* IMAGE UPLOAD (ONLY DURING IN-PROGRESS) */}
               {item.status === "in-progress" && (
                 <div className="mt-4 space-y-2">
+                  <p className="text-lg text-gray-500">
+                    You can upload maximum 5 images
+                  </p>
                   <input
                     type="file"
                     multiple
                     accept="image/*"
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      const selected = Array.from(e.target.files);
+
+                      if (selected.length > 5) {
+                        toast.error("Maximum 5 images allowed");
+                        return;
+                      }
+
                       setFiles({
                         ...files,
                         [item._id]: Array.from(e.target.files),
-                      })
-                    }
+                      });
+                    }}
                     className="border p-2 rounded w-full"
                   />
 
@@ -245,28 +257,40 @@ export default function StaffMaintenance() {
 
               {/* Uploaded Images - STAFF VIEW */}
               {item.proofImages?.length > 0 && (
-                <div className="mt-3 flex gap-2 flex-wrap">
-                  {item.proofImages.map((img, i) => (
-                    <div key={i} className="relative">
-                      <img
-                        src={`http://localhost:5000/${img}`}
-                        onClick={() =>
-                          setPreviewImg(`http://localhost:5000/${img}`)
-                        }
-                        className="w-20 h-20 rounded object-cover cursor-pointer"
-                      />
+                <div className="mt-3">
+                  {/* Section Title */}
+                  <p className="text-sm font-semibold text-blue-600 mb-2">
+                    Work Progress Images
+                  </p>
 
-                      {/* DELETE BUTTON */}
-                      {item.status === "in-progress" && (
-                        <button
-                          onClick={() => deleteImage(item._id, img)}
-                          className="absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded"
-                        >
-                          ✕
-                        </button>
-                      )}
-                    </div>
-                  ))}
+                  <div className="mt-3 flex gap-2 flex-wrap">
+                    {item.proofImages.map((img, i) => (
+                      <div key={i} className="relative">
+                        <img
+                          src={`http://localhost:5000/${img.url}`}
+                          onClick={() =>
+                            setPreviewImg(`http://localhost:5000/${img.url}`)
+                          }
+                          className="w-20 h-20 rounded object-cover cursor-pointer"
+                        />
+
+                        {/* STATUS BADGE */}
+                        <span className="absolute bottom-0 left-0 bg-blue-600 text-white text-[10px] px-1 rounded">
+                          In Progress
+                        </span>
+
+                        {/* DELETE BUTTON */}
+                        {item.status === "in-progress" && (
+                          <button
+                            onClick={() => deleteImage(item._id, img.url)}
+                            className="absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 

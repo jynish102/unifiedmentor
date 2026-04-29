@@ -54,7 +54,7 @@ router.put(
   uploadProof,
 );
 
-router.put("/maintenance/delete-proof", authMiddleware, authorizeRoles("staff"), deleteProofImage);
+router.delete("/:id/delete-proof", authMiddleware, authorizeRoles("staff"), deleteProofImage);
 
 // DELETE
 router.delete("/:id", authMiddleware, authorizeRoles("owner"), deleteMaintenance);

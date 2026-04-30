@@ -249,7 +249,7 @@ exports.getMyMaintenance = async (req, res) => {
       .populate("property", "title address city") // show property info
       .populate("amenity", "name location ")
       .sort({ createdAt: -1 }); // latest first
-    console.log(JSON.stringify(maintenance, null, 2));
+    // console.log(JSON.stringify(maintenance, null, 2));
 
     res.json({
       success: true,
@@ -281,15 +281,15 @@ exports.getMyAssignments = async (req, res) => {
       .populate("amenity", "name")
       .populate("tenant", "fullname email");
       
-    console.log("FETCH DATA:", JSON.stringify(maintenance, null, 2));
-    console.log(
-      "FETCH ID:",
-      maintenance.map((m) => m._id),
-    );
-    console.log(
-      "FETCH IMAGES:",
-      maintenance.map((m) => m.proofImages),
-    );
+    // console.log("FETCH DATA:", JSON.stringify(maintenance, null, 2));
+    // console.log(
+    //   "FETCH ID:",
+    //   maintenance.map((m) => m._id),
+    // );
+    // console.log(
+    //   "FETCH IMAGES:",
+    //   maintenance.map((m) => m.proofImages),
+    // );
      
 
     res.json({
@@ -545,9 +545,10 @@ exports.uploadProof = async (req, res) => {
     const { id } = req.params;
     const userId = req.user._id || req.user.id;
     
+    console.log("REQ QUERY:", req.query.status);
 
     const maintenance = await Maintenance.findById(id);
-    console.log("UPLOAD ID:", maintenance._id);
+    // console.log("UPLOAD ID:", maintenance._id);
 
     if (!maintenance) {
       return res.status(404).json({ message: "Not found" });
@@ -588,14 +589,16 @@ exports.uploadProof = async (req, res) => {
     //  Save images
     const imagePaths = req.files.map((file) => ({
       url: file.path.replace(/\\/g, "/"),
-      status: maintenance.status,
+      status: req.query.status || maintenance.status,
+      
     }));
+    
 
     maintenance.proofImages.push(...imagePaths);
     maintenance.proofImages = maintenance.proofImages.flat();
-    console.log("IMG PATH:", imagePaths);
+    // console.log("IMG PATH:", imagePaths);
     
-    console.log("Saved Images:", maintenance.proofImages); //
+    // console.log("Saved Images:", maintenance.proofImages); 
 
     await maintenance.save();
 
@@ -604,7 +607,7 @@ exports.uploadProof = async (req, res) => {
       data: maintenance,
     });
 
-     console.log("Sending Images:", maintenance.proofImages);
+    //  console.log("Sending Images:", maintenance.proofImages);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: err.message });

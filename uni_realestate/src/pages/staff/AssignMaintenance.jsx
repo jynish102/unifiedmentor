@@ -8,6 +8,10 @@ export default function StaffMaintenance() {
   const steps = ["pending", "assigned", "in-progress", "completed"];
   const [files, setFiles] = useState({});
   const [previewImg, setPreviewImg] = useState(null);
+ const [completeModal, setCompleteModal] = useState({
+   open: false,
+   id: null,
+ });
 
   //  Fetch ONLY assigned maintenance
   const fetchMaintenance = async () => {
@@ -84,6 +88,59 @@ export default function StaffMaintenance() {
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || "Upload failed");
+    }
+  };
+
+  const handleComplete = async (id) => {
+    try {
+      const selectedFiles = files[id];
+
+      if (!selectedFiles || selectedFiles.length === 0) {
+        return toast.error("At least 1 image required");
+      }
+
+      const token = localStorage.getItem("token");
+
+      const formData = new FormData();
+
+      selectedFiles.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      formData.append("status", "completed");
+
+     //Upload proof images first
+      await API.put(
+        `/maintenance/${id}/upload-proof?status=completed`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      // 2️⃣ Update status
+      await API.put(
+        `/maintenance/${id}/status`,
+        { status: "completed" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      toast.success("Maintenance completed");
+
+      // reset
+      setCompleteModal({ open: false, id: null });
+      setFiles({});
+
+      fetchMaintenance();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to complete");
     }
   };
 
@@ -186,7 +243,9 @@ export default function StaffMaintenance() {
 
                 {item.status === "in-progress" && (
                   <button
-                    onClick={() => updateStatus(item._id, "completed")}
+                    onClick={() =>
+                      setCompleteModal({ open: true, id: item._id })
+                    }
                     disabled={
                       !item.proofImages || item.proofImages.length === 0
                     }
@@ -290,6 +349,74 @@ export default function StaffMaintenance() {
                         )}
                       </div>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* for complete button modal*/}
+              {completeModal.open && (
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+                  <div className="bg-white p-6 rounded-lg w-[400px] space-y-4 relative">
+                    {/* CLOSE */}
+                    <button
+                      onClick={() =>
+                        setCompleteModal({ open: false, id: null })
+                      }
+                      className="absolute top-2 right-3 text-xl text-gray-600"
+                    >
+                      ✕
+                    </button>
+
+                    <h2 className="text-lg font-semibold">
+                      Complete Maintenance
+                    </h2>
+
+                    <p className="text-sm text-gray-500">
+                      Upload at least 1 image (max 5)
+                    </p>
+
+                    {/* FILE INPUT */}
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => {
+                        const selected = Array.from(e.target.files);
+
+                        if (selected.length > 5) {
+                          toast.error("Max 5 images allowed");
+                          return;
+                        }
+
+                        setFiles({
+                          ...files,
+                          [completeModal.id]: selected,
+                        });
+                      }}
+                      className="border p-2 rounded w-full"
+                    />
+
+                    {/* PREVIEW */}
+                    <div className="flex gap-2 flex-wrap">
+                      {(files[completeModal.id] || []).map((file, i) => (
+                       
+                          <img
+                          key={i}
+                            src={URL.createObjectURL(file)}
+                            className="w-16 h-16 object-cover rounded"
+                          />
+                          
+                        
+                      ))}
+                    </div>
+
+                    {/* CONFIRM BUTTON */}
+                    <button
+                      onClick={() => handleComplete(completeModal.id)}
+                      className="w-full bg-green-600 text-white py-2 rounded"
+                    >
+                      Confirm Complete
+                    </button>
                   </div>
                 </div>
               )}

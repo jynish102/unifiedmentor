@@ -97,7 +97,7 @@ export default function StaffMaintenance() {
         `/maintenance/${id}/delete-proof`,
 
         {
-          data: { image },
+          data: { image }, // Pass the image URL in the request body
           headers: {
             Authorization: `Bearer ${token}`,
           },

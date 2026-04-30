@@ -229,25 +229,32 @@ export default function OwnerMaintenance() {
               {item.proofImages?.length > 0 && (
                 <div className="mt-3">
                   <p className="text-sm font-medium text-gray-600">
-                    Work Proof:
+                    Work Progress Images
                   </p>
+
                   <div className="flex gap-2 flex-wrap mt-1">
                     {item.proofImages.map((img, i) => (
-                      <img
-                        key={i}
-                        src={`http://localhost:5000/${img}`}
-                        onClick={() =>
-                          setPreviewImg(`http://localhost:5000/${img}`)
-                        }
-                        className="w-20 h-20 rounded object-cover cursor-pointer hover:scale-105 transition"
-                      />
+                      <div key={i} className="relative">
+                        <img
+                          key={i}
+                          src={`http://localhost:5000/${img.url}`}
+                          onClick={() =>
+                            setPreviewImg(`http://localhost:5000/${img.url}`)
+                          }
+                          className="w-20 h-20 rounded object-cover cursor-pointer hover:scale-105 transition"
+                        />
+                        {/* STATUS BADGE */}
+                        <span className="absolute bottom-0 left-0 bg-blue-600 text-white text-[10px] px-1 rounded">
+                          In Progress
+                        </span>
+                      </div>
                     ))}
                   </div>
                 </div>
               )}
 
               {/*  ACTION BUTTONS */}
-              {item.status !== "rejected" &&  (
+              {item.status !== "rejected" && (
                 <div className="flex gap-2 mt-4">
                   {item.status !== "completed" && (
                     <button

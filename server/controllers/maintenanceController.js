@@ -280,11 +280,24 @@ exports.getMyAssignments = async (req, res) => {
       .populate("property", "title")
       .populate("amenity", "name")
       .populate("tenant", "fullname email");
+      
+    console.log("FETCH DATA:", JSON.stringify(maintenance, null, 2));
+    console.log(
+      "FETCH ID:",
+      maintenance.map((m) => m._id),
+    );
+    console.log(
+      "FETCH IMAGES:",
+      maintenance.map((m) => m.proofImages),
+    );
+     
 
     res.json({
       success: true,
       data: maintenance,
+      
     });
+    
   } catch (err) {
     console.error(err);
     res.status(500).json({
@@ -480,7 +493,7 @@ exports.updateMaintenanceStatus = async (req, res) => {
     }
 
     if (
-      !maintenance.assignedTo &&
+      !maintenance.assignedTo ||
       maintenance.assignedTo.toString() !== userId.toString()
     ) {
       return res.status(403).json({
@@ -531,8 +544,10 @@ exports.uploadProof = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user._id || req.user.id;
+    
 
     const maintenance = await Maintenance.findById(id);
+    console.log("UPLOAD ID:", maintenance._id);
 
     if (!maintenance) {
       return res.status(404).json({ message: "Not found" });
@@ -572,11 +587,12 @@ exports.uploadProof = async (req, res) => {
 
     //  Save images
     const imagePaths = req.files.map((file) => ({
-      url: file.path,
+      url: file.path.replace(/\\/g, "/"),
       status: maintenance.status,
     }));
 
     maintenance.proofImages.push(...imagePaths);
+    maintenance.proofImages = maintenance.proofImages.flat();
     console.log("IMG PATH:", imagePaths);
     
     console.log("Saved Images:", maintenance.proofImages); //
@@ -600,7 +616,7 @@ exports.uploadProof = async (req, res) => {
 exports.deleteProofImage = async (req, res) => {
   try {
     const { id } = req.params;
-    const { image} = req.body; // maintenanceId + image path
+    const { image } = req.body; // maintenanceId + image path
     const userId = req.user._id || req.user.id;
    
     const maintenance = await Maintenance.findById(id);
@@ -625,7 +641,9 @@ exports.deleteProofImage = async (req, res) => {
       });
     }
 
-    if (!maintenance.proofImages.includes(image)) {
+    const exists = maintenance.proofImages.some((img) => img.url === image);
+
+    if (!exists) {
       return res.status(400).json({
         message: "Image not found in record",
       });
@@ -635,7 +653,7 @@ exports.deleteProofImage = async (req, res) => {
 
     // Remove image from array
     maintenance.proofImages = maintenance.proofImages.filter(
-      (img) => img !== image,
+      (img) => img.url !== image,
     );
 
     await maintenance.save();

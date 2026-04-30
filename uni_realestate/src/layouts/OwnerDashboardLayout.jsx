@@ -7,6 +7,9 @@ import {
   Settings,
   Menu,
   X,
+  User,
+  Wrench,
+  Dumbbell
 } from "lucide-react";
 import { useState } from "react";
 
@@ -17,9 +20,9 @@ export  function OwnerDashboardLayout() {
   const navigation = [
     { path: "/owner/ownerdashboard", name: "Dashboard", icon: LayoutDashboard },
     { path: "/owner/properties", name: "Properties", icon: Building2 },
-    { path: "/owner/amenities", name: "Amenities", icon: Waves },
-    { path : "/owner/staff", name: "Staff Management", icon: Building2 },
-    { path: "/owner/maintenance", name: "Maintenance", icon: DollarSign },
+    { path: "/owner/amenities", name: "Amenities", icon: Dumbbell },
+    { path : "/owner/staff", name: "Staff ", icon: User },
+    { path: "/owner/maintenance", name: "Maintenance", icon: Wrench },
     { path: "/owner/settings", name: "Settings", icon: Settings },
   ];
 

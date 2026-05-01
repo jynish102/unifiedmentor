@@ -122,7 +122,5 @@ propertySchema.virtual("availableUnits").get(function () {
 propertySchema.set("toJSON", { virtuals: true });
 propertySchema.set("toObject", { virtuals: true });
 
-
 module.exports = mongoose.model("Property", propertySchema);
 
-module.exports = mongoose.model("Property", propertySchema);

@@ -12,7 +12,7 @@ const amenityRoutes = require("./routes/amenityRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const maintenanceRoutes = require("./routes/maintenanceRoutes");
 const amenityBookingRoutes = require("./routes/amenityBookingRoutes");
-const dashboardRoutes = require("./routes/dashboardRoutes");
+const OwnerDashboardRoutes = require("./routes/OwnerDashboardRoutes");
 const tenantRoutes = require("./routes/tenantRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -43,7 +43,7 @@ app.use("/api/staff", userRoutes);
 
 app.use("/api/maintenance", maintenanceRoutes);
 
-app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/owner", OwnerDashboardRoutes);
 
 app.use("/api/tenants", tenantRoutes);
 

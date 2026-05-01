@@ -24,62 +24,82 @@ import {
   Cell,
 } from "recharts";
 
-const revenueData = [
-  { month: "Jan", revenue: 45000 },
-  { month: "Feb", revenue: 52000 },
-  { month: "Mar", revenue: 48000 },
-  { month: "Apr", revenue: 61000 },
-  { month: "May", revenue: 55000 },
-  { month: "Jun", revenue: 67000 },
-];
+import { useEffect, useState } from "react";
+import API from "../../utils/api";
 
-const occupancyData = [
-  { month: "Jan", rate: 85 },
-  { month: "Feb", rate: 90 },
-  { month: "Mar", rate: 88 },
-  { month: "Apr", rate: 92 },
-  { month: "May", rate: 87 },
-  { month: "Jun", rate: 95 },
-];
 
-const propertyTypeData = [
-  { name: "Apartments", value: 12, color: "#3b82f6" },
-  { name: "Houses", value: 8, color: "#8b5cf6" },
-  { name: "Commercial", value: 5, color: "#ec4899" },
-];
+  
+  
 
-const recentActivity = [
-  {
-    id: 1,
-    property: "Sunset Apartments #302",
-    action: "New Tenant",
-    tenant: "Sarah Johnson",
-    date: "2 hours ago",
-  },
-  {
-    id: 2,
-    property: "Ocean View Villa",
-    action: "Maintenance Request",
-    tenant: "Pool cleaning needed",
-    date: "5 hours ago",
-  },
-  {
-    id: 3,
-    property: "Downtown Loft #12",
-    action: "Payment Received",
-    tenant: "$2,500",
-    date: "1 day ago",
-  },
-  {
-    id: 4,
-    property: "Garden Apartments #105",
-    action: "Lease Renewal",
-    tenant: "Michael Chen",
-    date: "2 days ago",
-  },
-];
+
+
+
 
 export  function OwnerDashboard() {
+  const [dashboard, setDashboard] = useState(null);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const res = await API.get("/owner/dashboard");
+        setDashboard(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchDashboard();
+
+    // optional real-time feel
+    const interval = setInterval(fetchDashboard, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+ const months = [
+   "Jan",
+   "Feb",
+   "Mar",
+   "Apr",
+   "May",
+   "Jun",
+   "Jul",
+   "Aug",
+   "Sep",
+   "Oct",
+   "Nov",
+   "Dec",
+ ];
+
+ const fullRevenueData = months.map((month, index) => {
+   const found = dashboard?.bookings?.revenueChart?.find(
+     (item) => item._id === index + 1,
+   );
+
+   return {
+     month,
+     revenue: found ? found.revenue : 0,
+   };
+ });
+
+ const rate = dashboard?.properties?.occupancyRate || 0;
+
+ const color =
+   rate > 80
+     ? "text-green-600"
+     : rate > 50
+       ? "text-yellow-500"
+       : "text-red-500";
+
+  const COLORS = ["#3b82f6", "#8b5cf6", "#ec4899", "#10b981", "#f59e0b"];
+
+  const propertyTypeData =
+    dashboard?.properties?.typeDistribution?.map((item, index) => ({
+      name: item._id || "Other",
+      value: item.value,
+      color: COLORS[index % COLORS.length],
+    })) || [];     
+
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -100,7 +120,9 @@ export  function OwnerDashboard() {
             <Building2 className="size-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">25</div>
+            <div className="text-2xl font-bold">
+              {dashboard?.properties?.total || 0}
+            </div>
             <p className="text-xs text-gray-600 mt-1">+2 from last month</p>
           </CardContent>
         </Card>
@@ -113,7 +135,9 @@ export  function OwnerDashboard() {
             <Users className="size-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">23</div>
+            <div className="text-2xl font-bold">
+              {dashboard?.bookings?.totalTenants || 0}
+            </div>
             <p className="text-xs text-gray-600 mt-1">92% occupancy rate</p>
           </CardContent>
         </Card>
@@ -126,7 +150,9 @@ export  function OwnerDashboard() {
             <DollarSign className="size-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$67,000</div>
+            <div className="text-2xl font-bold">
+              ${dashboard?.revenue?.monthly || 0}
+            </div>
             <p className="text-xs text-green-600 mt-1 flex items-center">
               <TrendingUp className="size-3 mr-1" />
               +12.3% from last month
@@ -142,7 +168,9 @@ export  function OwnerDashboard() {
             <AlertCircle className="size-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
+            <div className="text-2xl font-bold">
+              {dashboard?.maintenance?.pending || 0}
+            </div>
             <p className="text-xs text-gray-600 mt-1">2 maintenance requests</p>
           </CardContent>
         </Card>
@@ -157,7 +185,7 @@ export  function OwnerDashboard() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={revenueData}>
+              <LineChart data={fullRevenueData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
@@ -176,21 +204,29 @@ export  function OwnerDashboard() {
         {/* Occupancy Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>Occupancy Rate (%)</CardTitle>
+            <CardTitle>Occupancy Rate</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={occupancyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                {/* <Tooltip formatter={(value) => `${value}%`} /> */}
-                <Tooltip
-                  formatter={(value) => `$${Number(value).toLocaleString()}`}
+            <div className="flex flex-col items-center justify-center h-[200px]">
+              <h2 className={`text-5xl font-bold ${color}`}>
+                {dashboard?.properties?.occupancyRate || 0}%
+              </h2>
+
+              <p className="text-gray-600 mt-2">
+                {dashboard?.properties?.occupiedUnits || 0} /{" "}
+                {dashboard?.properties?.totalUnits || 0} units occupied
+              </p>
+
+              {/* Progress bar (optional 🔥) */}
+              <div className="w-full bg-gray-200 rounded-full h-2 mt-4">
+                <div
+                  className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                  style={{
+                    width: `${dashboard?.properties?.occupancyRate || 0}%`,
+                  }}
                 />
-                <Bar dataKey="rate" fill="#8b5cf6" />
-              </BarChart>
-            </ResponsiveContainer>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -218,7 +254,7 @@ export  function OwnerDashboard() {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip formatter={(value) => `${value} properties`} />
               </PieChart>
             </ResponsiveContainer>
             <div className="mt-4 space-y-2">

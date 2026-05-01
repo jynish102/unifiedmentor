@@ -545,10 +545,14 @@ exports.uploadProof = async (req, res) => {
     const { id } = req.params;
     const userId = req.user._id || req.user.id;
     
-    console.log("REQ QUERY:", req.query.status);
+    
 
     const maintenance = await Maintenance.findById(id);
     // console.log("UPLOAD ID:", maintenance._id);
+
+    const uploadStatus = req.query.status || maintenance.status;
+
+    console.log("UPLOAD STATUS:", uploadStatus);
 
     if (!maintenance) {
       return res.status(404).json({ message: "Not found" });
@@ -589,9 +593,10 @@ exports.uploadProof = async (req, res) => {
     //  Save images
     const imagePaths = req.files.map((file) => ({
       url: file.path.replace(/\\/g, "/"),
-      status: req.query.status || maintenance.status,
+      status:  uploadStatus,
       
     }));
+    console.log("IMAGE PATHS:", imagePaths);
     
 
     maintenance.proofImages.push(...imagePaths);

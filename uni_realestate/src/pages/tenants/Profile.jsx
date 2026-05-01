@@ -11,6 +11,7 @@ import {
   CheckCircle,
   AlertCircle,
   Pencil,
+  LogOut,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
@@ -33,12 +34,12 @@ export default function TenantProfile() {
     confirmPassword: "",
   });
 
-    //notification settings state
-    const [settings, setSettings] = useState({
-      booking: true,
-      maintenance: true,
-      amenity: true,
-    });
+  //notification settings state
+  const [settings, setSettings] = useState({
+    booking: true,
+    maintenance: true,
+    amenity: true,
+  });
 
   //handle password change
   const handlePasswordChange = (e) => {
@@ -117,16 +118,7 @@ export default function TenantProfile() {
     };
   }, [preview]);
 
-  useEffect(() => {
-    if (!tenant) return;
-
-    setFormData({
-      fullname: tenant.fullname ?? "",
-      email: tenant.email ?? "",
-      phone: tenant.phone ?? "",
-    });
-  }, [tenant]);
-
+  
   if (!tenant) {
     return <div className="min-h-screen bg-muted/30">Loading...</div>;
   }
@@ -245,281 +237,299 @@ export default function TenantProfile() {
       alert("Failed to deactivate account");
     }
   };
+
+  const getStatusConfig = (isActive) => {
+    if (isActive) {
+      return {
+        color: "bg-green-100 text-green-700",
+        icon: <CheckCircle className="w-4 h-4" />,
+        label: "Active",
+      };
+    } else {
+      return {
+        color: "bg-gray-100 text-gray-700",
+        icon: <AlertCircle className="w-4 h-4" />,
+        label: "Inactive",
+      };
+    }
+  };
+
+  const statusConfig = getStatusConfig(tenant.isActive);
   return (
-    <div className="space-y-6">
-      <div className="min-h-screen bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="bg-card rounded-lg shadow-sm border border-border overflow-hidden mb-6">
-            <div className="h-32 bg-gradient-to-r from-primary/10 to-primary/5"></div>
-            <div className="px-6 pb-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 -mt-16">
-                <div className="relative w-32 h-32">
-                  {/* Profile Image */}
-                  <img
-                    src={
-                      preview
-                        ? preview
-                        : tenant?.profileImage
-                          ? `http://localhost:5000/${tenant.profileImage}`
-                          : "/default-avatar.jpg"
-                    }
-                    className="w-32 h-32 rounded-full object-cover border-4 border-card shadow-md"
-                  />
+    <div className="min-h-screen bg-muted/30 py-8">
+      <div className="max-w-5xl mx-auto space-y-6 px-4">
+        {/* Header */}
+        <div className="bg-white rounded-2xl shadow-md p-6 w-full relative">
+          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4">
+            <div className="relative w-32 h-32">
+              {/* Profile Image */}
+              <img
+                src={
+                  preview
+                    ? preview
+                    : tenant?.profileImage
+                      ? `http://localhost:5000/${tenant.profileImage}`
+                      : "/default-avatar.jpg"
+                }
+                className="w-32 h-32 rounded-full object-cover border-4 border-card shadow-md"
+              />
 
-                  {/* Edit Icon */}
-                  <label className="absolute bottom-1 right-1 bg-white p-2 rounded-full shadow cursor-pointer hover:bg-gray-100">
-                    <Pencil className="w-4 h-4 text-gray-700" />
+              {/* Edit Icon */}
+              <label className="absolute bottom-1 right-1 bg-white p-2 rounded-full shadow cursor-pointer hover:bg-gray-100">
+                <Pencil className="w-4 h-4 text-gray-700" />
 
-                    {/* Hidden Input */}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => handleImageUpload(e.target.files[0])}
-                    />
-                  </label>
-                </div>
-                <div className="flex-1">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <div>
-                      {/* NAME */}
-                      {isEditing ? (
-                        <input
-                          name="fullname"
-                          value={formData.fullname || ""}
-                          onChange={handleChange}
-                          className="text-xl font-bold border px-2 py-1 rounded"
-                        />
-                      ) : (
-                        <h2 className="text-2xl font-bold">
-                          {tenant.fullname}
-                        </h2>
-                      )}
-
-                      <p className="text-gray-500 capitalize">{tenant.role}</p>
-
-                      {/* EMAIL */}
-                      <div className="mt-2">
-                        {isEditing ? (
-                          <input
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className="border px-2 py-1 rounded w-full"
-                          />
-                        ) : (
-                          <p className="text-gray-700">📧 {tenant.email}</p>
-                        )}
-                      </div>
-
-                      {/* PHONE */}
-                      <div>
-                        {isEditing ? (
-                          <input
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            className="border px-2 py-1 rounded w-full"
-                          />
-                        ) : (
-                          <p className="text-gray-700">📞 {tenant.phone}</p>
-                        )}
-                      </div>
-                      <div>
-                        {!isEditing ? (
-                          <button
-                            onClick={handleEdit}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md"
-                          >
-                            Edit Profile
-                          </button>
-                        ) : (
-                          <div className="flex gap-2">
-                            <button
-                              onClick={handleSave}
-                              className="px-4 py-2 bg-green-600 text-white rounded-md"
-                            >
-                              Save
-                            </button>
-                            <button
-                              onClick={handleCancel}
-                              className="px-4 py-2 bg-gray-800 text-white rounded-md"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-700 rounded-full w-fit">
-                      <CheckCircle className="w-4 h-4" />
-                      {tenant.status}
-                    </span>
-                  </div>
-                </div>
-              </div>
+                {/* Hidden Input */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => handleImageUpload(e.target.files[0])}
+                />
+              </label>
             </div>
-          </div>
+            <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div>
+                  {/* NAME */}
+                  {isEditing ? (
+                    <input
+                      name="fullname"
+                      value={formData.fullname || ""}
+                      onChange={handleChange}
+                      className="text-xl font-bold border px-2 py-1 rounded"
+                    />
+                  ) : (
+                    <h2 className="text-2xl font-bold flex items-center gap-3">
+                      {tenant.fullname}
+                      <span
+                        className={`flex items-center gap-1 px-2 py-1 text-xs rounded-full ${statusConfig.color}`}
+                      >
+                        {statusConfig.icon}
+                        {statusConfig.label}
+                      </span>
+                    </h2>
+                  )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Current Rental */}
-              <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Home className="w-5 h-5 text-primary" />
-                  <h2 className="text-foreground">Current Rental</h2>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="text-foreground">{tenant.property}</p>
-                      <p className="text-muted-foreground">{tenant.address}</p>
-                    </div>
+                  <div className="absolute top-4 right-4">
+                    <button
+                      onClick={handleLogout}
+                      className="p-2 rounded-full hover:bg-red-100 transition"
+                      title="Logout"
+                    >
+                      <LogOut className="w-6 h-6 text-red-600" />
+                    </button>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                    <div>
-                      <p className="text-muted-foreground">Move-in Date</p>
-                      <p className="text-foreground">
-                        {tenant.leaseStart
-                          ? new Date(tenant.leaseStart).toLocaleDateString()
-                          : "N/A"}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Lease End</p>
-                      <p className="text-foreground">
-                        {tenant.leaseEnd
-                          ? new Date(tenant.leaseEnd).toLocaleDateString()
-                          : "N/A"}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Monthly Rent</p>
-                      <p className="text-foreground">
-                        ₹{tenant.rentAmount?.toLocaleString()}/
-                        {tenant.paymentFrequency}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Security Deposit</p>
-                      <p className="text-foreground">
-                        ₹{tenant.deposit?.toLocaleString()}
-                      </p>
-                    </div>
+
+                  <p className="text-gray-500 capitalize">{tenant.role}</p>
+
+                  {/* EMAIL */}
+                  <div className="mt-2">
+                    {isEditing ? (
+                      <input
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="border px-2 py-1 rounded w-full"
+                      />
+                    ) : (
+                      <p className="text-gray-700">📧 {tenant.email}</p>
+                    )}
+                  </div>
+
+                  {/* PHONE */}
+                  <div>
+                    {isEditing ? (
+                      <input
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="border px-2 py-1 rounded w-full"
+                      />
+                    ) : (
+                      <p className="text-gray-700">📞 {tenant.phone}</p>
+                    )}
+                  </div>
+                  <div>
+                    {!isEditing ? (
+                      <button
+                        onClick={handleEdit}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                      >
+                        Edit Profile
+                      </button>
+                    ) : (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleSave}
+                          className="px-4 py-2 bg-green-600 text-white rounded-md"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={handleCancel}
+                          className="px-4 py-2 bg-gray-800 text-white rounded-md"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Change Password Section */}
-      <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
-        <h2 className="text-xl font-semibold mb-4">Change Password</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Current Rental */}
+            <div className="bg-card rounded-lg shadow-sm border border-border p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Home className="w-5 h-5 text-primary" />
+                <h2 className="text-foreground">Current Rental</h2>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
+                  <div>
+                    <p className="text-foreground">{tenant.property}</p>
+                    <p className="text-muted-foreground">{tenant.address}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  <div>
+                    <p className="text-muted-foreground">Move-in Date</p>
+                    <p className="text-foreground">
+                      {tenant.leaseStart
+                        ? new Date(tenant.leaseStart).toLocaleDateString()
+                        : "N/A"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Lease End</p>
+                    <p className="text-foreground">
+                      {tenant.leaseEnd
+                        ? new Date(tenant.leaseEnd).toLocaleDateString()
+                        : "N/A"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Monthly Rent</p>
+                    <p className="text-foreground">
+                      ₹{tenant.rentAmount?.toLocaleString()}/
+                      {tenant.paymentFrequency}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Security Deposit</p>
+                    <p className="text-foreground">
+                      ₹{tenant.deposit?.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <div className="space-y-3">
-          <input
-            type="password"
-            name="currentPassword"
-            placeholder="Current Password"
-            value={passwordData.currentPassword}
-            onChange={handlePasswordChange}
-            className="w-full border p-2 rounded"
-          />
+        {/* Change Password Section */}
+        <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
+          <h2 className="text-xl font-semibold mb-4">Change Password</h2>
 
-          <input
-            type="password"
-            name="newPassword"
-            placeholder="New Password"
-            value={passwordData.newPassword}
-            onChange={handlePasswordChange}
-            className="w-full border p-2 rounded"
-          />
+          <div className="space-y-3">
+            <input
+              type="password"
+              name="currentPassword"
+              placeholder="Current Password"
+              value={passwordData.currentPassword}
+              onChange={handlePasswordChange}
+              className="w-full border p-2 rounded"
+            />
 
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={passwordData.confirmPassword}
-            onChange={handlePasswordChange}
-            className="w-full border p-2 rounded"
-          />
+            <input
+              type="password"
+              name="newPassword"
+              placeholder="New Password"
+              value={passwordData.newPassword}
+              onChange={handlePasswordChange}
+              className="w-full border p-2 rounded"
+            />
+
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={passwordData.confirmPassword}
+              onChange={handlePasswordChange}
+              className="w-full border p-2 rounded"
+            />
+
+            <Button
+              onClick={handleChangePassword}
+              className="bg-blue-600 text-white"
+            >
+              Update Password
+            </Button>
+          </div>
+        </div>
+
+        {/* Notification Settings */}
+        <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
+          <h2 className="text-xl font-semibold mb-4">Notification Settings</h2>
+
+          <div className="space-y-3">
+            {Object.keys(settings).map((key) => (
+              <div key={key} className="flex justify-between items-center">
+                <span className="capitalize">{key} Alerts</span>
+                <button
+                  onClick={() => handleToggle(key)}
+                  className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
+                    settings[key] ? "bg-blue-600" : "bg-gray-300"
+                  }`}
+                >
+                  <div
+                    className={`bg-white w-4 h-4 rounded-full shadow-md transform transition ${
+                      settings[key] ? "translate-x-6" : ""
+                    }`}
+                  />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Deactivate Account */}
+        <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6 border border-yellow-300">
+          <h2 className="text-xl font-semibold text-yellow-600 mb-2">
+            Deactivate Account
+          </h2>
+
+          <p className="text-gray-600 mb-4">
+            Your account will be temporarily disabled. You can contact admin to
+            reactivate it.
+          </p>
 
           <Button
-            onClick={handleChangePassword}
-            className="bg-blue-600 text-white"
+            onClick={handleDeactivate}
+            className="bg-yellow-500 text-white"
           >
-            Update Password
+            Deactivate Account
           </Button>
         </div>
-      </div>
-      {/* Logout Button */}
-      <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
-        <h2 className="text-xl font-semibold text-red-600 mb-4">
-          Account Actions
-        </h2>
 
-        <Button onClick={handleLogout} className="bg-red-600 text-white">
-          Logout
-        </Button>
-      </div>
+        {/* Delete Account */}
+        <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6 border border-red-300">
+          <h2 className="text-xl font-semibold text-red-600 mb-2">
+            Delete Account
+          </h2>
 
-      {/* Notification Settings */}
-      <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
-        <h2 className="text-xl font-semibold mb-4">Notification Settings</h2>
+          <p className="text-gray-600 mb-4">
+            This action is permanent and cannot be undone.
+          </p>
 
-        <div className="space-y-3">
-          {Object.keys(settings).map((key) => (
-            <div key={key} className="flex justify-between items-center">
-              <span className="capitalize">{key} Alerts</span>
-              <button
-                onClick={() => handleToggle(key)}
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
-                  settings[key] ? "bg-blue-600" : "bg-gray-300"
-                }`}
-              >
-                <div
-                  className={`bg-white w-4 h-4 rounded-full shadow-md transform transition ${
-                    settings[key] ? "translate-x-6" : ""
-                  }`}
-                />
-              </button>
-            </div>
-          ))}
+          <Button className="bg-red-600 text-white">Delete Account</Button>
         </div>
-      </div>
-
-      {/* Deactivate Account */}
-      <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6 border border-yellow-300">
-        <h2 className="text-xl font-semibold text-yellow-600 mb-2">
-          Deactivate Account
-        </h2>
-
-        <p className="text-gray-600 mb-4">
-          Your account will be temporarily disabled. You can contact admin to
-          reactivate it.
-        </p>
-
-        <Button onClick={handleDeactivate} className="bg-yellow-500 text-white">
-          Deactivate Account
-        </Button>
-      </div>
-
-      {/* Delete Account */}
-      <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6 border border-red-300">
-        <h2 className="text-xl font-semibold text-red-600 mb-2">
-          Delete Account
-        </h2>
-
-        <p className="text-gray-600 mb-4">
-          This action is permanent and cannot be undone.
-        </p>
-
-        <Button className="bg-red-600 text-white">Delete Account</Button>
       </div>
     </div>
   );

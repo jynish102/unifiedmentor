@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
-import { Pencil } from "lucide-react";
+import { 
+  Pencil,
+CheckCircle,
+LogOutIcon } from "lucide-react";
 
 export default function ProfileCard() {
   const [user, setUser] = useState(null);
@@ -51,15 +54,7 @@ export default function ProfileCard() {
     fetchProfile();
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        fullname: user.fullname || "",
-        email: user.email || "",
-        phone: user.phone || "",
-      });
-    }
-  }, [user]);
+ 
 
   const handleChange = (e) => {
     setFormData({
@@ -69,6 +64,11 @@ export default function ProfileCard() {
   };
 
   const handleEdit = () => {
+    setFormData({
+      fullname: user.fullname || "",
+      email: user.email || "",
+      phone: user.phone || "",
+    });
     setIsEditing(true);
   };
 
@@ -222,6 +222,24 @@ export default function ProfileCard() {
      }
    };
 
+   const getStatusConfig = (isActive) => {
+     if (isActive) {
+       return {
+         color: "bg-green-100 text-green-700",
+         icon: <CheckCircle className="w-4 h-4" />,
+         label: "Active",
+       };
+     } else {
+       return {
+         color: "bg-gray-100 text-gray-700",
+         icon: <AlertCircle className="w-4 h-4" />,
+         label: "Inactive",
+       };
+     }
+   };
+
+   const statusConfig = getStatusConfig(user.isActive);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between p-8 bg-white rounded-2xl shadow-md max-w-5xl mx-auto">
@@ -264,8 +282,25 @@ export default function ProfileCard() {
                 className="text-2xl font-semibold border px-2 py-1 rounded"
               />
             ) : (
-              <h2 className="text-2xl font-semibold">{user.fullname}</h2>
+              <h2 className="text-2xl font-bold flex items-center gap-3">
+                {user.fullname}
+                <span
+                  className={`flex items-center gap-1 px-2 py-1 text-xs rounded-full ${statusConfig.color}`}
+                >
+                  {statusConfig.icon}
+                  {statusConfig.label}
+                </span>
+              </h2>
             )}
+            <div className="absolute top-4 right-4">
+              <button
+                onClick={handleLogout}
+                className="p-2 rounded-full hover:bg-red-100 transition"
+                title="Logout"
+              >
+                <LogOutIcon className="w-6 h-6 text-red-600" />
+              </button>
+            </div>
             <p className="text-lg text-gray-500">{user.role}</p>
 
             <div className="text-lg text-gray-600 mt-2 space-y-1">
@@ -412,9 +447,7 @@ export default function ProfileCard() {
           This action is permanent and cannot be undone.
         </p>
 
-        <Button  className="bg-red-600 text-white">
-          Delete Account
-        </Button>
+        <Button className="bg-red-600 text-white">Delete Account</Button>
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ const User = require("../models/User");
 exports.registerUser = async (req, res) => {
   try {
     const { fullname, email, phone, role, password } = req.body;
-    console.log(req.body)
+    console.log(req.body);
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -18,8 +18,6 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: "Phone already exists" });
     }
 
-    
-
     await User.create({
       fullname,
       email,
@@ -30,15 +28,15 @@ exports.registerUser = async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
-  if (err.code === 11000) {
-    const field = Object.keys(err.keyValue)[0];
-    return res.status(400).json({
-      message: `${field} already exists`,
-    });
-  }
+    if (err.code === 11000) {
+      const field = Object.keys(err.keyValue)[0];
+      return res.status(400).json({
+        message: `${field} already exists`,
+      });
+    }
 
-  res.status(500).json({ message: err.message });
-}
+    res.status(500).json({ message: err.message });
+  }
 };
 
 // LOGIN
@@ -97,5 +95,41 @@ exports.updateProfileImage = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(userId);
+
+    // check current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: "Wrong current password" });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "Password must be 6+ chars" });
+    }
+
+    if (currentPassword === newPassword) {
+      return res
+        .status(400)
+        .json({ message: "New password must be different" });
+    }
+    
+    // just assign new password
+    user.password = newPassword;
+
+    await user.save(); //  pre-save hook hashes it
+
+    res.json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };

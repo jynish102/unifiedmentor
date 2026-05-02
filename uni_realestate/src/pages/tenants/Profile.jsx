@@ -12,6 +12,8 @@ import {
   AlertCircle,
   Pencil,
   LogOut,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
@@ -33,6 +35,41 @@ export default function TenantProfile() {
     newPassword: "",
     confirmPassword: "",
   });
+
+  const [showPassword, setShowPassword] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
+
+  const togglePassword = (field) => {
+    setShowPassword((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
+  const validatePassword = (password) => {
+    const rules = {
+      length: password.length >= 6,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    };
+
+    return rules;
+  };
+
+  const rules = validatePassword(passwordData.newPassword);
+
+  const isValidPassword =
+    rules.length &&
+    rules.uppercase &&
+    rules.lowercase &&
+    rules.number &&
+    rules.special &&
+    passwordData.newPassword === passwordData.confirmPassword;
 
   //notification settings state
   const [settings, setSettings] = useState({
@@ -59,7 +96,7 @@ export default function TenantProfile() {
       const token = localStorage.getItem("token");
 
       await API.put(
-        "/change-password",
+        "/auth/change-password",
         {
           currentPassword: passwordData.currentPassword,
           newPassword: passwordData.newPassword,
@@ -80,7 +117,7 @@ export default function TenantProfile() {
       });
     } catch (err) {
       console.error(err);
-      alert("Failed to update password");
+      alert(err.response?.data?.message || "Upload failed");
     }
   };
 
@@ -287,6 +324,7 @@ export default function TenantProfile() {
                 />
               </label>
             </div>
+            
             <div className="flex-1">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <div>
@@ -349,7 +387,8 @@ export default function TenantProfile() {
                       <p className="text-gray-700">📞 {tenant.phone}</p>
                     )}
                   </div>
-                  <div>
+
+                  <div> 
                     {!isEditing ? (
                       <button
                         onClick={handleEdit}
@@ -438,36 +477,88 @@ export default function TenantProfile() {
           <h2 className="text-xl font-semibold mb-4">Change Password</h2>
 
           <div className="space-y-3">
-            <input
-              type="password"
-              name="currentPassword"
-              placeholder="Current Password"
-              value={passwordData.currentPassword}
-              onChange={handlePasswordChange}
-              className="w-full border p-2 rounded"
-            />
+            <div className="relative">
+              <input
+                type={showPassword.current ? "text" : "password"}
+                name="currentPassword"
+                placeholder="Current Password"
+                value={passwordData.currentPassword}
+                onChange={handlePasswordChange}
+                className="w-full border p-2 rounded"
+              />
+            </div>
 
-            <input
-              type="password"
-              name="newPassword"
-              placeholder="New Password"
-              value={passwordData.newPassword}
-              onChange={handlePasswordChange}
-              className="w-full border p-2 rounded"
-            />
+            <div className="relative">
+              <input
+                type={showPassword.new ? "text" : "password"}
+                name="newPassword"
+                placeholder="New Password"
+                value={passwordData.newPassword}
+                onChange={handlePasswordChange}
+                className="w-full border p-2 rounded"
+              />
+              <span
+                onClick={() => togglePassword("new")}
+                className="absolute right-3 top-2.5 cursor-pointer"
+              >
+                {showPassword.new ? <EyeOff size={18} /> : <Eye size={18} />}
+              </span>
+              <div className="text-sm space-y-1 mt-2">
+                <p
+                  className={rules.length ? "text-green-600" : "text-gray-500"}
+                >
+                  ✔ At least 6 characters
+                </p>
+                <p
+                  className={
+                    rules.uppercase ? "text-green-600" : "text-gray-500"
+                  }
+                >
+                  ✔ One uppercase letter
+                </p>
+                <p
+                  className={
+                    rules.lowercase ? "text-green-600" : "text-gray-500"
+                  }
+                >
+                  ✔ One lowercase letter
+                </p>
+                <p
+                  className={rules.number ? "text-green-600" : "text-gray-500"}
+                >
+                  ✔ One number
+                </p>
+              </div>
+            </div>
 
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              value={passwordData.confirmPassword}
-              onChange={handlePasswordChange}
-              className="w-full border p-2 rounded"
-            />
-
+            <div className="relative">
+              <input
+                type={showPassword.confirm ? "text" : "password"}
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={passwordData.confirmPassword}
+                onChange={handlePasswordChange}
+                className="w-full border p-2 rounded"
+              />
+              <span
+                onClick={() => togglePassword("confirm")}
+                className="absolute right-3 top-2.5 cursor-pointer"
+              >
+                {showPassword.confirm ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
+              </span>
+            </div>
             <Button
               onClick={handleChangePassword}
-              className="bg-blue-600 text-white"
+              disabled={!isValidPassword}
+              className={`text-white ${
+                isValidPassword
+                  ? "bg-blue-600 hover:bg-blue-700"
+                  : "bg-gray-400 cursor-not-allowed opacity-60"
+              }`}
             >
               Update Password
             </Button>

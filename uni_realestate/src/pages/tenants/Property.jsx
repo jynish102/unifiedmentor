@@ -154,10 +154,28 @@ export default function Properties() {
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">Monthly Rent:</span>
                 <span className="font-medium text-green-600 flex items-center">
-                  <DollarSign className="size-3" />₹
-                  {property.price?.toLocaleString()} /
+                 ₹{property.price?.toLocaleString()} /
                   {property.paymentFrequency}
                 </span>
+              </div>
+
+              {/* Occupancy */}
+              <div className="mt-4 pt-4 border-t border-slate-200">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-600">Occupancy</span>
+                  <span className="font-medium">
+                    {property.occupied}/{property.units}
+                  </span>
+                </div>
+
+                <div className="mt-2 w-full bg-slate-200 rounded-full h-2">
+                  <div
+                    className="bg-blue-500 h-2 rounded-full"
+                    style={{
+                      width: `${(property.occupied / property.units) * 100}%`,
+                    }}
+                  />
+                </div>
               </div>
 
               <div className="flex gap-2 mt-4">
@@ -177,7 +195,9 @@ export default function Properties() {
                   size="sm"
                   className="flex-1"
                   onClick={() =>
-                    navigate(`/tenant/maintenance/create/property/${property._id}`)
+                    navigate(
+                      `/tenant/maintenance/create/property/${property._id}`,
+                    )
                   }
                 >
                   Report Issue

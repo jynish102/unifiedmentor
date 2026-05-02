@@ -18,14 +18,13 @@ import {
   Eye,
   Pencil,
   Trash2,
+  Wallet,
+  Banknote
 } from "lucide-react";
 import { ImageWithFallback } from "../../components/ui/imageWithFallback";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
-
-
-
 
 export  default function Properties() {
   const navigate = useNavigate();
@@ -138,126 +137,148 @@ export  default function Properties() {
           </div>
         </CardContent>
       </Card>
-      { filteredProperties.length === 0 ? (
-  <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
-    <p className="text-5xl mb-3">🏠</p>
+      {filteredProperties.length === 0 ? (
+        <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
+          <p className="text-5xl mb-3">🏠</p>
 
-    <h2 className="text-xl font-semibold text-gray-700">
-      No Properties Found
-    </h2>
+          <h2 className="text-xl font-semibold text-gray-700">
+            No Properties Found
+          </h2>
 
-    <p className="text-gray-500 mt-2">
-      You haven’t added any properties yet.
-    </p>
+          <p className="text-gray-500 mt-2">
+            You haven’t added any properties yet.
+          </p>
 
-     <Button
-      className="mt-4"
-      onClick={() => navigate("/owner/properties/add-property")}
-    >
-      <Plus className="size-4 mr-2" />
-      Add Property
-    </Button>
-  </div>
-) : (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProperties.map((property) => (
-          <Card
-            key={property._id}
-            className="overflow-hidden hover:shadow-lg transition-shadow"
+          <Button
+            className="mt-4"
+            onClick={() => navigate("/owner/properties/add-property")}
           >
-            <div className="relative h-48 bg-gray-200">
-              <ImageWithFallback
-                src={getImageUrl(selectedImage || property.images?.[0])}
-                alt={property.name}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.src = "/default-image.jpg";
-                }}
-              />
-              <Badge
-                className={`absolute top-3 right-3 ${getStatusColor(property.status)}`}
-              >
-                {property.status}
-              </Badge>
-            </div>
+            <Plus className="size-4 mr-2" />
+            Add Property
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredProperties.map((property) => (
+            <Card
+              key={property._id}
+              className="overflow-hidden hover:shadow-lg transition-shadow"
+            >
+              <div className="relative h-48 bg-gray-200">
+                <ImageWithFallback
+                  src={getImageUrl(selectedImage || property.images?.[0])}
+                  alt={property.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = "/default-image.jpg";
+                  }}
+                />
+                <Badge
+                  className={`absolute top-3 right-3 ${getStatusColor(property.status)}`}
+                >
+                  {property.status}
+                </Badge>
+              </div>
 
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="text-lg">{property.title}</CardTitle>
-                  <div className="flex items-center text-sm text-gray-600 mt-1">
-                    <MapPin className="size-3 mr-1" />
-                    {property.address},{property.city}
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="text-lg">{property.title}</CardTitle>
+                    <div className="flex items-center text-sm text-gray-600 mt-1">
+                      <MapPin className="size-3 mr-1" />
+                      {property.address},{property.city}
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm" className="ml-2">
+                    <MoreVertical className="size-4" />
+                  </Button>
+                </div>
+              </CardHeader>
+
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600">Type:</span>
+                  <span className="font-medium">{property.propertyType}</span>
+                </div>
+
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600">Bed/Bath:</span>
+                  <span className="font-medium">
+                    {property.bedrooms}BD / {property.bathrooms}BA
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600 flex items-center gap-1">
+                    Monthly Rent :
+                  </span>
+                  <span className="font-medium text-green-600 flex items-center">
+                    ₹{property.price?.toLocaleString()} /
+                    {property.paymentFrequency}
+                  </span>
+                </div>
+
+                {/* Occupancy */}
+                <div className="mt-4 pt-4 border-t border-slate-200">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-600">Occupancy</span>
+                    <span className="font-medium">
+                      {property.occupied}/{property.units}
+                    </span>
+                  </div>
+
+                  <div className="mt-2 w-full bg-slate-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-500 h-2 rounded-full"
+                      style={{
+                        width: `${(property.occupied / property.units) * 100}%`,
+                      }}
+                    />
                   </div>
                 </div>
-                <Button variant="ghost" size="sm" className="ml-2">
-                  <MoreVertical className="size-4" />
-                </Button>
-              </div>
-            </CardHeader>
 
-            <CardContent className="space-y-3">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Type:</span>
-                <span className="font-medium">{property.propertyType}</span>
-              </div>
+                <div className="flex gap-2 mt-4">
+                  {/* View */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() =>
+                      navigate(`/owner/properties/${property._id}`)
+                    }
+                  >
+                    <Eye size={14} />
+                    View
+                  </Button>
 
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Bed/Bath:</span>
-                <span className="font-medium">
-                  {property.bedrooms}BD / {property.bathrooms}BA
-                </span>
-              </div>
+                  {/* Edit */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() =>
+                      navigate(`/owner/properties/edit/${property._id}`)
+                    }
+                  >
+                    <Pencil size={14} />
+                    Edit
+                  </Button>
 
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Monthly Rent:</span>
-                <span className="font-medium text-green-600 flex items-center">
-                  <DollarSign className="size-3" />₹
-                  {property.price?.toLocaleString()} /
-                  {property.paymentFrequency}
-                </span>
-              </div>
-
-              <div className="flex gap-2 mt-4">
-                {/* View */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => navigate(`/owner/properties/${property._id}`)}
-                >
-                  <Eye size={14} />
-                  View
-                </Button>
-
-                {/* Edit */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() =>
-                    navigate(`/owner/properties/edit/${property._id}`)
-                  }
-                >
-                  <Pencil size={14} />
-                  Edit
-                </Button>
-
-                {/* Delete */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => handleDelete(property._id)}
-                >
-                  <Trash2 size={14} />
-                  Delete
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                  {/* Delete */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => handleDelete(property._id)}
+                  >
+                    <Trash2 size={14} />
+                    Delete
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

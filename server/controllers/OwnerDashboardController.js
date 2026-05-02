@@ -4,6 +4,7 @@ const Amenity = require("../models/Amenity");
 const Booking = require("../models/Booking");
 const AmenityBooking = require("../models/AmenityBooking");
 const Maintenance = require("../models/Maintenance");
+const mongoose = require("mongoose");
 
 exports.getOwnerDashboard = async (req, res) => {
   try {
@@ -42,7 +43,11 @@ exports.getOwnerDashboard = async (req, res) => {
 
     //  2. Total Units & Occupied Units
     const unitsData = await Property.aggregate([
-      { $match: { owner: ownerId } },
+      {
+        $match: {
+          owner: new mongoose.Types.ObjectId(ownerId),
+        },
+      },
       {
         $group: {
           _id: null,
@@ -60,7 +65,11 @@ exports.getOwnerDashboard = async (req, res) => {
 
     //  3. Property Status Count
     const statusStats = await Property.aggregate([
-      { $match: { owner: ownerId } },
+      {
+        $match: {
+          owner: new mongoose.Types.ObjectId(ownerId),
+        },
+      },
       {
         $group: {
           _id: "$status",
@@ -77,7 +86,7 @@ exports.getOwnerDashboard = async (req, res) => {
 
     //  4. Property Type Distribution (for Pie Chart)
     const propertyTypeData = await Property.aggregate([
-      { $match: { owner: ownerId } },
+      { $match: { owner: new mongoose.Types.ObjectId(ownerId) } },
       {
         $group: {
           _id: "$propertyType",
@@ -86,6 +95,11 @@ exports.getOwnerDashboard = async (req, res) => {
       },
     ]);
 
+    console.log("unitsData:", unitsData);
+    console.log("totalUnits:", totalUnits);
+    console.log("occupiedUnits:", occupiedUnits);
+
+    
     /*------------------------- Booking Data-------------------------------------- */
     const tenants = await Booking.distinct("user", {
       property: { $in: propertyIds },
@@ -98,7 +112,7 @@ exports.getOwnerDashboard = async (req, res) => {
       {
         $match: {
           property: { $in: propertyIds },
-          paymentStatus: "paid",
+          status: "approved",
         },
       },
       {
@@ -109,13 +123,13 @@ exports.getOwnerDashboard = async (req, res) => {
       },
     ]);
 
-    const totalRevenue = revenueResult[0]?.totalRevenue || 0;
+    const totalExpectedRevenue = revenueResult[0]?.totalRevenue || 0;
 
     const revenueChart = await Booking.aggregate([
       {
         $match: {
           property: { $in: propertyIds },
-          paymentStatus: "paid",
+          status: "approved",
         },
       },
       {
@@ -148,6 +162,33 @@ exports.getOwnerDashboard = async (req, res) => {
           : `New booking by ${b.user?.fullname}`,
       date: b.createdAt,
     }));
+
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+
+    const currentMonthRevenue = await Booking.aggregate([
+      {
+        $match: {
+          property: { $in: propertyIds },
+          status: "approved",
+          createdAt: {
+            $gte: new Date(currentYear, currentMonth - 1, 1),
+            $lt: new Date(currentYear, currentMonth, 1),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$rentAmount" },
+        },
+      },
+    ]);
+    // console.log("propertyIds:", propertyIds);
+    // console.log("revenueResult:", revenueResult);
+    // console.log("revenueChart:", revenueChart);
+
+    const monthlyExpectedRevenue = currentMonthRevenue[0]?.total || 0;
 
     /*------------------------- Maintenance Data-------------------------------------- */
     const totalIssues = await Maintenance.countDocuments({
@@ -224,7 +265,7 @@ exports.getOwnerDashboard = async (req, res) => {
 
       bookings: {
         totalTenants,
-        totalRevenue,
+        totalRevenue: totalExpectedRevenue,
         pendingPayments,
         revenueChart,
       },

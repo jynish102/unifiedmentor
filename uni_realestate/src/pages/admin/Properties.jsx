@@ -11,6 +11,7 @@ import {
   Pencil,
   Trash2,
   Eye,
+  Banknote,
 } from "lucide-react";
 import { useState, useEffect, } from "react";
 import axios from "axios";
@@ -161,7 +162,7 @@ export function Properties() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <DollarSign size={16} className="text-slate-400" />
+                      <Banknote size={16} className="text-green-400" />
                       <span>
                         ₹{property.price?.toLocaleString()} /
                         {property.paymentFrequency}

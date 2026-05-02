@@ -181,7 +181,7 @@ export  function OwnerDashboard() {
         {/* Revenue Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>Monthly Revenue</CardTitle>
+            <CardTitle>Expected Monthly Revenue</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -284,43 +284,35 @@ export  function OwnerDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentActivity.map((activity) => (
+              {dashboard?.activity?.map((activity, index) => (
                 <div
                   key={activity.id}
                   className="flex items-start space-x-4 pb-4 border-b last:border-b-0 last:pb-0"
                 >
                   <div className="mt-1">
-                    {activity.action === "New Tenant" && (
+                    {activity.type === "booking" && (
                       <div className="p-2 bg-blue-100 rounded-lg">
                         <KeyRound className="size-4 text-blue-600" />
                       </div>
                     )}
-                    {activity.action === "Maintenance Request" && (
+                    {activity.type === "Maintenance" && (
                       <div className="p-2 bg-orange-100 rounded-lg">
                         <Waves className="size-4 text-orange-600" />
                       </div>
                     )}
-                    {activity.action === "Payment Received" && (
+                    {activity.type === "staff" && (
                       <div className="p-2 bg-green-100 rounded-lg">
                         <DollarSign className="size-4 text-green-600" />
-                      </div>
-                    )}
-                    {activity.action === "Lease Renewal" && (
-                      <div className="p-2 bg-purple-100 rounded-lg">
-                        <Home className="size-4 text-purple-600" />
                       </div>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900">
-                      {activity.property}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {activity.action}: {activity.tenant}
+                      {activity.message}
                     </p>
                   </div>
                   <span className="text-xs text-gray-500 whitespace-nowrap">
-                    {activity.date}
+                    {new Date(activity.date).toLocaleString()}
                   </span>
                 </div>
               ))}

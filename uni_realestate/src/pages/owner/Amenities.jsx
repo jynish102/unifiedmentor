@@ -181,8 +181,8 @@ export default function Amenities() {
                       <div className="flex items-center gap-2">
                         <Clock size={16} />
                         <span>
-                          {amenity.operatingHours.start} -{" "}
-                          {amenity.operatingHours.end}
+                          {amenity.operatingHours.start.toLocaleString()} -{" "}
+                          {amenity.operatingHours.end.toLocaleString()}
                         </span>
                       </div>
                     )}

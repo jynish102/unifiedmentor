@@ -33,8 +33,8 @@ export default function AddProperty() {
       security: false,
       wifi: false,
     },
-    units: "",
-    occupied: "",
+    units: 1,
+    occupied: 0,
     status: "available",
     availableFrom: "",
   });
@@ -444,7 +444,7 @@ export default function AddProperty() {
           name="units"
           placeholder="Units"
           type="number"
-          value={formData.units}
+          value={formData.units || 1}
           onChange={handleChange}
         />
 
@@ -452,7 +452,7 @@ export default function AddProperty() {
           name="occupied"
           placeholder="Occupied Units"
           type="number"
-          value={formData.occupied}
+          value={formData.occupied || 0}
           onChange={handleChange}
         />
 

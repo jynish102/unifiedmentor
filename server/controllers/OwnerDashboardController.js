@@ -94,10 +94,10 @@ exports.getOwnerDashboard = async (req, res) => {
         },
       },
     ]);
-
-    console.log("unitsData:", unitsData);
-    console.log("totalUnits:", totalUnits);
-    console.log("occupiedUnits:", occupiedUnits);
+    
+    // console.log("unitsData:", unitsData);
+    // console.log("totalUnits:", totalUnits);
+    // console.log("occupiedUnits:", occupiedUnits);
 
     
     /*------------------------- Booking Data-------------------------------------- */

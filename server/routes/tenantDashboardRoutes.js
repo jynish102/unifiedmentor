@@ -4,17 +4,14 @@ const authMiddleware = require("../middleware/authMiddleware");
 const authorizeRoles = require("../middleware/authorizeRoles");
 
 const {
-  getOwnerDashboard,
- 
-} = require("../controllers/ownerDashboardController");
+  getTenantDashboard,
+} = require("../controllers/tenantDashboardController");
 
 router.get(
   "/dashboard",
   authMiddleware,
-  authorizeRoles("owner"),
-  getOwnerDashboard,
-  
+  authorizeRoles("tenant"),
+  getTenantDashboard,
 );
-
 
 module.exports = router;

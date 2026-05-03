@@ -3,27 +3,29 @@ import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Calendar, Wrench, Bell, ArrowRight, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import  API from "../../utils/api";
 
-import {
-  tenantData,
-  announcements,
-  bookings,
-  maintenanceRequests,
-} from "../../components/data/mockData";
+
 
 export function Dashboard() {
-  const upcomingBookings = bookings
-    .filter((b) => b.status === "confirmed")
-    .slice(0, 2);
+  const [dashboard, setDashboard] = useState(null);
 
-  const recentRequests = maintenanceRequests.slice(0, 2);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await API.get("/tenant/dashboard");
+      setDashboard(res.data);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold">
-          Welcome back, {tenantData.name.split(" ")[0]}!
+          Welcome back, {dashboard?.tenant?.name?.split(" ")[0]}!
         </h1>
         <p className="text-gray-600 mt-1">
           Here's what's happening with your rental
@@ -39,7 +41,11 @@ export function Dashboard() {
               <div>
                 <p className="text-sm text-gray-600">Upcoming Bookings</p>
                 <p className="text-2xl font-bold mt-1">
-                  {bookings.filter((b) => b.status === "confirmed").length}
+                  {
+                    dashboard?.stats?.totalBookings?.filter(
+                      (b) => b.status === "confirmed",
+                    ).length
+                  }
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
                   Active reservations
@@ -60,8 +66,9 @@ export function Dashboard() {
                 <p className="text-sm text-gray-600">Maintenance</p>
                 <p className="text-2xl font-bold mt-1">
                   {
-                    maintenanceRequests.filter((r) => r.status !== "completed")
-                      .length
+                    dashboard?.stats?.openMaintenance?.filter(
+                      (r) => r.status !== "completed",
+                    ).length
                   }
                 </p>
                 <p className="text-xs text-gray-500 mt-1">Open requests</p>
@@ -81,7 +88,10 @@ export function Dashboard() {
                 <p className="text-sm text-gray-600">Lease Status</p>
                 <p className="text-2xl font-bold mt-1">Active</p>
                 <p className="text-xs text-gray-500 mt-1">
-                  Until {new Date(tenantData.leaseEnd).toLocaleDateString()}
+                  Until{" "}
+                  {new Date(
+                    dashboard?.stats?.leaseStatus?.leaseEnd,
+                  ).toLocaleDateString()}
                 </p>
               </div>
               <div className="size-12 bg-purple-100 rounded-full flex items-center justify-center">
@@ -108,9 +118,9 @@ export function Dashboard() {
             </CardHeader>
 
             <CardContent>
-              {upcomingBookings.length > 0 ? (
+              {dashboard?.bookings?.length > 0 ? (
                 <div className="space-y-4">
-                  {upcomingBookings.map((booking) => (
+                  {dashboard?.bookings?.map((booking) => (
                     <div
                       key={booking.id}
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
@@ -139,7 +149,7 @@ export function Dashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Recent Maintenance</CardTitle>
-              <Link to="/maintenance">
+              <Link to="/tenant/maintenance">
                 <Button variant="ghost" size="sm">
                   View All <ArrowRight className="size-4 ml-2" />
                 </Button>
@@ -147,7 +157,7 @@ export function Dashboard() {
             </CardHeader>
 
             <CardContent>
-              {recentRequests.map((request) => (
+              {dashboard?.stats?.Maintenance?.map((request) => (
                 <div
                   key={request.id}
                   className="p-4 bg-gray-50 rounded-lg mb-3"
@@ -163,7 +173,7 @@ export function Dashboard() {
         {/* RIGHT */}
         <div className="space-y-6">
           {/* Announcements */}
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Bell className="size-5" />
@@ -179,7 +189,7 @@ export function Dashboard() {
                 </div>
               ))}
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Property */}
           <Card>
@@ -188,8 +198,8 @@ export function Dashboard() {
             </CardHeader>
 
             <CardContent>
-              <p>Unit: {tenantData.unit}</p>
-              <p>Building: {tenantData.building}</p>
+              <p>Title: {dashboard?.property?.title}</p>
+              <p>Address: {dashboard?.property?.address}</p>
             </CardContent>
           </Card>
         </div>

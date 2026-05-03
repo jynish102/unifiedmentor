@@ -12,7 +12,8 @@ const amenityRoutes = require("./routes/amenityRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const maintenanceRoutes = require("./routes/maintenanceRoutes");
 const amenityBookingRoutes = require("./routes/amenityBookingRoutes");
-const OwnerDashboardRoutes = require("./routes/OwnerDashboardRoutes");
+const ownerDashboardRoutes = require("./routes/ownerDashboardRoutes");
+const tenantDashboardRoutes = require("./routes/tenantDashboardRoutes");
 const tenantRoutes = require("./routes/tenantRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -43,7 +44,9 @@ app.use("/api/staff", userRoutes);
 
 app.use("/api/maintenance", maintenanceRoutes);
 
-app.use("/api/owner", OwnerDashboardRoutes);
+app.use("/api/owner", ownerDashboardRoutes);
+
+app.use("/api/tenant", tenantDashboardRoutes);
 
 app.use("/api/tenants", tenantRoutes);
 

@@ -200,30 +200,6 @@ export function Amenities() {
                       <Eye size={14} />
                       View
                     </Button>
-
-                    {/* Edit */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() =>
-                        navigate(`/admin/amenities/edit/${amenity._id}`)
-                      }
-                    >
-                      <Pencil size={14} />
-                      Edit
-                    </Button>
-
-                    {/* Delete */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => handleDelete(amenity._id)}
-                    >
-                      <Trash2 size={14} />
-                      Delete
-                    </Button>
                   </div>
                 </CardContent>
               </Card>

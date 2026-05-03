@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
 import { Pencil, CheckCircle, Eye, EyeOff, LogOutIcon } from "lucide-react";
-import tost from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export default function ProfileCard() {
   const [user, setUser] = useState(null);
@@ -27,6 +27,8 @@ export default function ProfileCard() {
     new: false,
     confirm: false,
   });
+
+  const [deactivatePassword, setDeactivatePassword] = useState("");
 
   const togglePassword = (field) => {
     setShowPassword((prev) => ({
@@ -80,7 +82,8 @@ export default function ProfileCard() {
         console.log("API RESPONSE:", res.data); //
         setUser(res.data.user);
       } catch (err) {
-        console.error("Error fetching profile", err);
+        console.error(err);
+        toast.error(err.response?.data?.message || "Failed to fetch profile data");
       }
     };
 
@@ -125,10 +128,10 @@ export default function ProfileCard() {
       setUser(res.data.user || { ...user, ...formData });
       setIsEditing(false);
 
-      tost.success("Profile updated successfully ");
+      toast.success("Profile updated successfully ");
     } catch (err) {
       console.error(err);
-      tost.error(err.response?.data?.message || "Upload failed");
+      toast.error(err.response?.data?.message || "Upload failed");
     }
   };
 
@@ -142,7 +145,7 @@ export default function ProfileCard() {
 
   const handleChangePassword = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      tost.error("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -162,7 +165,7 @@ export default function ProfileCard() {
         },
       );
 
-      tost.success("Password updated successfully");
+      toast.success("Password updated successfully");
 
       setPasswordData({
         currentPassword: "",
@@ -171,7 +174,7 @@ export default function ProfileCard() {
       });
     } catch (err) {
       console.error(err);
-      tost.error(err.response?.data?.message || "Upload failed");
+      toast.error(err.response?.data?.message || "Upload failed");
     }
   };
 
@@ -224,34 +227,7 @@ export default function ProfileCard() {
     }));
   };
 
-  //handle account deactivation
-  const handleDeactivate = async () => {
-    const confirmAction = window.confirm(
-      "Are you sure you want to deactivate your account?",
-    );
-
-    if (!confirmAction) return;
-
-    try {
-      const token = localStorage.getItem("token");
-
-      await API.put(
-        "/deactivate-account",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-    } catch (err) {
-      console.error(err);
-      tost.error("Failed to deactivate account");
-    }
-  };
+ 
 
   const getStatusConfig = (isActive) => {
     if (isActive) {
@@ -271,6 +247,40 @@ export default function ProfileCard() {
 
   const statusConfig = getStatusConfig(user.isActive);
 
+  {/* deactivate account */}
+  const handleDeactivateAccount = async () => {
+    if (!deactivatePassword) {
+      toast.error("Please enter your password");
+      return;
+    }
+     const confirmAction = window.confirm(
+       "Are you sure you want to deactivate your account?",
+     );
+
+     if (!confirmAction) return;
+
+  
+    try {
+      const token = localStorage.getItem("token");
+
+      await API.put("/auth/deactivate-account",
+        {password: deactivatePassword}, 
+        {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      toast.success("Account deactivated");
+
+      localStorage.removeItem("token");
+      window.location.href = "/register";
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to deactivate account", err.response?.data?.message || "");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-muted/30 py-8 ">
       <div className="max-w-5xl mx-auto space-y-6 px-4 ">
@@ -279,7 +289,6 @@ export default function ProfileCard() {
             {/* Profile Image */}
 
             <div className="relative w-32 h-32">
-              
               <img
                 src={
                   preview
@@ -304,7 +313,7 @@ export default function ProfileCard() {
                 />
               </label>
             </div>
-            
+
             {/* User Info */}
             <div>
               {isEditing ? (
@@ -509,11 +518,24 @@ export default function ProfileCard() {
         </h2>
 
         <p className="text-gray-600 mb-4">
-          Your account will be temporarily disabled. You can contact admin to
-          reactivate it.
+          Your account will be deactivated. You will not be able to login or
+          access the system. All your data (bookings, maintenance, etc.) will
+          remain and can be restored by admin. This action can be reversed by
+          admin.
         </p>
+        {/* Password Input */}
+        <input
+          type={showPassword.deactivate ? "text" : "password"}
+          placeholder="Enter your password to confirm"
+          value={deactivatePassword}
+          onChange={(e) => setDeactivatePassword(e.target.value)}
+          className="w-full border p-2 rounded mb-4"
+        />
 
-        <Button onClick={handleDeactivate} className="bg-yellow-500 text-white">
+        <Button
+          onClick={handleDeactivateAccount}
+          className="bg-yellow-500 text-white"
+        >
           Deactivate Account
         </Button>
       </div>

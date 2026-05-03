@@ -45,8 +45,15 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(400).json({ message: "User not found" });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({
+        message: "Account is deactivated. Contact admin.",
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -131,5 +138,36 @@ exports.changePassword = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+exports.deactivateAccount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { password } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: "Incorrect password" });
+    }
+
+    
+    user.isActive = false;
+    await user.save();
+
+    res.json({ message: "Account deactivated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to deactivate account" });
   }
 };

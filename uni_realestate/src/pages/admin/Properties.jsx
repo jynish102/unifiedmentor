@@ -204,30 +204,6 @@ export function Properties() {
                       <Eye size={14} />
                       View
                     </Button>
-
-                    {/* Edit */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() =>
-                        navigate(`/admin/properties/edit/${property._id}`)
-                      }
-                    >
-                      <Pencil size={14} />
-                      Edit
-                    </Button>
-
-                    {/* Delete */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => handleDelete(property._id)}
-                    >
-                      <Trash2 size={14} />
-                      Delete
-                    </Button>
                   </div>
                 </CardContent>
               </Card>

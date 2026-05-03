@@ -18,6 +18,9 @@ import {
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
+import toast  from "react-hot-toast";
+
+
 export default function TenantProfile() {
   const [tenant, setTenant] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -41,6 +44,8 @@ export default function TenantProfile() {
     new: false,
     confirm: false,
   });
+
+  const [deactivatePassword, setDeactivatePassword] = useState("");
 
   const togglePassword = (field) => {
     setShowPassword((prev) => ({
@@ -108,7 +113,7 @@ export default function TenantProfile() {
         },
       );
 
-      alert("Password updated successfully");
+      toast.success("Password updated successfully");
 
       setPasswordData({
         currentPassword: "",
@@ -117,7 +122,7 @@ export default function TenantProfile() {
       });
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || "Upload failed");
+      toast.error(err.response?.data?.message || "Upload failed");
     }
   };
 
@@ -143,6 +148,7 @@ export default function TenantProfile() {
         setCounts(res.data.counts);
       } catch (error) {
         console.error(error);
+        toast.error(error);
       }
     };
 
@@ -184,7 +190,7 @@ export default function TenantProfile() {
       alert("Profile updated successfully ");
     } catch (err) {
       console.error(err);
-      alert(" updated Failed ");
+      toast.error("Failed to update profile", err.response?.data?.message || err.message);
     }
   };
 
@@ -247,7 +253,12 @@ export default function TenantProfile() {
   };
 
   //handle account deactivation
-  const handleDeactivate = async () => {
+  const handleDeactivateAccount = async () => {
+    if (!deactivatePassword) {
+      toast.error("Please enter your password");
+      return;
+    }
+
     const confirmAction = window.confirm(
       "Are you sure you want to deactivate your account?",
     );
@@ -258,8 +269,8 @@ export default function TenantProfile() {
       const token = localStorage.getItem("token");
 
       await API.put(
-        "/deactivate-account",
-        {},
+        "/auth/deactivate-account",
+          { password: deactivatePassword },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -268,10 +279,15 @@ export default function TenantProfile() {
       );
 
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      window.location.href = "/register";
     } catch (err) {
       console.error(err);
-      alert("Failed to deactivate account");
+      const message =
+        err.response?.data?.message || // backend message
+        err.message || // axios error
+        "Something went wrong ";
+
+      toast.error(message);
     }
   };
 
@@ -324,7 +340,7 @@ export default function TenantProfile() {
                 />
               </label>
             </div>
-            
+
             <div className="flex-1">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <div>
@@ -388,7 +404,7 @@ export default function TenantProfile() {
                     )}
                   </div>
 
-                  <div> 
+                  <div>
                     {!isEditing ? (
                       <button
                         onClick={handleEdit}
@@ -597,29 +613,27 @@ export default function TenantProfile() {
           </h2>
 
           <p className="text-gray-600 mb-4">
-            Your account will be temporarily disabled. You can contact admin to
-            reactivate it.
+            Your account will be deactivated. You will not be able to login or
+            access the system. All your data (bookings, maintenance, etc.) will
+            remain available and can be restored by admin. This action can be
+            reversed by admin.
           </p>
 
+          {/* Password Input */}
+          <input
+            type={showPassword.deactivate ? "text" : "password"}
+            placeholder="Enter your password to confirm"
+            value={deactivatePassword}
+            onChange={(e) => setDeactivatePassword(e.target.value)}
+            className="w-full border p-2 rounded mb-4"
+          />
+
           <Button
-            onClick={handleDeactivate}
+            onClick={handleDeactivateAccount}
             className="bg-yellow-500 text-white"
           >
             Deactivate Account
           </Button>
-        </div>
-
-        {/* Delete Account */}
-        <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6 border border-red-300">
-          <h2 className="text-xl font-semibold text-red-600 mb-2">
-            Delete Account
-          </h2>
-
-          <p className="text-gray-600 mb-4">
-            This action is permanent and cannot be undone.
-          </p>
-
-          <Button className="bg-red-600 text-white">Delete Account</Button>
         </div>
       </div>
     </div>

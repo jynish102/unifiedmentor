@@ -27,7 +27,6 @@ router.get("/my-properties", authMiddleware, getMyProperties);
 router.get(
   "/:id",
   authMiddleware,
-  authorizeRoles("owner", "tenant"),
   getPropertyById,
 );
 

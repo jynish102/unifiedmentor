@@ -232,7 +232,7 @@ const Register = () => {
               <option className="text-black" value="">Select Role</option>
               <option className="text-black" value="tenant">Tenant</option>
               <option className="text-black" value="owner">Owner</option>
-              <option className="text-black" value="staff">Staff</option>
+              
             </select>
 
             <div className="relative">

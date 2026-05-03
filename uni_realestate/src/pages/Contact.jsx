@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { useMotionValue, useTransform } from "framer-motion";
 import { useEffect,useState } from "react";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
@@ -209,6 +209,8 @@ const ContactHeader = () => {
                 <option value="sell">Sell Property</option>
                 <option value="rent">Rent Property</option>
                 <option value="visit">Schedule Site Visit</option>
+                <option value="reactivate-account">Reactivate Account</option>
+                <option value="other">Other</option>
               </select>
 
               {/* Subject */}

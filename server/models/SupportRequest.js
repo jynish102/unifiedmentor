@@ -22,8 +22,8 @@ const supportRequestSchema = new mongoose.Schema(
 
     inquiryType: {
       type: String,
-      enum: ["general", "complaint", "reactivation"],
-      default: "general",
+      enum: ["buy property", "sell property", "rent property", "schedule visit", "reactivate account" , "other"],
+      default: "buy property",
     },
 
     message: {

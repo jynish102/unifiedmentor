@@ -2,12 +2,19 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"
+import { Button } from "../../components/ui/button"
 
 export default function PropertyDetails() {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({
+    subject: "",
+    message: "",
+  });
 
   const getImageUrl = (img) => {
     if (!img) return "/default-image.jpg";
@@ -23,11 +30,40 @@ export default function PropertyDetails() {
         });
         setProperty(res.data);
       } catch (err) {
-        console.error("ERROR:", err.response?.data || err.message);
+        console.log(err);
+        toast.error("ERROR:", err.response?.data || err.message);
       }
     };
     fetchProperty();
   }, [id]);
+
+  const handleSend = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await API.post(
+        "/messages/contact-owner",
+        {
+          propertyId: property._id, // IMPORTANT
+          subject: form.subject,
+          message: form.message,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      toast.success("Message sent successfully");
+
+      setForm({ subject: "", message: "" });
+      setOpen(false);
+    } catch (err) {
+      console.log(err);
+      toast.error(err.response?.data?.message ||"Failed to send message");
+    }
+  };
 
   if (!property) return <p>Loading...</p>;
 
@@ -41,6 +77,10 @@ export default function PropertyDetails() {
       >
         Book Property
       </button>
+
+      <Button onClick={() => setOpen(true)} className="bg-blue-600 text-white">
+        Contact Owner
+      </Button>
 
       <button
         onClick={() => navigate("/tenant/properties")}
@@ -154,6 +194,46 @@ export default function PropertyDetails() {
             })
           : "N/A"}
       </p>
+
+      {open && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg">
+            <h2 className="text-lg font-semibold mb-4">Contact Owner</h2>
+
+            {/* Subject */}
+            <input
+              type="text"
+              placeholder="Subject"
+              value={form.subject}
+              onChange={(e) => setForm({ ...form, subject: e.target.value })}
+              className="w-full border p-2 rounded mb-3"
+            />
+
+            {/* Message */}
+            <textarea
+              placeholder="Write your message..."
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
+              className="w-full border p-2 rounded mb-4"
+              rows={4}
+            />
+
+            {/* Buttons */}
+            <div className="flex justify-end gap-2">
+              <Button
+                onClick={() => setOpen(false)}
+                className="bg-gray-400 text-white"
+              >
+                Cancel
+              </Button>
+
+              <Button onClick={handleSend} className="bg-blue-600 text-white">
+                Send
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

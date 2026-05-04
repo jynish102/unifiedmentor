@@ -1,6 +1,8 @@
-import { useMotionValue, useTransform } from "framer-motion";
+import {motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect,useState } from "react";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import API from "../utils/api";
+import toast from "react-hot-toast";
 
 const ContactHeader = () => {
     {/*contact header section*/}
@@ -33,13 +35,28 @@ const ContactHeader = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    alert("Message Sent Successfully!");
-  };
+  try {
+    const res = await API.post("/support", formData);
 
+    toast.success(res.data.message || "Message Sent Successfully!");
+
+    // clear form after submit
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      subject: "",
+      inquiryType: "",
+      message: "",
+    });
+  } catch (err) {
+    console.error(err);
+    toast.error(err.response?.data?.message || "Failed to send message");
+  }
+};
 
   return (
     <>
@@ -205,11 +222,11 @@ const ContactHeader = () => {
                 className="w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Inquiry Type</option>
-                <option value="buy">Buy Property</option>
-                <option value="sell">Sell Property</option>
-                <option value="rent">Rent Property</option>
-                <option value="visit">Schedule Site Visit</option>
-                <option value="reactivate-account">Reactivate Account</option>
+                <option value="buy property">Buy Property</option>
+                <option value="sell property">Sell Property</option>
+                <option value="rent property">Rent Property</option>
+                <option value=" schedule visit ">Schedule Site Visit</option>
+                <option value="reactivate account">Reactivate Account</option>
                 <option value="other">Other</option>
               </select>
 

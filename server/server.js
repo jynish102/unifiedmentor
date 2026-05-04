@@ -18,6 +18,7 @@ const tenantRoutes = require("./routes/tenantRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const userRoutes = require("./routes/userRoutes");
 const supportRoutes = require("./routes/supportRoutes");
+const messageRoutes = require("./routes/messageRoutes.js")
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -54,6 +55,8 @@ app.use("/api/tenants", tenantRoutes);
 app.use("/api" , profileRoutes);
 
 app.use("/api" , supportRoutes);
+
+app.use("/api/messages", messageRoutes);
 
 // Connect MongoDB
 mongoose

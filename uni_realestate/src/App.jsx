@@ -26,6 +26,7 @@ import AddProperty from "./pages/admin/AddProperty";
 import AddAmenity from "./pages/admin/AddAmenity";
 import AmenityDetails from "./pages/admin/AmenityDetails";
 import BookingRequests from "./pages/admin/BookingRequests";
+import SupportRequest from "./pages/admin/SupportRequests";
 
 //owner
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
@@ -37,6 +38,7 @@ import OwnerAddAmenity from "./pages/owner/AddAmenity";
 import OwnerAmenityDetails from "./pages/owner/AmenityDetails";
 import StaffList from "./pages/owner/StaffManagement";
 import OwnerMaintenance from "./pages/owner/Maintenance";
+import OwnerMessages from "./pages/owner/Messages";
 import Settings from "./pages/owner/Settings";
 
 //tenants
@@ -107,6 +109,10 @@ function App() {
             <Route path="tenants" element={<Tenants />} />
             <Route path="bookings" element={<BookingRequests />} />
             <Route path="maintenance" element={<Maintenance />} />
+            <Route
+              path="/admin/support-requests"
+              element={<SupportRequest />}
+            />
           </Route>
           //owner routes
           <Route path="/owner" element={<OwnerDashboardLayout />}>
@@ -139,6 +145,7 @@ function App() {
             />
             <Route path="/owner/staff" element={<StaffList />} />
             <Route path="/owner/maintenance" element={<OwnerMaintenance />} />
+            <Route path="/owner/messages" element={<OwnerMessages />} />
             <Route path="settings" element={<Settings />} />
           </Route>
           //tenant routes
@@ -171,11 +178,10 @@ function App() {
             <Route path="/tenant/maintenance" element={<TenantMaintenance />} />
             <Route path="profile" element={<Profile />} />
           </Route>
-          
           //staff routes
           <Route path="/staff" element={<StaffDashboardLayout />}>
-          <Route path="/staff/maintenance" element={<StaffMaintenance />} />
-           <Route path="/staff/profile" element={<StaffProfile />} />
+            <Route path="/staff/maintenance" element={<StaffMaintenance />} />
+            <Route path="/staff/profile" element={<StaffProfile />} />
           </Route>
         </Routes>
       </Router>

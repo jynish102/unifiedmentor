@@ -163,10 +163,10 @@ export default function StaffProfile() {
       setStaff(res.data.user || { ...staff, ...formData });
 
       setIsEditing(false);
-      alert("Profile updated successfully ");
+      toast.success("Profile updated successfully ");
     } catch (err) {
       console.error(err);
-      alert(" updated Failed ");
+      toast.error(err.response?.data?.message || "updated Failed ");
     }
   };
 
@@ -259,7 +259,7 @@ export default function StaffProfile() {
       });
     } catch (err) {
       console.error(err);
-      toast.error("Failed to update password" ||  err.response?.data?.message );
+      toast.error(err.response?.data?.message||"Failed to update password" );
     }
   };
 

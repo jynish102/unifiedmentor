@@ -8,6 +8,7 @@ const {
   updateProfileImage,
   changePassword,
   deactivateAccount,
+  reactivateUser,
 } = require("../controllers/authController");
 
 
@@ -16,5 +17,7 @@ router.post("/login", loginUser);
 router.put("/profile-image", upload.single("image"), authMiddleware, updateProfileImage);
 router.put("/change-password", authMiddleware, changePassword);
 router.put("/deactivate-account", authMiddleware, deactivateAccount);
+router.put("/reactivate",  reactivateUser);
+
 
 module.exports = router;

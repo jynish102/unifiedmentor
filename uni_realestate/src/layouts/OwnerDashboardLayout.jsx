@@ -9,7 +9,8 @@ import {
   X,
   User,
   Wrench,
-  Dumbbell
+  Dumbbell,
+  Inbox
 } from "lucide-react";
 import { useState } from "react";
 
@@ -24,6 +25,7 @@ export  function OwnerDashboardLayout() {
     { path : "/owner/staff", name: "Staff ", icon: User },
     { path: "/owner/maintenance", name: "Maintenance", icon: Wrench },
     { path: "/owner/settings", name: "Settings", icon: Settings },
+    { path: "/owner/messages", name: "Messages", icon: Inbox},
   ];
 
   const isActive = (path) => {

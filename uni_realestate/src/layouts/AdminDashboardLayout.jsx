@@ -9,6 +9,7 @@ import {
   Menu,
   Bell,
   Search,
+  FileText
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -21,6 +22,7 @@ const navItems = [
   { path: "/admin/tenants", label: "Tenants", icon: Users },
   { path: "/admin/bookings", label: "Bookings", icon: Calendar },
   { path: "/admin/maintenance", label: "Maintenance", icon: Wrench },
+  { path: "/admin/support-requests", label: "Requests", icon: FileText },
 ];
 
 export function AdminDashboardLayout() {

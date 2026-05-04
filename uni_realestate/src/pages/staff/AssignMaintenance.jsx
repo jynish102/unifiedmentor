@@ -147,8 +147,8 @@ export default function StaffMaintenance() {
   const deleteImage = async (id, image) => {
     try {
       const token = localStorage.getItem("token");
-      console.log("Deleting image:", image, "from maintenance ID:", id);
-      console.log("Token:", token);
+      // console.log("Deleting image:", image, "from maintenance ID:", id);
+      // console.log("Token:", token);
 
       await API.delete(
         `/maintenance/${id}/delete-proof`,
@@ -165,11 +165,14 @@ export default function StaffMaintenance() {
       fetchMaintenance();
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || "Upload failed");
+      toast.error(
+        err.response?.data?.message ||
+        
+          "You cannot delete images after completion",
+      );
     }
   };
 
- 
   if (loading) return <p className="p-6">Loading...</p>;
 
   return (
@@ -180,7 +183,7 @@ export default function StaffMaintenance() {
         <p>No assigned maintenance</p>
       ) : (
         <div className="grid gap-4">
-          {data.map((item) => { 
+          {data.map((item) => {
             const inProgressImages = item.proofImages?.filter(
               (img) => img.status === "in-progress",
             );
@@ -188,6 +191,14 @@ export default function StaffMaintenance() {
             const completedImages = item.proofImages?.filter(
               (img) => img.status === "completed",
             );
+
+            const formatDate = (date) => {
+              return new Date(date).toLocaleString("en-IN", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              });
+            };
+
             return (
               <div
                 key={item._id}
@@ -279,9 +290,25 @@ export default function StaffMaintenance() {
                     <input
                       type="file"
                       multiple
-                      accept="image/*"
+                      accept=".jpg,.jpeg,.png,.webp"
                       onChange={(e) => {
                         const selected = Array.from(e.target.files);
+
+                        const allowedTypes = [
+                          "image/jpeg",
+                          "image/png",
+                          "image/webp",
+                          "image/jpg",
+                        ];
+
+                        const invalidFiles = selected.filter(
+                          (file) => !allowedTypes.includes(file.type),
+                        );
+
+                        if (invalidFiles.length > 0) {
+                          toast.error("Only JPG, PNG, WEBP images allowed");
+                          return;
+                        }
 
                         if (selected.length > 5) {
                           toast.error("Maximum 5 images allowed");
@@ -334,29 +361,38 @@ export default function StaffMaintenance() {
 
                     <div className="mt-3 flex gap-2 flex-wrap">
                       {inProgressImages.map((img, i) => (
-                        <div key={i} className="relative">
-                          <img
-                            src={`http://localhost:5000/${img.url}`}
-                            onClick={() =>
-                              setPreviewImg(`http://localhost:5000/${img.url}`)
-                            }
-                            className="w-20 h-20 rounded object-cover cursor-pointer"
-                          />
+                        <div key={i} className="w-20">
+                          <div className="relative">
+                            <img
+                              src={`http://localhost:5000/${img.url}`}
+                              onClick={() =>
+                                setPreviewImg(
+                                  `http://localhost:5000/${img.url}`,
+                                )
+                              }
+                              className="w-20 h-20 rounded object-cover cursor-pointer"
+                            />
 
-                          {/* STATUS BADGE */}
-                          <span className="absolute bottom-0 left-0 bg-blue-600 text-white text-[10px] px-1 rounded">
-                            In Progress
-                          </span>
+                            {/* STATUS BADGE */}
+                            <span className="absolute bottom-0 left-0 bg-blue-600 text-white text-[10px] px-1 rounded">
+                              In Progress
+                            </span>
 
-                          {/* DELETE BUTTON */}
-                          {item.status === "in-progress" && (
-                            <button
-                              onClick={() => deleteImage(item._id, img.url)}
-                              className="absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded"
-                            >
-                              ✕
-                            </button>
-                          )}
+                            {/* DELETE BUTTON */}
+                            {item.status === "in-progress" && (
+                              <button
+                                onClick={() => deleteImage(item._id, img.url)}
+                                className="absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded"
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
+
+                          {/* DATE */}
+                          <p className="text-[10px] text-gray-500 mt-1 text-center">
+                            {formatDate(img.uploadedAt)}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -371,18 +407,26 @@ export default function StaffMaintenance() {
 
                     <div className="flex gap-2 flex-wrap">
                       {completedImages.map((img, i) => (
-                        <div key={i} className="relative">
-                          <img
-                            src={`http://localhost:5000/${img.url}`}
-                            onClick={() =>
-                              setPreviewImg(`http://localhost:5000/${img.url}`)
-                            }
-                            className="w-20 h-20 rounded object-cover cursor-pointer"
-                          />
+                        <div className="w-20" key={i}>
+                          <div className="relative">
+                            <img
+                              src={`http://localhost:5000/${img.url}`}
+                              onClick={() =>
+                                setPreviewImg(
+                                  `http://localhost:5000/${img.url}`,
+                                )
+                              }
+                              className="w-20 h-20 rounded object-cover cursor-pointer"
+                            />
 
-                          <span className="absolute bottom-0 left-0 bg-green-600 text-white text-[10px] px-1 rounded">
-                            Completed
-                          </span>
+                            <span className="absolute bottom-0 left-0 bg-green-600 text-white text-[10px] px-1 rounded">
+                              Completed
+                            </span>
+                          </div>
+                          {/* DATE */}
+                          <p className="text-[10px] text-gray-500 mt-1 text-center">
+                            {formatDate(img.uploadedAt)}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -415,9 +459,24 @@ export default function StaffMaintenance() {
                       <input
                         type="file"
                         multiple
-                        accept="image/*"
+                        accept=".jpg,.jpeg,.png,.webp"
                         onChange={(e) => {
                           const selected = Array.from(e.target.files);
+
+                          const allowedTypes = [
+                            "image/jpeg",
+                            "image/png",
+                            "image/webp",
+                          ];
+
+                          const invalidFiles = selected.filter(
+                            (file) => !allowedTypes.includes(file.type),
+                          );
+
+                          if (invalidFiles.length > 0) {
+                            toast.error("Only JPG, PNG, WEBP images allowed");
+                            return;
+                          }
 
                           if (selected.length > 5) {
                             toast.error("Max 5 images allowed");
@@ -521,7 +580,6 @@ export default function StaffMaintenance() {
               </div>
             );
           })}
-      
         </div>
       )}
     </div>

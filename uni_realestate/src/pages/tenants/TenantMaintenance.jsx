@@ -77,81 +77,149 @@ export default function TenantMaintenance() {
 
       {/* List */}
       <div className="grid gap-4">
-        {maintenance.map((item) => (
-          <Card key={item._id}>
-            <CardContent className="p-4 space-y-2">
-              <div className="flex justify-between items-center">
-                <h3 className="font-semibold text-lg">{item.title}</h3>
+        {maintenance.map((item) => {
+           const inProgressImages = item.proofImages?.filter(
+              (img) => img.status === "in-progress",
+            );
 
-                <Badge className={getStatusColor(item.status)}>
-                  {item.status}
-                </Badge>
-              </div>
+            const completedImages = item.proofImages?.filter(
+              (img) => img.status === "completed",
+            );
 
-              <p className="text-gray-600">
-                {item.description || "No description"}
-              </p>
+            const formatDate = (date) => {
+              return new Date(date).toLocaleString("en-IN", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              });
+            };
 
-              {/* Property info */}
-              <p className="text-sm text-gray-500">🏠 {item.property?.title}</p>
+          return (
+            <Card key={item._id}>
+              <CardContent className="p-4 space-y-2">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-semibold text-lg">{item.title}</h3>
 
-              {previewImg && (
-                <div
-                  className="fixed inset-0 bg-white bg-opacity-70 flex items-center justify-center z-50"
-                  onClick={() => setPreviewImg(null)}
-                >
-                  <img
-                    src={previewImg}
-                    onClick={(e) => e.stopPropagation()}
-                    className="max-w-[90%] max-h-[90%] rounded shadow-lg"
-                  />
-                  <button
-                    className="absolute top-5 right-5 text-red-500 text-3xl"
+                  <Badge className={getStatusColor(item.status)}>
+                    {item.status}
+                  </Badge>
+                </div>
+
+                <p className="text-gray-600">
+                  {item.description || "No description"}
+                </p>
+
+                {/* Property info */}
+                <p className="text-sm text-gray-500">
+                  🏠 {item.property?.title}
+                </p>
+
+                {previewImg && (
+                  <div
+                    className="fixed inset-0 bg-white bg-opacity-70 flex items-center justify-center z-50"
                     onClick={() => setPreviewImg(null)}
                   >
-                    ✕
-                  </button>
-                </div>
-              )}
+                    <img
+                      src={previewImg}
+                      onClick={(e) => e.stopPropagation()}
+                      className="max-w-[90%] max-h-[90%] rounded shadow-lg"
+                    />
+                    <button
+                      className="absolute top-5 right-5 text-red-500 text-3xl"
+                      onClick={() => setPreviewImg(null)}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+                {/* Uploaded Images - STAFF VIEW */}
+                {inProgressImages?.length > 0 && (
+                  <div className="mt-3">
+                    {/* Section Title */}
+                    <p className="text-sm font-semibold text-blue-600 mb-2">
+                      Work Progress Images
+                    </p>
 
-              {/* Proof Images - TENANT VIEW */}
-              {item.proofImages?.length > 0 && (
+                    <div className="mt-3 flex gap-2 flex-wrap">
+                      {inProgressImages.map((img, i) => (
+                        <div key={i} className="w-20">
+                          <div className="relative">
+                            <img
+                              src={`http://localhost:5000/${img.url}`}
+                              onClick={() =>
+                                setPreviewImg(
+                                  `http://localhost:5000/${img.url}`,
+                                )
+                              }
+                              className="w-20 h-20 rounded object-cover cursor-pointer"
+                            />
+
+                            {/* STATUS BADGE */}
+                            <span className="absolute bottom-0 left-0 bg-blue-600 text-white text-[10px] px-1 rounded">
+                              In Progress
+                            </span>
+
+                          
+                          </div>
+
+                          {/* DATE */}
+                          <p className="text-[10px] text-gray-500 mt-1 text-center">
+                            {formatDate(img.uploadedAt)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {completedImages?.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-semibold text-green-600 mb-2">
+                      Completed Work Images
+                    </p>
+
+                    <div className="flex gap-2 flex-wrap">
+                      {completedImages.map((img, i) => (
+                        <div className="w-20" key={i}>
+                          <div className="relative">
+                            <img
+                              src={`http://localhost:5000/${img.url}`}
+                              onClick={() =>
+                                setPreviewImg(
+                                  `http://localhost:5000/${img.url}`,
+                                )
+                              }
+                              className="w-20 h-20 rounded object-cover cursor-pointer"
+                            />
+
+                            <span className="absolute bottom-0 left-0 bg-green-600 text-white text-[10px] px-1 rounded">
+                              Completed
+                            </span>
+                          </div>
+                          {/* DATE */}
+                          <p className="text-[10px] text-gray-500 mt-1 text-center">
+                            {formatDate(img.uploadedAt)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* STEPPER START */}
                 <div className="mt-3">
-                  <p className="text-sm font-medium text-gray-600">
-                    Work Proof:
-                  </p>
-
-                  <div className="flex gap-2 flex-wrap mt-1">
-                    {item.proofImages.map((img, i) => (
-                      <div key={i} className="relative">
-                        <img
-                          src={`http://localhost:5000/${img.url}`}
-                          onClick={() =>
-                            setPreviewImg(`http://localhost:5000/${img.url}`)
-                          }
-                          className="w-20 h-20 rounded object-cover cursor-pointer hover:scale-105 transition"
-                        />
-                        {/* STATUS BADGE */}
-                        <span className="absolute bottom-0 left-0 bg-blue-600 text-white text-[10px] px-1 rounded">
-                          In Progress
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* STEPPER START */}
-              <div className="mt-3">
-                {item.status === "rejected" ? (
-                  <div className="text-center text-red-600 font-medium">
-                    Request Rejected
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-between">
-                      {["pending", "assigned", "in-progress", "completed"].map(
-                        (step, index) => {
+                  {item.status === "rejected" ? (
+                    <div className="text-center text-red-600 font-medium">
+                      Request Rejected
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between">
+                        {[
+                          "pending",
+                          "assigned",
+                          "in-progress",
+                          "completed",
+                        ].map((step, index) => {
                           const currentIndex = [
                             "pending",
                             "assigned",
@@ -188,38 +256,41 @@ export default function TenantMaintenance() {
                               )}
                             </div>
                           );
-                        },
-                      )}
-                    </div>
+                        })}
+                      </div>
 
-                    <div className="flex justify-between mt-1 text-[10px] text-gray-500">
-                      {["pending", "assigned", "in-progress", "completed"].map(
-                        (step) => (
+                      <div className="flex justify-between mt-1 text-[10px] text-gray-500">
+                        {[
+                          "pending",
+                          "assigned",
+                          "in-progress",
+                          "completed",
+                        ].map((step) => (
                           <span
                             key={step}
                             className="flex-1 text text-xs text-gray-600"
                           >
                             {step}
                           </span>
-                        ),
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-              {/*  STEPPER END */}
-              <div className="flex justify-between items-center text-sm">
-                <Badge className={getPriorityColor(item.priority)}>
-                  {item.priority}
-                </Badge>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+                {/*  STEPPER END */}
+                <div className="flex justify-between items-center text-sm">
+                  <Badge className={getPriorityColor(item.priority)}>
+                    {item.priority}
+                  </Badge>
 
-                <span className="text-gray-500">
-                  {new Date(item.createdAt).toLocaleDateString()}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                  <span className="text-gray-500">
+                    {new Date(item.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

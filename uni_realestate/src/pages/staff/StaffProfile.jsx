@@ -17,6 +17,8 @@ EyeOff,} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "../../components/ui/button";
 import API from "../../utils/api";
+import toast from "react-hot-toast"
+
 export default function StaffProfile() {
   const [staff, setStaff] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -136,14 +138,9 @@ export default function StaffProfile() {
   fetchTasks();
 }, []);
 
-
-
   if (!staff) {
     return <div className="min-h-screen bg-muted/30">Loading...</div>;
   }
-
-
-
 
   const handleChange = (e) => {
     setFormData({
@@ -253,7 +250,7 @@ export default function StaffProfile() {
         },
       );
 
-      alert("Password updated successfully");
+      toast.success("Password updated successfully");
 
       setPasswordData({
         currentPassword: "",
@@ -262,7 +259,7 @@ export default function StaffProfile() {
       });
     } catch (err) {
       console.error(err);
-      alert("Failed to update password");
+      toast.error("Failed to update password" ||  err.response?.data?.message );
     }
   };
 
@@ -292,7 +289,7 @@ export default function StaffProfile() {
       const token = localStorage.getItem("token");
 
       await API.put(
-        "/deactivate-account",
+        "/auth/deactivate-account",
         {},
         {
           headers: {
@@ -652,18 +649,7 @@ const statusConfig = getStatusConfig(staff.isActive);
           </Button>
         </div>
 
-        {/* Delete Account */}
-        <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6 border border-red-300">
-          <h2 className="text-xl font-semibold text-red-600 mb-2">
-            Delete Account
-          </h2>
-
-          <p className="text-gray-600 mb-4">
-            This action is permanent and cannot be undone.
-          </p>
-
-          <Button className="bg-red-600 text-white">Delete Account</Button>
-        </div>
+       
       </div>
     </div>
   );

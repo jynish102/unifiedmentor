@@ -544,15 +544,15 @@ exports.uploadProof = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user._id || req.user.id;
-    
-    
+
 
     const maintenance = await Maintenance.findById(id);
     // console.log("UPLOAD ID:", maintenance._id);
 
     const uploadStatus = req.query.status || maintenance.status;
 
-    console.log("UPLOAD STATUS:", uploadStatus);
+      const allowedTypes = ["image/jpeg", "image/png", "image/webp" , "image/jpg"];
+    // console.log("UPLOAD STATUS:", uploadStatus);
 
     if (!maintenance) {
       return res.status(404).json({ message: "Not found" });
@@ -580,6 +580,14 @@ exports.uploadProof = async (req, res) => {
       return res.status(400).json({ message: "No images uploaded" });
     }
 
+    for (const file of req.files) {
+      if (!allowedTypes.includes(file.mimetype)) {
+        return res.status(400).json({
+          message: "Only JPG, PNG, WEBP images allowed",
+        });
+      }
+    }
+
     //  Limit total images to 5
     const existingImages = maintenance.proofImages.length;
     const newImages = req.files.length;
@@ -596,7 +604,7 @@ exports.uploadProof = async (req, res) => {
       status:  uploadStatus,
       
     }));
-    console.log("IMAGE PATHS:", imagePaths);
+    // console.log("IMAGE PATHS:", imagePaths)
     
 
     maintenance.proofImages.push(...imagePaths);
@@ -656,8 +664,6 @@ exports.deleteProofImage = async (req, res) => {
         message: "Image not found in record",
       });
     }
-
-    
 
     // Remove image from array
     maintenance.proofImages = maintenance.proofImages.filter(

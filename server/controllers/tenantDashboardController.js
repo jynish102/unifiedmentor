@@ -1,21 +1,33 @@
 const Booking = require("../models/Booking");
 const Maintenance = require("../models/Maintenance");
 const Property = require("../models/Property");
+const User = require("../models/User");
 
 exports.getTenantDashboard = async (req, res) => {
   try {
+    // console.log("REQ USER:", req.user);
     const tenantId = req.user.id;
+    const user = await User.findById(req.user.id).select("fullname");
 
     /* ---------------- BOOKINGS ---------------- */
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     const bookings = await Booking.find({ user: tenantId })
       .populate("property", "title address")
       .sort({ startDate: 1 });
 
-    const upcomingBookings = bookings.filter(
-      (b) => b.status === "approved" && new Date(b.startDate) >= new Date(),
-    );
+    const upcomingBookings = bookings.filter((b) => {
+      const bookingDate = new Date(b.startDate);
+      bookingDate.setHours(0, 0, 0, 0);
+      return b.status === "approved" && bookingDate >= today;
+    });
 
+    // bookings.forEach((b) => {
+    //   console.log("STATUS:", b.status);
+    //   console.log("START:", new Date(b.startDate));
+    //   console.log("NOW:", new Date());
+    // });
     /* ---------------- MAINTENANCE ---------------- */
 
     const maintenance = await Maintenance.find({ tenant: tenantId }).sort({
@@ -47,10 +59,16 @@ exports.getTenantDashboard = async (req, res) => {
     /* ---------------- RESPONSE ---------------- */
 
     res.json({
+      tenant: {
+        fullname: user.fullname,
+      },
       stats: {
         totalBookings: upcomingBookings.length,
         openMaintenance: openRequests.length,
-        leaseStatus: activeBooking ? "Active" : "Inactive",
+        leaseStatus: {
+          status: activeBooking ? "Active" : "Inactive",
+          leaseEnd: activeBooking ? activeBooking.endDate : null,
+        },
       },
 
       bookings: upcomingBookings.slice(0, 2),

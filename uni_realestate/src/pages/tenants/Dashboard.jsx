@@ -19,13 +19,15 @@ export function Dashboard() {
 
     fetchData();
   }, []);
+  console.log(dashboard);
 
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold">
-          Welcome back, {dashboard?.tenant?.name?.split(" ")[0]}!
+          Welcome back,{" "}
+          {dashboard?.tenant?.fullname ? dashboard.tenant.fullname : "User"}!
         </h1>
         <p className="text-gray-600 mt-1">
           Here's what's happening with your rental
@@ -41,11 +43,7 @@ export function Dashboard() {
               <div>
                 <p className="text-sm text-gray-600">Upcoming Bookings</p>
                 <p className="text-2xl font-bold mt-1">
-                  {
-                    dashboard?.stats?.totalBookings?.filter(
-                      (b) => b.status === "confirmed",
-                    ).length
-                  }
+                  {dashboard?.stats?.totalBookings}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
                   Active reservations
@@ -65,11 +63,7 @@ export function Dashboard() {
               <div>
                 <p className="text-sm text-gray-600">Maintenance</p>
                 <p className="text-2xl font-bold mt-1">
-                  {
-                    dashboard?.stats?.openMaintenance?.filter(
-                      (r) => r.status !== "completed",
-                    ).length
-                  }
+                  {dashboard?.stats?.openMaintenance}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">Open requests</p>
               </div>
@@ -89,9 +83,11 @@ export function Dashboard() {
                 <p className="text-2xl font-bold mt-1">Active</p>
                 <p className="text-xs text-gray-500 mt-1">
                   Until{" "}
-                  {new Date(
-                    dashboard?.stats?.leaseStatus?.leaseEnd,
-                  ).toLocaleDateString()}
+                  {dashboard?.stats?.leaseStatus?.leaseEnd
+                    ? new Date(
+                        dashboard.stats.leaseStatus.leaseEnd,
+                      ).toLocaleDateString()
+                    : "N/A"}
                 </p>
               </div>
               <div className="size-12 bg-purple-100 rounded-full flex items-center justify-center">
@@ -110,7 +106,7 @@ export function Dashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Upcoming Bookings</CardTitle>
-              <Link to="/amenities">
+              <Link to="/tenant/amenities">
                 <Button variant="ghost" size="sm">
                   View All <ArrowRight className="size-4 ml-2" />
                 </Button>
@@ -122,13 +118,13 @@ export function Dashboard() {
                 <div className="space-y-4">
                   {dashboard?.bookings?.map((booking) => (
                     <div
-                      key={booking.id}
+                      key={booking._id}
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
                     >
                       <div>
                         <p className="font-medium">{booking.amenityName}</p>
                         <p className="text-sm text-gray-600 mt-1">
-                          {new Date(booking.date).toLocaleDateString()} •{" "}
+                          {new Date(booking.date).toLocaleDateString()}
                           {booking.time}
                         </p>
                       </div>
@@ -157,15 +153,23 @@ export function Dashboard() {
             </CardHeader>
 
             <CardContent>
-              {dashboard?.stats?.Maintenance?.map((request) => (
-                <div
-                  key={request.id}
-                  className="p-4 bg-gray-50 rounded-lg mb-3"
-                >
-                  <p className="font-medium">{request.title}</p>
-                  <p className="text-sm text-gray-600">{request.description}</p>
-                </div>
-              ))}
+              {dashboard?.maintenance?.length > 0 ? (
+                dashboard.maintenance.map((request) => (
+                  <div
+                    key={request._id}
+                    className="p-4 bg-gray-50 rounded-lg mb-3"
+                  >
+                    <p className="font-medium">{request.title}</p>
+                    <p className="text-sm text-gray-600">
+                      {request.description}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center py-4">
+                  No maintenance requests
+                </p>
+              )}
             </CardContent>
           </Card>
         </div>

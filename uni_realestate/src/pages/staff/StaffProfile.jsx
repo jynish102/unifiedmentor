@@ -165,7 +165,7 @@ export default function StaffProfile() {
       setIsEditing(false);
       toast.success("Profile updated successfully ");
     } catch (err) {
-      console.error(err);
+      console.log(err);
       toast.error(err.response?.data?.message || "updated Failed ");
     }
   };
@@ -258,7 +258,7 @@ export default function StaffProfile() {
         confirmPassword: "",
       });
     } catch (err) {
-      console.error(err);
+      console.error("Error", err.response?.data || err.message);
       toast.error(err.response?.data?.message||"Failed to update password" );
     }
   };

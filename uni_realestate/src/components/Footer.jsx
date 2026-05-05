@@ -22,18 +22,41 @@ const Footer =() => {
             <div>
               <h4 className="text-white font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-sm">
-                <Link to="/" className="hover:text-white transition cursor-pointer">
-                  Home
-                </Link>
-                <li className="hover:text-white transition cursor-pointer">
-                  Properties
+                <li>
+                  <Link
+                    to="/"
+                    className="hover:text-white transition cursor-pointer"
+                  >
+                    Home
+                  </Link>
                 </li>
-                <li className="hover:text-white transition cursor-pointer">
-                  Amenities
+
+                <li>
+                  <Link
+                    to="/properties"
+                    className="hover:text-white transition cursor-pointer"
+                  >
+                    Properties
+                  </Link>
                 </li>
-                <Link to="/contact" className="hover:text-white transition cursor-pointer">
-                  Contact
-                </Link>
+                <li>
+                  <Link
+                    to="/amenities"
+                    className="hover:text-white transition cursor-pointer"
+                  >
+                    Amenities
+                  </Link>
+                </li>
+
+                <li>
+                  {" "}
+                  <Link
+                    to="/contact"
+                    className="hover:text-white transition cursor-pointer"
+                  >
+                    Contact
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -41,18 +64,42 @@ const Footer =() => {
             <div>
               <h4 className="text-white font-semibold mb-4">User Access</h4>
               <ul className="space-y-2 text-sm">
-                <Link to="/login" className="hover:text-white transition cursor-pointer">
-                  Admin Login
-                </Link>
-                <Link to="/login" className="hover:text-white transition cursor-pointer">
-                  Owner Login
-                </Link>
-                <Link to="/login" className="hover:text-white transition cursor-pointer">
-                  Tenant Login
-                </Link>
-                <Link to="/login" className="hover:text-white transition cursor-pointer">
-                  Staff Login
-                </Link>
+                <li>
+                  <Link
+                    to="/login"
+                    className="hover:text-white transition cursor-pointer"
+                  >
+                    Admin Login
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/login"
+                    className="hover:text-white transition cursor-pointer"
+                  >
+                    Owner Login
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/login"
+                    className="hover:text-white transition cursor-pointer"
+                  >
+                    Tenant Login
+                  </Link>
+                </li>
+
+                <li>
+                  {" "}
+                  <Link
+                    to="/login"
+                    className="hover:text-white transition cursor-pointer"
+                  >
+                    Staff Login
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -73,7 +120,7 @@ const Footer =() => {
 
                 <div className="flex items-center gap-3">
                   <MapPin size={16} className="text-green-400" />
-                  <span>Ahmedabad, India</span>
+                  <span>Ahmadabad, India</span>
                 </div>
               </div>
 

@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Badge } from "../../components/ui/badge";
-import { Input } from "../../components/ui/input";
+import { Card, CardContent, CardHeader } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { Input } from "../components/ui/input";
 import {
   Plus,
   Search,
@@ -13,16 +13,15 @@ import {
   Eye,
   Banknote,
 } from "lucide-react";
-import { useState, useEffect, } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom";
-import API from "../../utils/api";
+import API from "../utils/api";
 
-export function Properties() {
+export default function Properties() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [properties, setProperties] = useState([]);
-  
 
   // Fetch from backend
   useEffect(() => {
@@ -31,8 +30,8 @@ export function Properties() {
         const res = await API.get("/property");
         setProperties(res.data);
       } catch (err) {
-        console.log(err);
-        toast.error(err.response?.data?.messages || "feild to fetch data")
+        console.log("Error", err.response?.data || err.message) ;
+        toast.error(err.response?.data?.message)
       }
     };
 
@@ -60,7 +59,7 @@ export function Properties() {
     }
   };
 
-  
+
 
   return (
     <div className="space-y-6">

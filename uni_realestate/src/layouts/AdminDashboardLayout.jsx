@@ -16,7 +16,7 @@ import { Input } from "../components/ui/input";
 import { useState } from "react";
 
 const navItems = [
-  { path: "/admin/overview", label: "Overview", icon: LayoutDashboard },
+  { path: "/admin/admin-dashboard", label: "Admin Dashboard", icon: LayoutDashboard },
   { path: "/admin/properties", label: "Properties", icon: Building2 },
   { path: "/admin/amenities", label: "Amenities", icon: Dumbbell },
   { path: "/admin/tenants", label: "Tenants", icon: Users },

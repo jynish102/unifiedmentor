@@ -3,6 +3,7 @@ import Maintenance from '../assets/Maintenance.webp'
 import office from '../assets/officeplace.webp'
 import Amenities from "../assets/Amenities.jpg";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../components/ui/button"
 
 
 
@@ -22,7 +23,8 @@ import {
   Waves,
   Building2,
   Star,
-  Quote
+  Quote,
+  ArrowRight
   
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -44,15 +46,18 @@ const Home = () => {
           </p>
 
           <div className="space-x-4">
-            <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-              Explore Properties
-            </button>
-            <button
-              className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600"
+            <Button
+              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              onClick={() => navigate("/properties")}
+            >
+              Explore Properties <ArrowRight size={18} />
+            </Button>
+            <Button
+              className="mt-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600"
               onClick={() => navigate(`/register`)}
             >
               Get Started
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -60,7 +65,7 @@ const Home = () => {
           <img
             src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2"
             alt="Property"
-            className="rounded-xl shadow-lg"
+            className="w-full h-70 object-cover rounded-xl shadow-lg"
           />
         </div>
       </section>
@@ -73,7 +78,7 @@ const Home = () => {
             <img
               src={partyplot}
               alt="Celebration"
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
             />
 
             {/* Overlay */}
@@ -561,9 +566,7 @@ const Home = () => {
 
           <button
             className="bg-white text-blue-600 font-semibold px-10 py-4 rounded-full shadow-lg hover:scale-105 hover:shadow-2xl transition duration-300"
-            onClick={() =>
-              navigate(`register`)
-            }
+            onClick={() => navigate(`register`)}
           >
             Create Account Now
           </button>

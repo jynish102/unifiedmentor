@@ -10,13 +10,15 @@ import { StaffDashboardLayout } from "./layouts/StaffDashboardLayout";
 import Home from "./pages/Home";
 import Features from "./pages/Features";
 import Contact from "./pages/Contact";
+import AllProperties  from "./pages/Properties";
+import  AllAmenities  from "./pages/Amenities";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
 //admin
-import { Overview } from "./pages/admin/Overview";
+import AdminDashboard  from "./pages/admin/AdminDashboard";
 import { Properties } from "./pages/admin/Properties";
 import { Tenants } from "./pages/admin/Tenants";
 import { Amenities } from "./pages/admin/Amenities";
@@ -82,6 +84,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/features" element={<Features />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/properties" element={<AllProperties />} />
+            <Route path="/amenities" element={<AllAmenities />} />
           </Route>
           <Route element={<AuthLayout />}>
             <Route path="/register" element={<Register />} />
@@ -91,7 +95,7 @@ function App() {
           </Route>
           //admin routes
           <Route path="/admin" element={<AdminDashboardLayout />}>
-            <Route path="overview" element={<Overview />} />
+            <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
             <Route path="properties" element={<Properties />} />
             <Route path="properties/add-property" element={<AddProperty />} />
             <Route

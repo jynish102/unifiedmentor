@@ -29,8 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
 
-// dashboard check
-app.use("/api/admin", authMiddleware, adminRoutes);
+
 
 app.use("/api/property", propertyRoutes);
 
@@ -45,6 +44,9 @@ app.use("/api/amenity-bookings", amenityBookingRoutes);
 app.use("/api/staff", userRoutes);
 
 app.use("/api/maintenance", maintenanceRoutes);
+
+
+app.use("/api/admin", adminRoutes);
 
 app.use("/api/owner", ownerDashboardRoutes);
 

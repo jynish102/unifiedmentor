@@ -3,6 +3,7 @@ import logo from "../assets/logo2.png";
 import {Eye, EyeOff} from "lucide-react";
 import { Link , useNavigate} from "react-router-dom";
 import API from "../utils/api";
+import toast from "react-hot-toast"
 
 
 const Register = () => {
@@ -16,11 +17,32 @@ const Register = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  // const [error, setError] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "fullname") {
+      const regex = /^[A-Za-z\s]*$/;
+
+      if (!regex.test(value)) {
+        setErrors((prev) => ({
+          ...prev,
+          fullname: "Only letters and spaces allowed",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          fullname: "",
+        }));
+      }
+    }
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
     const updatedForm = {
       ...formData,
@@ -42,20 +64,8 @@ const Register = () => {
       }, 400);
     }
 
-    //--------------------------------name validation
-    if (name === "fullname") {
-      // allow only letters and spaces
-      const regex = /^[A-Za-z\s]*$/;
-
-      if (!regex.test(value)) {
-        return; // stop if number or special char
-      }
-    }
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+    //--------------------------------name validation----------------------------
+    
 
   //------------------------------form submission
   const handleSubmit = async (e) => {
@@ -69,14 +79,14 @@ const Register = () => {
         password: formData.password,
       });
 
-      alert("User Registered ");
+      toast.success("User Registered ");
 
        navigate("/Login");
 
       console.log(res.data);
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      alert("Registration Failed ");
+      console.log("Error" , err.response?.data || err.message);
+      toast.error("Registration Failed ");
     }
   };
 

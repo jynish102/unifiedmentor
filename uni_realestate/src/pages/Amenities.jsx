@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Badge } from "../../components/ui/badge";
-import { Input } from "../../components/ui/input";
+import { Card, CardContent, CardHeader } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { Input } from "../components/ui/input";
 import {
   Plus,
   Search,
@@ -15,12 +15,12 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
-import API from "../../utils/api";
+import API from "../utils/api";
 
 
-export function Amenities() {
+export default function Amenities() {
   const [searchTerm, setSearchTerm] = useState("");
   const [amenities, setAmenities] = useState([]);
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ export function Amenities() {
   useEffect(() => {
     const fetchAmenities = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/amenity");
+        const res = await API.get("/amenity");
         setAmenities(res.data.data || []);
       } catch (err) {
         console.error("Error fetching amenities", err);
@@ -70,7 +70,7 @@ export function Amenities() {
     };
   
 
-  
+   
   
 
   return (

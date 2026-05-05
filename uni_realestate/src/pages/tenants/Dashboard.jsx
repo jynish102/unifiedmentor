@@ -122,10 +122,28 @@ export function Dashboard() {
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
                     >
                       <div>
-                        <p className="font-medium">{booking.amenityName}</p>
+                        <p className="font-medium">
+                          {" "}
+                          {booking.property?.title || "Property"}
+                        </p>
                         <p className="text-sm text-gray-600 mt-1">
-                          {new Date(booking.date).toLocaleDateString()}
-                          {booking.time}
+                          {new Date(booking.startDate).toLocaleDateString(
+                            "en-IN",
+                            {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            },
+                          )}{" "}
+                          →{" "}
+                          {new Date(booking.endDate).toLocaleDateString(
+                            "en-IN",
+                            {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            },
+                          )}
                         </p>
                       </div>
 

@@ -13,10 +13,14 @@ import {
 import { Plus, Search, Mail, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
+import toast from "react-hot-toast";
 
-export function Tenants() {
+export default function Tenants() {
   const [searchTerm, setSearchTerm] = useState("");
   const [tenants, setTenants] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTenant, setSelectedTenant] = useState(null);
+  const [message, setMessage] = useState("");
   const [counts, setCounts] = useState({
     total: 0,
     active: 0,
@@ -24,18 +28,28 @@ export function Tenants() {
     upcoming: 0,
   });
 
+  const [form, setForm] = useState({
+    subject: "",
+    message: "",
+  });
+
+
   //  Fetch from backend
   useEffect(() => {
     const fetchTenants = async () => {
       try {
-        const res = await API.get("/tenants/admin");
+        const res = await API.get("/tenants/owner");
+        console.log("API RESPONSE:", res.data);
         setTenants(res.data.tenants || []);
         setCounts(res.data.counts || {});
       } catch (err) {
-        console.error("Error fetching tenants", err);
+        console.log("Error fetching tenants", err.res?.data || err.message);
+        toast.error(
+          err.response?.data?.message || "Failed To Fetch Tenant data",
+        );
       }
     };
-
+  console.log(tenants);
     fetchTenants();
   }, []);
 
@@ -61,21 +75,55 @@ export function Tenants() {
     }
   };
 
+  //message modal
+  const handleOpenModal = (tenant) => {
+    setSelectedTenant(tenant);
+    setIsModalOpen(true);
+  };
+
+  const handleSend = async () => {
+    
+    try {
+      const token = localStorage.getItem("token");
+
+      await API.post(
+        "/messages/contact-tenant",
+        {
+          
+        propertyId: selectedTenant.propertyId,
+        subject: form.subject,
+        message: form.message,
+        receiver: selectedTenant._id,
+      
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      setMessage("");
+      setIsModalOpen(false);
+
+      toast.success("Message sent");
+    } catch (err) {
+      console.log("Error", err.response?.data || err.message);
+      toast.error(err.response?.data?.message || "Failed to send message");
+    }
+  };
+
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h2 className="text-3xl font-bold text-slate-900">Tenants</h2>
+          <h2 className="text-3xl font-bold text-slate-900">My Tenants</h2>
           <p className="text-slate-500 mt-1">
             Manage tenant information and leases
           </p>
         </div>
-
-        <Button className="gap-2">
-          <Plus size={18} />
-          Add Tenant
-        </Button>
       </div>
 
       {/* Table */}
@@ -104,7 +152,7 @@ export function Tenants() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Tenant</TableHead>
-                  <TableHead>Property </TableHead>
+                  <TableHead>Property</TableHead>
                   <TableHead>Contact</TableHead>
                   <TableHead>Lease Period</TableHead>
                   <TableHead>Monthly Rent</TableHead>
@@ -135,9 +183,6 @@ export function Tenants() {
 
                     {/* Unit */}
                     <TableCell>
-                      <p className="font-medium text-slate-900">
-                        {tenant.unit}
-                      </p>
                       <p className="text-sm text-slate-500">
                         {tenant.property}
                       </p>
@@ -161,10 +206,29 @@ export function Tenants() {
                     <TableCell>
                       <div className="text-sm">
                         <p className="text-slate-900">
-                          {new Date(tenant.leaseStart).toLocaleDateString()}
+                          {tenant.leaseStart
+                            ? new Date(tenant.leaseStart).toLocaleDateString(
+                                "en-IN",
+                                {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                },
+                              )
+                            : "N/A"}
                         </p>
                         <p className="text-slate-500">
-                          to {new Date(tenant.leaseEnd).toLocaleDateString()}
+                          to{" "}
+                          {tenant.leaseEnd
+                            ? new Date(tenant.leaseEnd).toLocaleDateString(
+                                "en-IN",
+                                {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                },
+                              )
+                            : "N/A"}
                         </p>
                       </div>
                     </TableCell>
@@ -172,7 +236,7 @@ export function Tenants() {
                     {/* Rent */}
                     <TableCell>
                       <span className="font-medium">
-                        ₹{tenant.rentAmount?.toLocaleString()}
+                        ₹{tenant.rentAmount?.toLocaleString("en-IN")}
                       </span>
                     </TableCell>
 
@@ -185,9 +249,20 @@ export function Tenants() {
 
                     {/* Action */}
                     <TableCell>
-                      <Button variant="outline" size="sm">
-                        View
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm">
+                          View
+                        </Button>
+
+                        <Button
+                          size="sm"
+                          className="bg-blue-600 text-white"
+                          onClick={() => handleOpenModal(tenant)}
+                        >
+                          <Mail size={14} className="mr-1" />
+                          Message
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -203,18 +278,58 @@ export function Tenants() {
                   </TableRow>
                 )}
               </TableBody>
-              <div className="flex gap-4">
-                <div>Total: {counts.total}</div>
-                <div className="text-green-600">Active: {counts.active}</div>
-                <div className="text-yellow-600">
-                  Upcoming: {counts.upcoming}
-                </div>
-                <div className="text-red-600">Expired: {counts.expired}</div>
-              </div>
             </Table>
+            <div className="flex gap-4">
+              <div>Total: {counts.total}</div>
+              <div className="text-green-600">Active: {counts.active}</div>
+              <div className="text-yellow-600">Upcoming: {counts.upcoming}</div>
+              <div className="text-red-600">Expired: {counts.expired}</div>
+            </div>
           </div>
         </CardContent>
       </Card>
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl w-full max-w-md">
+            <h2 className="text-lg font-semibold mb-2">
+              Message {selectedTenant?.name}
+            </h2>
+
+            {/* Subject */}
+            <input
+              type="text"
+              placeholder="Subject"
+              value={form.subject}
+              onChange={(e) => setForm({ ...form, subject: e.target.value })}
+              className="w-full border p-2 rounded mb-3"
+            />
+
+            <textarea
+              className="w-full border p-2 rounded mb-4"
+              rows={4}
+              placeholder="Write your message..."
+              value={form.message}
+               onChange={(e) => setForm({ ...form, message: e.target.value })}
+            />
+
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="px-3 py-1 bg-gray-300 rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleSend}
+                className="px-3 py-1 bg-blue-600 text-white rounded"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

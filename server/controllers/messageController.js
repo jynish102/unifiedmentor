@@ -42,6 +42,49 @@ exports.contactOwner = async (req, res) => {
   }
 };
 
+
+//owner--> tenant
+exports.contactTenant = async (req, res) => {
+  try {
+    const ownerId = req.user.id; // logged-in owner
+    const { tenantId, propertyId, subject, message } = req.body;
+
+    // 1. Validate
+    if (!tenantId || !message) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // 2. Optional: verify tenant actually booked owner property ✅ (important)
+    const booking = await Booking.findOne({
+      user: tenantId,
+      property: propertyId,
+    }).populate("property");
+
+    if (!booking || booking.property.owner.toString() !== ownerId) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // 3. Create message
+    const newMessage = await Message.create({
+      sender: ownerId,
+      receiver: tenantId,
+      property: propertyId,
+      subject,
+      message,
+      type: "owner-to-tenant", 
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Message sent to tenant",
+      data: newMessage,
+    });
+  } catch (err) {
+    console.error("Error", err.res?.data || err.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 exports.getOwnerMessages = async (req, res) => {
   try {
     if (req.user.role !== "owner") {

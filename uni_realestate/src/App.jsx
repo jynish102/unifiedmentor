@@ -40,6 +40,7 @@ import OwnerAddAmenity from "./pages/owner/AddAmenity";
 import OwnerAmenityDetails from "./pages/owner/AmenityDetails";
 import StaffList from "./pages/owner/StaffManagement";
 import OwnerMaintenance from "./pages/owner/Maintenance";
+import OwnerTenant from "./pages/owner/Tenants"
 import OwnerMessages from "./pages/owner/Messages";
 import Settings from "./pages/owner/Settings";
 
@@ -149,6 +150,7 @@ function App() {
             />
             <Route path="/owner/staff" element={<StaffList />} />
             <Route path="/owner/maintenance" element={<OwnerMaintenance />} />
+            <Route path="/owner/tenants" element={<OwnerTenant />} />
             <Route path="/owner/messages" element={<OwnerMessages />} />
             <Route path="settings" element={<Settings />} />
           </Route>

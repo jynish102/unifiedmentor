@@ -1,5 +1,7 @@
 const Booking = require("../models/Booking");
 const AmenityBooking = require("../models/AmenityBooking");
+const Property = require("../models/Property")
+const mongoose = require("mongoose");
 
 exports.getTenants = async (req, res) => {
   try {
@@ -111,5 +113,85 @@ exports.getTenants = async (req, res) => {
     res.status(500).json({
       message: err.message,
     });
+  }
+};
+
+
+// controllers/ownerController.js
+
+exports.getOwnerTenants = async (req, res) => {
+  try {
+  const ownerId = new mongoose.Types.ObjectId(req.user.id);
+
+    // const bookings = await Booking.find()
+    //   .populate({
+    //     path: "property",
+    //     match: { owner: ownerId }, 
+    //     select: "title",
+    //   })
+    //   .populate("user", "fullname email phone");
+    // console.log(bookings);  
+
+    const bookings = await Booking.find()
+      .populate("property", "title owner")
+      .populate("user", "fullname email phone");
+
+    // filter manually
+    const filtered = bookings.filter(
+      (b) =>
+        b.property &&
+        b.property.owner &&
+        b.property.title &&
+        b.property.owner.toString() === req.user.id,
+        
+    );
+
+    // console.log(filtered);
+
+    
+
+    // // remove bookings where property is null (not owner's)
+    // const filtered = bookings.filter((b) => b.property !== null);
+
+    // extract unique tenants
+    const tenantsMap = new Map();
+    const today = new Date();
+
+    filtered.forEach((b) => {
+       if (!b.property) return;
+
+       let status = "expired";
+
+       if (today < b.startDate) {
+         status = "upcoming";
+       } else if (today >= b.startDate && today <= b.endDate) {
+         status = "active";
+       }
+
+      if (b.user) {
+        tenantsMap.set(b.user._id.toString(), {
+          _id: b.user._id,
+          name: b.user?.fullname || "N/A",
+          email: b.user?.email || "",
+          phone: b.user?.phone || "",
+          property: b.property?.title || "",
+          propertyId: b.property?._id,
+          leaseStart: b.startDate,
+          leaseEnd: b.endDate,
+          rentAmount: b.rentAmount,
+          status,
+        });
+      }
+    });
+
+    const tenants = Array.from(tenantsMap.values());
+
+    res.json({
+      success: true,
+      tenants,
+    });
+  } catch (err) {
+    console.log("Error",err.res?.data || err.message);
+    res.status(500).json({ message: "Server error" });
   }
 };

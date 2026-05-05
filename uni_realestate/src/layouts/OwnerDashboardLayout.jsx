@@ -22,10 +22,11 @@ export  function OwnerDashboardLayout() {
     { path: "/owner/ownerdashboard", name: "Dashboard", icon: LayoutDashboard },
     { path: "/owner/properties", name: "Properties", icon: Building2 },
     { path: "/owner/amenities", name: "Amenities", icon: Dumbbell },
-    { path : "/owner/staff", name: "Staff ", icon: User },
+    { path: "/owner/staff", name: "Staff ", icon: User },
     { path: "/owner/maintenance", name: "Maintenance", icon: Wrench },
+    { path: "/owner/tenants", name: "Tenants", icon: User },
     { path: "/owner/settings", name: "Settings", icon: Settings },
-    { path: "/owner/messages", name: "Messages", icon: Inbox},
+    { path: "/owner/messages", name: "Messages", icon: Inbox },
   ];
 
   const isActive = (path) => {

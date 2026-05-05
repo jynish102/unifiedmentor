@@ -60,7 +60,7 @@ export default function PropertyDetails() {
       setForm({ subject: "", message: "" });
       setOpen(false);
     } catch (err) {
-      console.log(err);
+      console.log("Error",err.response?.data || err.message);
       toast.error(err.response?.data?.message ||"Failed to send message");
     }
   };

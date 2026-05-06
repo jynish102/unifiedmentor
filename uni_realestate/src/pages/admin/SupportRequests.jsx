@@ -68,7 +68,10 @@ export default function SupportRequest(){
                 <p className="text-sm mt-2">{req.message}</p>
 
                 <p className="text-xs text-gray-400 mt-1">
-                  {new Date(req.createdAt).toLocaleString()}
+                  {new Date(req.createdAt).toLocaleString("en-IN", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
                 </p>
 
                 <span className="text-xs bg-gray-200 px-2 py-1 rounded">

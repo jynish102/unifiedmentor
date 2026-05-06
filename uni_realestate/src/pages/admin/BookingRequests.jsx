@@ -215,8 +215,18 @@ export default function BookingRequests() {
                     <div>
                       <p className="text-slate-400">DATE & TIME</p>
                       {b.startDate
-                        ? new Date(b.startDate).toLocaleDateString()
-                        : new Date(b.date).toLocaleDateString()}
+                        ? new Date(b.startDate).toLocaleString("en-IN", {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                          }
+                        )
+                        : new Date(b.date).toLocaleString("en-IN", {
+                          dateStyle: "medium",
+                          timeStyle: "short", 
+                          }
+                        )
+                      }
+
                     </div>
 
                     <div>

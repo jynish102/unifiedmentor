@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import toast from "react-hot-toast"
 
-export default function OwnerMessages() {
+export default function TenantMessages() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
@@ -10,13 +10,13 @@ export default function OwnerMessages() {
       try {
         const token = localStorage.getItem("token");
 
-        const res = await API.get("/messages/owner", {
+        const res = await API.get("/messages/tenant", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        setMessages(res.data.data);
+        setMessages(res.data.messages || []);
       } catch (err) {
         console.log("Error", err.res?.data || err.message);
         toast.error(err.response?.data?.message || "failed fetch message")
@@ -43,16 +43,16 @@ export default function OwnerMessages() {
               </p>
 
               <p className="text-sm text-gray-500">
-                Property: {msg.property?.title}
+                Property: {msg.property?.title || "General"}
               </p>
 
               <p className="mt-2">{msg.message}</p>
 
               <p className="text-xs text-gray-400 mt-2">
                 {new Date(msg.createdAt).toLocaleString("en-IN", {
-                dateStyle: "medium",
-                timeStyle: "short", })
-                }
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
               </p>
             </div>
           ))}

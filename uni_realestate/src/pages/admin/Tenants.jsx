@@ -161,10 +161,19 @@ export function Tenants() {
                     <TableCell>
                       <div className="text-sm">
                         <p className="text-slate-900">
-                          {new Date(tenant.leaseStart).toLocaleDateString()}
+                          {new Date(tenant.leaseStart).toLocaleString("en-IN", {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          })}
                         </p>
                         <p className="text-slate-500">
-                          to {new Date(tenant.leaseEnd).toLocaleDateString()}
+                          to{" "}
+                          {new Date(tenant.leaseEnd).toLocaleString("en-IN", {
+                              dateStyle: "medium",
+                              timeStyle: "short",
+                              }
+                            )
+                          }
                         </p>
                       </div>
                     </TableCell>
@@ -203,15 +212,13 @@ export function Tenants() {
                   </TableRow>
                 )}
               </TableBody>
-              <div className="flex gap-4">
-                <div>Total: {counts.total}</div>
-                <div className="text-green-600">Active: {counts.active}</div>
-                <div className="text-yellow-600">
-                  Upcoming: {counts.upcoming}
-                </div>
-                <div className="text-red-600">Expired: {counts.expired}</div>
-              </div>
             </Table>
+            <div className="flex gap-4">
+              <div>Total: {counts.total}</div>
+              <div className="text-green-600">Active: {counts.active}</div>
+              <div className="text-yellow-600">Upcoming: {counts.upcoming}</div>
+              <div className="text-red-600">Expired: {counts.expired}</div>
+            </div>
           </div>
         </CardContent>
       </Card>

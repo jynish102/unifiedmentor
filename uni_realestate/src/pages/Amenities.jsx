@@ -158,8 +158,21 @@ export default function Amenities() {
                       <div className="flex items-center gap-2">
                         <Clock size={16} />
                         <span>
-                          {amenity.operatingHours.start} -{" "}
-                          {amenity.operatingHours.end}
+                          {new Date(
+                            `1970-01-01T${amenity.operatingHours.start}`,
+                          ).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                          {" - "}
+                          {new Date(
+                            `1970-01-01T${amenity.operatingHours.end}`,
+                          ).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
                         </span>
                       </div>
                     )}
@@ -171,9 +184,7 @@ export default function Amenities() {
                       variant="outline"
                       size="sm"
                       className="flex-1"
-                      onClick={() =>
-                        navigate(`/login`)
-                      }
+                      onClick={() => navigate(`/login`)}
                     >
                       <Eye size={14} />
                       View

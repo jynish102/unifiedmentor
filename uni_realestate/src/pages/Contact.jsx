@@ -222,10 +222,7 @@ const handleSubmit = async (e) => {
                 className="w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">Select Inquiry Type</option>
-                <option value="buy property">Buy Property</option>
-                <option value="sell property">Sell Property</option>
-                <option value="rent property">Rent Property</option>
-                <option value=" schedule visit ">Schedule Site Visit</option>
+                <option value="accept my property request">Accept My property Request </option>
                 <option value="reactivate account">Reactivate Account</option>
                 <option value="other">Other</option>
               </select>

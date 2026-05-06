@@ -13,7 +13,10 @@ import {
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
+
 
 const navItems = [
   { path: "/admin/admin-dashboard", label: "Admin Dashboard", icon: LayoutDashboard },
@@ -28,6 +31,27 @@ const navItems = [
 export function AdminDashboardLayout() {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  //handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
+  const dropdownRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -106,8 +130,34 @@ export function AdminDashboardLayout() {
               <Button variant="ghost" size="icon">
                 <Bell size={20} />
               </Button>
-              <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white">
-                JD
+              <div className="relative" ref={dropdownRef}>
+                <div
+                  onClick={() => setOpen(!open)}
+                  className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white"
+                >
+                  JD
+                </div>
+
+                {open && (
+                  <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-50">
+                    <Button
+                      onClick={() => {
+                        navigate("/admin/profile");
+                        setOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                    >
+                      Profile
+                    </Button>
+
+                    <Button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

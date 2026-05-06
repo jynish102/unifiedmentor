@@ -1,5 +1,6 @@
 const Message = require("../models/Message");
 const Property = require("../models/Property");
+const Booking = require("../models/Booking")
 
 exports.contactOwner = async (req, res) => {
   try {
@@ -50,25 +51,29 @@ exports.contactTenant = async (req, res) => {
     const { tenantId, propertyId, subject, message } = req.body;
 
     // 1. Validate
-    if (!tenantId || !message) {
+    if (!tenantId || !message || !subject) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    // 2. Optional: verify tenant actually booked owner property ✅ (important)
-    const booking = await Booking.findOne({
-      user: tenantId,
-      property: propertyId,
-    }).populate("property");
+    // 2. Optional: verify tenant actually booked owner property 
+    let booking = null;
+    if(propertyId){
+       const booking = await Booking.findOne({
+         user: tenantId,
+         property: propertyId,
+       }).populate("property");
 
-    if (!booking || booking.property.owner.toString() !== ownerId) {
-      return res.status(403).json({ message: "Not authorized" });
+       if (!booking || booking.property.owner.toString() !== ownerId) {
+         return res.status(403).json({ message: "Not authorized" });
+       }
+
     }
-
+   
     // 3. Create message
     const newMessage = await Message.create({
       sender: ownerId,
       receiver: tenantId,
-      property: propertyId,
+      property: propertyId || "",
       subject,
       message,
       type: "owner-to-tenant", 
@@ -85,6 +90,7 @@ exports.contactTenant = async (req, res) => {
   }
 };
 
+//get owner msg from tenant
 exports.getOwnerMessages = async (req, res) => {
   try {
     if (req.user.role !== "owner") {
@@ -95,6 +101,7 @@ exports.getOwnerMessages = async (req, res) => {
 
     const messages = await Message.find({ receiver: ownerId })
       .populate("sender", "fullname email")
+      .populate("receiver", "fullname email")
       .populate("property", "title")
       .sort({ createdAt: -1 });
 
@@ -104,6 +111,31 @@ exports.getOwnerMessages = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// get tenant msf from owner
+exports.getTenantMessages = async (req, res) => {
+  try {
+     if (req.user.role !== "tenant") {
+       return res.status(403).json({ message: "Access denied" });
+     }
+    const tenantId = req.user.id; // logged-in tenant
+
+    const messages = await Message.find({ receiver: tenantId })
+
+      .populate("sender", "fullname email")
+      .populate("receiver", "fullname email")
+      .populate("property", "title")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      messages,
+    });
+  } catch (err) {
+    console.error("Error", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };

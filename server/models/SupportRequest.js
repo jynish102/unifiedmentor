@@ -22,7 +22,7 @@ const supportRequestSchema = new mongoose.Schema(
 
     inquiryType: {
       type: String,
-      enum: ["buy property", "sell property", "rent property", "schedule visit", "reactivate account" , "other"],
+      enum: ["accept my property request", "reactivate account" , "other"],
       default: "buy property",
     },
 

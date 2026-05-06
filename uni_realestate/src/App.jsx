@@ -24,8 +24,8 @@ import { Tenants } from "./pages/admin/Tenants";
 import { Amenities } from "./pages/admin/Amenities";
 import Maintenance  from "./pages/admin/Maintenance";
 import PropertyDetails from "./pages/admin/PropertyDetails";
-import AddProperty from "./pages/admin/AddProperty";
-import AddAmenity from "./pages/admin/AddAmenity";
+import AdminProfile from "./pages/admin/AdminProfile";
+import AddAmenity from "./pages/admin/AdminProfile";
 import AmenityDetails from "./pages/admin/AmenityDetails";
 import BookingRequests from "./pages/admin/BookingRequests";
 import SupportRequest from "./pages/admin/SupportRequests";
@@ -54,9 +54,9 @@ import TenantAmenities  from "./pages/tenants/TenantAmenities";
 import TenantAmenityDetails from "./pages/tenants/AmenityDetails";
 import AmenityBooking from "./pages/tenants/AmenityBooking";
 import AllBooking from "./pages/tenants/AllBookings";
+import TenantMessage from "./pages/tenants/Message";
 import  CreateMaintenance   from "./pages/tenants/CreateMaintenance";
 import TenantMaintenance  from "./pages/tenants/TenantMaintenance";
-
 import StaffProfile from "./pages/staff/StaffProfile";
 import StaffMaintenance from "./pages/staff/AssignMaintenance";
 
@@ -98,11 +98,8 @@ function App() {
           <Route path="/admin" element={<AdminDashboardLayout />}>
             <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
             <Route path="properties" element={<Properties />} />
-            <Route path="properties/add-property" element={<AddProperty />} />
-            <Route
-              path="/admin/properties/edit/:id"
-              element={<AddProperty />}
-            />
+            <Route path="/admin/profile" element={<AdminProfile />} />
+           
             <Route path="/admin/properties/:id" element={<PropertyDetails />} />
             <Route path="amenities" element={<Amenities />} />
             <Route
@@ -177,6 +174,7 @@ function App() {
               element={<AmenityBooking />}
             />
             <Route path="/tenant/bookings" element={<AllBooking />} />
+            <Route path="/tenant/message" element={<TenantMessage/>} />
             <Route
               path="/tenant/maintenance/create/:type/:id"
               element={<CreateMaintenance />}

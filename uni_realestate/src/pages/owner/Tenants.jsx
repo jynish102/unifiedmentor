@@ -89,12 +89,10 @@ export default function Tenants() {
       await API.post(
         "/messages/contact-tenant",
         {
-          
-        propertyId: selectedTenant.propertyId,
-        subject: form.subject,
-        message: form.message,
-        receiver: selectedTenant._id,
-      
+          propertyId: selectedTenant.propertyId,
+          subject: form.subject,
+          message: form.message,
+          tenantId: selectedTenant._id,
         },
         {
           headers: {
@@ -103,7 +101,7 @@ export default function Tenants() {
         },
       );
 
-      setMessage("");
+      setForm({ subject: "", message: "" });
       setIsModalOpen(false);
 
       toast.success("Message sent");

@@ -121,7 +121,7 @@ export default function StaffMaintenance() {
         },
       );
 
-      // 2️ Update status
+      // 2 Update status
       await API.put(
         `/maintenance/${id}/status`,
         { status: "completed" },

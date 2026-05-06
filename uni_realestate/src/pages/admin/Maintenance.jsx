@@ -60,7 +60,7 @@ export default function Maintenance() {
     return matchesSearch && matchesStatus;
   });
 
-  // ✅ COLORS
+  //  COLORS
   const getPriorityColor = (priority) => {
     switch (priority) {
       case "low":

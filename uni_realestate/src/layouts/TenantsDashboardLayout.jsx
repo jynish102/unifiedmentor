@@ -7,6 +7,7 @@ import {
   Menu,
   Bell,
   Dumbbell,
+MailIcon
 } from "lucide-react";
 
 import { Button } from "../components/ui/button";
@@ -21,6 +22,7 @@ const navigation = [
   { path: "/tenant/properties", name: "Properties", icon: Home },
   { path: "/tenant/amenities", name: "Amenities", icon: Dumbbell },
   { path: "/tenant/bookings", name: "Bookings", icon: Calendar },
+  { path: "/tenant/message", name: "Message", icon: MailIcon },
   { path: "/tenant/maintenance", name: "Maintenance", icon: Wrench },
   { path: "/tenant/profile", name: "Profile", icon: User },
 ];

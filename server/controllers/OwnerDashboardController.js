@@ -94,6 +94,29 @@ exports.getOwnerDashboard = async (req, res) => {
         },
       },
     ]);
+
+    // 5. Property Change
+    const currentMonthProperties = await Property.countDocuments({
+      owner: ownerId,
+      createdAt: { $gte: startOfCurrentMonth },
+    });
+
+    const lastMonthProperties = await Property.countDocuments({
+      owner: ownerId,
+      createdAt: {
+        $gte: startOfLastMonth,
+        $lte: endOfLastMonth,
+      },
+    });
+
+    let propertyChange = 0;
+
+    if (lastMonthProperties > 0) {
+      propertyChange = (
+        ((currentMonthProperties - lastMonthProperties) / lastMonthProperties) *
+        100
+      ).toFixed(1);
+    }
     
     // console.log("unitsData:", unitsData);
     // console.log("totalUnits:", totalUnits);
@@ -107,6 +130,27 @@ exports.getOwnerDashboard = async (req, res) => {
     });
 
     const totalTenants = tenants.length;
+
+    // tenant calculation
+    const currentTenants = totalTenants;
+
+    const lastMonthTenants = await Booking.distinct("user", {
+      property: { $in: propertyIds },
+      status: "approved",
+      createdAt: {
+        $gte: new Date(currentYear, currentMonth - 2, 1),
+        $lt: new Date(currentYear, currentMonth - 1, 1),
+      },
+    });
+
+    const prevTenantCount = lastMonthTenants.length;
+
+    let tenantChange = "0%";
+
+    if (prevTenantCount > 0) {
+      const diff = ((currentTenants - prevTenantCount) / prevTenantCount) * 100;
+      tenantChange = `${diff > 0 ? "+" : ""}${diff.toFixed(1)}%`;
+    }
 
     const revenueResult = await Booking.aggregate([
       {
@@ -190,6 +234,38 @@ exports.getOwnerDashboard = async (req, res) => {
 
     const monthlyExpectedRevenue = currentMonthRevenue[0]?.total || 0;
 
+    //last month revenue
+    const lastMonthRevenue = await Booking.aggregate([
+      {
+        $match: {
+          property: { $in: propertyIds },
+          status: "approved",
+          createdAt: {
+            $gte: new Date(currentYear, currentMonth - 2, 1),
+            $lt: new Date(currentYear, currentMonth - 1, 1),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$rentAmount" },
+        },
+      },
+    ]);
+
+    const current = currentMonthRevenue[0]?.total || 0;
+    const previous = lastMonthRevenue[0]?.total || 0;
+
+    let revenueChange = "0%";
+
+    if (previous > 0) {
+      const diff = ((current - previous) / previous) * 100;
+      revenueChange = `${diff > 0 ? "+" : ""}${diff.toFixed(1)}%`;
+    } else if (current > 0) {
+      revenueChange = "+100%"; // or "New"
+    }
+
     /*------------------------- Maintenance Data-------------------------------------- */
     const totalIssues = await Maintenance.countDocuments({
       property: { $in: propertyIds },
@@ -256,6 +332,9 @@ exports.getOwnerDashboard = async (req, res) => {
 
       properties: {
         total: totalProperties,
+        revenueChange,
+        tenantChange,
+        propertyChange,
         totalUnits,
         occupiedUnits,
         occupancyRate,

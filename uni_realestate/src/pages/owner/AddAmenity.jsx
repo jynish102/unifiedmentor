@@ -191,12 +191,12 @@ export default function AddAmenity() {
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Add Amenity</h2>
-      <button
+      <Button
         onClick={() => navigate("/owner/amenities")}
         className="bg-gray-500 text-white px-3 py-1 rounded"
       >
         Cancel
-      </button>
+      </Button>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input

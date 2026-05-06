@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../../components/ui/button";
 
 export default function AmenityDetails() {
   const { id } = useParams();
@@ -31,18 +32,22 @@ export default function AmenityDetails() {
 
   return (
     <div className="p-6 space-y-4">
-      <button
-        onClick={() => navigate(`/tenant/amenities/booking/${amenity._id}`)}
-        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-      >
-        Book Amenity
-      </button>
-      <button
-        onClick={() => navigate("/tenant/amenities")}
-        className="bg-gray-500 text-white px-3 py-1 rounded"
-      >
-        Close
-      </button>
+      <div className="flex gap-2">
+        {" "}
+        <Button
+          onClick={() => navigate(`/tenant/amenities/booking/${amenity._id}`)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+        >
+          Book Amenity
+        </Button>
+        <Button
+          onClick={() => navigate("/tenant/amenities")}
+          className="bg-gray-500 text-white px-3 py-1 rounded"
+        >
+          Close
+        </Button>
+      </div>
+
       {/* Title */}
       <h2 className="text-2xl font-bold">{amenity.name}</h2>
 

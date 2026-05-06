@@ -22,28 +22,19 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Validation for fullname
     if (name === "fullname") {
       const regex = /^[A-Za-z\s]*$/;
-
-      if (!regex.test(value)) {
-        setErrors((prev) => ({
-          ...prev,
-          fullname: "Only letters and spaces allowed",
-        }));
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          fullname: "",
-        }));
-      }
+      if (!regex.test(value)) return;
     }
 
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
 
+    // Create updated form
     const updatedForm = {
       ...formData,
       [name]: value,
@@ -51,7 +42,7 @@ const Register = () => {
 
     setFormData(updatedForm);
 
-    // Trigger shake only when confirmPassword changes
+    // Password match shake effect
     if (
       name === "confirmPassword" &&
       updatedForm.password !== value &&
@@ -63,34 +54,19 @@ const Register = () => {
         setShake(false);
       }, 400);
     }
-
-    //--------------------------------name validation----------------------------
-    
-
-  //------------------------------form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await API.post("/auth/register", {
-        fullname: formData.fullname,
-        email: formData.email,
-        phone: formData.phone,
-        role: formData.role,
-        password: formData.password,
-      });
-
-      toast.success("User Registered ");
-
-       navigate("/Login");
-
-      console.log(res.data);
-    } catch (err) {
-      console.log("Error" , err.response?.data || err.message);
-      toast.error("Registration Failed ");
-    }
   };
 
-  {/*======================password======================== */}
+  {/*-----------name validation--------------------- */}
+  const validateName = (name) => {
+    const regex = /^[A-Za-z\s]+$/;
+    return regex.test(name);
+  };
+
+  const isValidName = validateName(formData.fullname);
+
+  {
+    /*======================password======================== */
+  }
   const getPasswordStrength = (password) => {
     const rules = {
       length: password.length >= 8,
@@ -109,7 +85,7 @@ const Register = () => {
     return { strength, rules, passedRules };
   };
 
-  {/*======================checkpassword======================== */  }
+  {/*======================checkpassword======================== */}
   const passwordsMatch =
     formData.confirmPassword && formData.password === formData.confirmPassword;
 
@@ -129,21 +105,47 @@ const Register = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [formData.confirmPassword, formData.password]);  
-    {/*======================emaill validation======================== */}
-   const validateEmail = (email) => {
-     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
-     return emailRegex.test(email);
-   };
-    const emailIsValid = validateEmail(formData.email);
+  }, [formData.confirmPassword, formData.password]);
+  {
+    /*======================email validation======================== */
+  }
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+    return emailRegex.test(email);
+  };
+  const emailIsValid = validateEmail(formData.email);
 
-  
-  {/*======================phone validation======================== */}
+  {
+    /*======================phone validation======================== */
+  }
   const validatePhone = (phone) => {
     const phoneRegex = /^[0-9]{10}$/;
     return phoneRegex.test(phone);
   };
   const phoneIsValid = validatePhone(formData.phone);
+
+  //------------------------------form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await API.post("/auth/register", {
+        fullname: formData.fullname,
+        email: formData.email,
+        phone: formData.phone,
+        role: formData.role,
+        password: formData.password,
+      });
+
+      toast.success("User Registered ");
+
+      navigate("/Login");
+
+      console.log(res.data);
+    } catch (err) {
+      console.log("Error", err.response?.data || err.message);
+      toast.error(err.response?.data?.message || "Registration Failed ");
+    }
+  };
 
   return (
     <div
@@ -172,8 +174,24 @@ const Register = () => {
               value={formData.fullname}
               onChange={handleChange}
               placeholder="Full Name"
-              className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400"
+              className={`w-full px-4 py-3 rounded-xl bg-white/20 text-white border focus:outline-none focus:ring-2 ${
+                formData.fullname
+                  ? isValidName
+                    ? "border-green-400 focus:ring-green-400"
+                    : "border-red-500 focus:ring-red-400"
+                  : "border-white/30 focus:ring-purple-400"
+              }`}
             />
+
+            {formData.fullname && (
+              <p
+                className={`mt-2 text-sm ${isValidName ? "text-green-400" : "text-red-400"}`}
+              >
+                {isValidName
+                  ? "✓ Valid name"
+                  : "✗ Only letters and spaces allowed"}
+              </p>
+            )}
 
             <input
               type="email"
@@ -239,10 +257,15 @@ const Register = () => {
               name="role"
               className="w-full px-4 py-3 rounded-xl bg-white/20 text-white border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400"
             >
-              <option className="text-black" value="">Select Role</option>
-              <option className="text-black" value="tenant">Tenant</option>
-              <option className="text-black" value="owner">Owner</option>
-              
+              <option className="text-black" value="">
+                Select Role
+              </option>
+              <option className="text-black" value="tenant">
+                Tenant
+              </option>
+              <option className="text-black" value="owner">
+                Owner
+              </option>
             </select>
 
             <div className="relative">
@@ -391,6 +414,6 @@ const Register = () => {
       </div>
     </div>
   );
-};
+};;
 
 export default Register;

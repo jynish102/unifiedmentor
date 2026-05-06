@@ -123,7 +123,16 @@ export  function OwnerDashboard() {
             <div className="text-2xl font-bold">
               {dashboard?.properties?.total || 0}
             </div>
-            <p className="text-xs text-gray-600 mt-1">+2 from last month</p>
+            <p
+              className={`text-xs mt-1 ${
+                dashboard?.properties?.propertyChange >= 0
+                  ? "text-green-600"
+                  : "text-red-500"
+              }`}
+            >
+              {dashboard?.properties?.propertyChange >= 0 ? "+" : ""}
+              {dashboard?.properties?.propertyChange || 0} from last month
+            </p>
           </CardContent>
         </Card>
 

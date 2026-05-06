@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import API from "../../utils/api"
 import toast from "react-hot-toast"
+import { Button } from "../../components/ui/button";
 
 export default function SupportRequest(){
     const [requests, setRequests] = useState([]);
@@ -78,22 +79,22 @@ export default function SupportRequest(){
               <div className="flex flex-col gap-2">
                 {/* Reactivate button */}
                 {req.inquiryType === "reactivate account" && (
-                  <button
+                  <Button
                     onClick={() => handleReactivate(req.email)}
                     className="bg-green-600 text-white px-3 py-1 rounded"
                   >
                     Reactivate
-                  </button>
+                  </Button>
                 )}
 
                 {/* Resolve button */}
                 {req.status !== "resolved" && (
-                  <button
+                  <Button
                     onClick={() => handleResolve(req._id || req.id)}
                     className="bg-blue-600 text-white px-3 py-1 rounded"
                   >
                     Mark Resolved
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>

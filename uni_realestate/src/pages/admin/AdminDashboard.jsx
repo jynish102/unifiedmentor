@@ -97,7 +97,7 @@ export default function AdminDashboard() {
             const Icon = iconMap[stat.icon] || Building2;
 
             return (
-              <Card key={stats.title}>
+              <Card key={stat.title}>
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -131,7 +131,7 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      {/* 🔹 Charts */}
+      {/*  Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Revenue */}
         <Card>
@@ -189,21 +189,32 @@ export default function AdminDashboard() {
                 recentActivity.map((activity) => (
                   <div
                     key={activity._id || activity.time}
-                    className="flex items-start gap-4 p-3 rounded-lg hover:bg-slate-50"
+                    className="flex items-start gap-3 p-4 bg-white rounded-xl border hover:shadow-sm transition"
                   >
-                    <div className="w-2 h-2 rounded-full bg-blue-500 mt-2" />
-                    <div className="flex-1">
-                      <p
+                    {/* Left dot */}
+                    <div className="flex flex-col items-center">
+                      <div
                         className={`w-2 h-2 rounded-full mt-2 ${
                           typeColor[activity.type] || "bg-gray-400"
                         }`}
-                      >
+                      />
+                      <div className="w-px h-full bg-gray-200 mt-1" />
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1">
+                      {/* Title */}
+                      <p className="text-sm font-semibold text-gray-900">
                         {activity.type}
                       </p>
-                      <p className="text-sm text-slate-600">
+
+                      {/* Description */}
+                      <p className="text-sm text-gray-600 mt-1">
                         {activity.description}
                       </p>
-                      <p className="text-xs text-slate-400 mt-1">
+
+                      {/* Time */}
+                      <p className="text-xs text-gray-400 mt-2">
                         {new Date(activity.time).toLocaleString("en-IN", {
                           day: "2-digit",
                           month: "short",
@@ -245,7 +256,11 @@ export default function AdminDashboard() {
                     {propertyTypeData.map((entry) => (
                       <Cell
                         key={entry.name}
-                        fill={COLORS[entry.name % COLORS.length]}
+                        fill={
+                          COLORS[
+                            propertyTypeData.indexOf(entry) % COLORS.length
+                          ]
+                        }
                       />
                     ))}
                   </Pie>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import toast from "react-hot-toast";
+import { Button } from "../../components/ui/button";
 
 export default function StaffList() {
   const [staff, setStaff] = useState([]);
@@ -101,7 +102,7 @@ export default function StaffList() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-semibold">My Staff</h1>
 
-        <button
+        <Button
           onClick={() => {
             setOpen(true);
            generatePassword(); // auto password on open
@@ -109,7 +110,7 @@ export default function StaffList() {
           className="bg-blue-600 text-white px-4 py-2 rounded"
         >
            Add Staff
-        </button>
+        </Button>
       </div>
 
       {/* LIST */}
@@ -125,7 +126,7 @@ export default function StaffList() {
         ))}
       </div>
 
-      {/* 🔥 MODAL */}
+   
       {open && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
           <div className="bg-white rounded-xl p-6 w-[400px] space-y-4">
@@ -171,28 +172,28 @@ export default function StaffList() {
                 value={form.password}
                 className="w-full border p-2 rounded bg-gray-100"
               />
-              <button
+              <Button
                 onClick={generatePassword}
                 className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
               >
                 Generate Password
-              </button>
+              </Button>
             </div>
 
             <div className="flex justify-end gap-2">
-              <button
+              <Button
                 onClick={() => setOpen(false)}
                 className="px-4 py-2 border rounded"
               >
                 Cancel
-              </button>
+              </Button>
 
-              <button
+              <Button
                 onClick={handleSubmit}
                 className="bg-blue-600 text-white px-4 py-2 rounded"
               >
                 Save
-              </button>
+              </Button>
             </div>
           </div>
         </div>

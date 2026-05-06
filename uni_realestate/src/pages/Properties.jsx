@@ -170,7 +170,7 @@ export default function Properties() {
                       size="sm"
                       className="flex-1"
                       onClick={() =>
-                        navigate(`/admin/properties/${property._id}`)
+                        navigate(`/login`)
                       }
                     >
                       <Eye size={14} />

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../utils/api";
 import toast from "react-hot-toast";
+import { Button } from "../../components/ui/button";
 
 export default function CreateMaintenance() {
   const { type, id } = useParams();
@@ -121,7 +122,7 @@ export default function CreateMaintenance() {
         </select>
 
         {/* BUTTON */}
-        <button
+        <Button
           onClick={handleSubmit}
           disabled={loading}
           className={`w-full py-2 rounded text-white transition ${
@@ -131,7 +132,7 @@ export default function CreateMaintenance() {
           }`}
         >
           {loading ? "Submitting..." : "Submit Request"}
-        </button>
+        </Button>
       </div>
     </div>
   );

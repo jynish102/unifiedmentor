@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import toast from "react-hot-toast";
+import { Button } from "../../components/ui/button";
 
 export default function OwnerMaintenance() {
   const [data, setData] = useState([]);
@@ -213,12 +214,12 @@ export default function OwnerMaintenance() {
                         </option>
                       ))}
                     </select>
-                    <button
+                    <Button
                       onClick={() => assignMaintenance(item._id)}
                       className="px-3 py-1 bg-purple-600 text-white rounded"
                     >
                       Assign
-                    </button>
+                    </Button>
                   </div>
                 )}
 
@@ -232,12 +233,12 @@ export default function OwnerMaintenance() {
                       onClick={(e) => e.stopPropagation()}
                       className="max-w-[90%] max-h-[90%] rounded shadow-lg"
                     />
-                    <button
+                    <Button
                       className="absolute top-5 right-5 text-red-500 text-3xl"
                       onClick={() => setPreviewImg(null)}
                     >
                       ✕
-                    </button>
+                    </Button>
                   </div>
                 )}
 

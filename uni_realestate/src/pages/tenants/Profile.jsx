@@ -365,13 +365,13 @@ export default function TenantProfile() {
                   )}
 
                   <div className="absolute top-4 right-4">
-                    <button
+                    <Button
                       onClick={handleLogout}
                       className="p-2 rounded-full hover:bg-red-100 transition"
                       title="Logout"
                     >
                       <LogOut className="w-6 h-6 text-red-600" />
-                    </button>
+                    </Button>
                   </div>
 
                   <p className="text-gray-500 capitalize">{tenant.role}</p>
@@ -406,26 +406,26 @@ export default function TenantProfile() {
 
                   <div>
                     {!isEditing ? (
-                      <button
+                      <Button
                         onClick={handleEdit}
                         className="px-4 py-2 bg-blue-600 text-white rounded-md"
                       >
                         Edit Profile
-                      </button>
+                      </Button>
                     ) : (
                       <div className="flex gap-2">
-                        <button
+                        <Button
                           onClick={handleSave}
                           className="px-4 py-2 bg-green-600 text-white rounded-md"
                         >
                           Save
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                           onClick={handleCancel}
                           className="px-4 py-2 bg-gray-800 text-white rounded-md"
                         >
                           Cancel
-                        </button>
+                        </Button>
                       </div>
                     )}
                   </div>
@@ -589,7 +589,7 @@ export default function TenantProfile() {
             {Object.keys(settings).map((key) => (
               <div key={key} className="flex justify-between items-center">
                 <span className="capitalize">{key} Alerts</span>
-                <button
+                <Button
                   onClick={() => handleToggle(key)}
                   className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
                     settings[key] ? "bg-blue-600" : "bg-gray-300"
@@ -600,7 +600,7 @@ export default function TenantProfile() {
                       settings[key] ? "translate-x-6" : ""
                     }`}
                   />
-                </button>
+                </Button>
               </div>
             ))}
           </div>

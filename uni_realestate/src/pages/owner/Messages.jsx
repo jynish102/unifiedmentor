@@ -18,7 +18,7 @@ export default function OwnerMessages() {
 
         setMessages(res.data.data);
       } catch (err) {
-        console.log("Error", err.respose?.data || err.message);
+        console.log("Error", err.res?.data || err.message);
         toast.error(err.response?.data?.message || "failed fetch message")
       }
     };

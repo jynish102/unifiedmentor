@@ -73,12 +73,12 @@ export default function AddBooking() {
     <div className="p-6 max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Book Property</h2>
 
-      <button
+      <Button
         onClick={() => navigate(-1)}
         className="bg-gray-500 text-white px-3 py-1 rounded mb-3"
       >
         Cancel
-      </button>
+      </Button>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Start Date */}

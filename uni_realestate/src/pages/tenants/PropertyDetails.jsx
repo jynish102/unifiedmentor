@@ -71,23 +71,27 @@ export default function PropertyDetails() {
     <div className="p-6 space-y-4">
       <h2 className="text-2xl font-bold">{property.title}</h2>
 
-      <button
-        onClick={() => navigate(`/tenant/properties/booking/${property._id}`)}
-        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-      >
-        Book Property
-      </button>
-
-      <Button onClick={() => setOpen(true)} className="bg-blue-600 text-white">
-        Contact Owner
-      </Button>
-
-      <button
-        onClick={() => navigate("/tenant/properties")}
-        className="bg-gray-500 text-white px-3 py-1 rounded"
-      >
-        Close
-      </button>
+      <div className="flex gap-2">
+        {" "}
+        <Button
+          onClick={() => navigate(`/tenant/properties/booking/${property._id}`)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+        >
+          Book Property
+        </Button>
+        <Button
+          onClick={() => setOpen(true)}
+          className="bg-blue-600 text-white"
+        >
+          Contact Owner
+        </Button>
+        <Button
+          onClick={() => navigate("/tenant/properties")}
+          className="bg-gray-500 text-white px-3 py-1 rounded"
+        >
+          Close
+        </Button>
+      </div>
 
       <img
         src={getImageUrl(selectedImage || property.images?.[0])}

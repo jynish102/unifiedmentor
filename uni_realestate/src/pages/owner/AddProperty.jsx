@@ -227,114 +227,148 @@ export default function AddProperty() {
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Add Property</h2>
-      <button
+      <Button
         onClick={() => navigate("/owner/properties")}
         className="bg-gray-500 text-white px-3 py-1 rounded"
       >
         Cancel
-      </button>
+      </Button>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          name="title"
-          type="text"
-          placeholder="Title"
-          value={formData.title}
-          onChange={handleChange}
-        />
+      <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm text-gray-600">Title</label>
+            {"  "}
+            <Input
+              name="title"
+              type="text"
+              placeholder="Title"
+              value={formData.title}
+              onChange={handleChange}
+            />
+          </div>
 
-        <Input
-          name="description"
-          type="text"
-          placeholder="Description"
-          value={formData.description}
-          onChange={handleChange}
-        />
+          <div>
+            <label className="text-sm text-gray-600">Description</label>
+            {"  "}
+            <Input
+              name="description"
+              type="text"
+              placeholder="Description"
+              value={formData.description}
+              onChange={handleChange}
+            />
+          </div>
 
-        <Input
-          name="address"
-          type="text"
-          placeholder="Address"
-          value={formData.address}
-          onChange={handleChange}
-        />
+          <div>
+            <label className="text-sm text-gray-600">Address</label>{" "}
+            <Input
+              name="address"
+              type="text"
+              placeholder="Address"
+              value={formData.address}
+              onChange={handleChange}
+            />
+          </div>
 
-        <Input
-          name="city"
-          type="text"
-          placeholder="City"
-          value={formData.city}
-          onChange={handleChange}
-        />
+          <div>
+            <label className="text-sm text-gray-600">City</label>{" "}
+            <Input
+              name="city"
+              type="text"
+              placeholder="City"
+              value={formData.city}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
 
-        <Input
-          name="price"
-          placeholder="Price"
-          type="number"
-          value={formData.price}
-          onChange={handleChange}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {" "}
+          <div>
+            <label className="text-sm text-gray-600">Price</label>{" "}
+            <Input
+              name="price"
+              placeholder="Price"
+              type="number"
+              value={formData.price}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label className="text-sm text-gray-600">Deposit</label>{" "}
+            <Input
+              name="deposit"
+              placeholder="Deposit"
+              type="number"
+              value={formData.deposit}
+              onChange={handleChange}
+            />
+          </div>
+          {/* Payment Frequency */}
+          {formData.listingType === "rent" && (
+            <div>
+              <label className="text-sm text-gray-600">Payment Frequency</label>{" "}
+              <select
+                name="paymentFrequency"
+                value={formData.paymentFrequency || "monthly"}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+              >
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+                <option value="daily">Daily</option>
+              </select>
+            </div>
+          )}
+        </div>
 
-        <Input
-          name="deposit"
-          placeholder="Deposit"
-          type="number"
-          value={formData.deposit}
-          onChange={handleChange}
-        />
-
-        {/* Payment Frequency */}
-        {formData.listingType === "rent" && (
-          <select
-            name="paymentFrequency"
-            value={formData.paymentFrequency || "monthly"}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          >
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-            <option value="daily">Daily</option>
-          </select>
-        )}
-       
-
-        {/* Category */}
-        <select
-          name="category"
-          value={formData.category || "residential"}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        >
-          <option value="residential">Residential</option>
-          <option value="commercial">Commercial</option>
-        </select>
-
-        {/* Property Type */}
-        <select
-          name="propertyType"
-          value={formData.propertyType || "Apartment"}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        >
-          <option value="Apartment">Apartment</option>
-          <option value="House">House</option>
-          <option value="Villa">Villa</option>
-          <option value="Shop">Shop</option>
-          <option value="Warehouse">Warehouse</option>
-          <option value="land">Land</option>
-          <option value="others">Others</option>
-        </select>
-
-        {/* Listing Type */}
-        <select
-          name="listingType"
-          value={formData.listingType || "rent"}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        >
-          <option value="rent">Rent</option>
-          <option value="sale">Sale</option>
-        </select>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <label className="text-sm text-gray-600">Property Category</label>{" "}
+          <div>
+            {/* Category */}
+            <select
+              name="category"
+              value={formData.category || "residential"}
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            >
+              <option value="residential">Residential</option>
+              <option value="commercial">Commercial</option>
+            </select>
+          </div>
+          <div>
+            <label className="text-sm text-gray-600">Property Type</label>{" "}
+            {/* Property Type */}
+            <select
+              name="propertyType"
+              value={formData.propertyType || "Apartment"}
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            >
+              <option value="Apartment">Apartment</option>
+              <option value="House">House</option>
+              <option value="Villa">Villa</option>
+              <option value="Shop">Shop</option>
+              <option value="Warehouse">Warehouse</option>
+              <option value="land">Land</option>
+              <option value="others">Others</option>
+            </select>
+          </div>
+          <div>
+            <label className="text-sm text-gray-600">Listing Type</label>{" "}
+            {/* Listing Type */}
+            <select
+              name="listingType"
+              value={formData.listingType || "rent"}
+              onChange={handleChange}
+              className="w-full border p-2 rounded"
+            >
+              <option value="rent">Rent</option>
+              <option value="sale">Sale</option>
+            </select>
+          </div>
+        </div>
 
         {/* Bedrooms / Bathrooms */}
         <Input

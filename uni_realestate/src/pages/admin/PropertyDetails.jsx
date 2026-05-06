@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../../components/ui/button";
 
 
 export default function PropertyDetails() {
@@ -33,12 +34,13 @@ export default function PropertyDetails() {
   return (
     <div className="p-6 space-y-4">
       <h2 className="text-2xl font-bold">{property.title}</h2>
-      <button
+
+      <Button
         onClick={() => navigate("/admin/properties")}
         className="bg-gray-500 text-white px-3 py-1 rounded"
       >
         Close
-      </button>
+      </Button>
       <img
         src={getImageUrl(selectedImage || property.images?.[0])}
         className="w-full max-w-md rounded-lg"

@@ -172,7 +172,7 @@ export default function Amenities() {
                       size="sm"
                       className="flex-1"
                       onClick={() =>
-                        navigate(`/admin/amenities/${amenity._id}`)
+                        navigate(`/login`)
                       }
                     >
                       <Eye size={14} />

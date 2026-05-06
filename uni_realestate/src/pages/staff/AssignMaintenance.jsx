@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import toast from "react-hot-toast";
+import { Button } from "../../components/ui/button";
 
 export default function StaffMaintenance() {
   const [data, setData] = useState([]);
@@ -254,16 +255,16 @@ export default function StaffMaintenance() {
                 {/*  ACTION BUTTONS (STAFF ONLY) */}
                 <div className="flex gap-2 mt-4">
                   {item.status === "assigned" && (
-                    <button
+                    <Button
                       onClick={() => updateStatus(item._id, "in-progress")}
                       className="px-3 py-1 bg-blue-600 text-white rounded"
                     >
                       Start Work
-                    </button>
+                    </Button>
                   )}
 
                   {item.status === "in-progress" && (
-                    <button
+                    <Button
                       onClick={() =>
                         setCompleteModal({ open: true, id: item._id })
                       }
@@ -277,7 +278,7 @@ export default function StaffMaintenance() {
                       }`}
                     >
                       Complete
-                    </button>
+                    </Button>
                   )}
                 </div>
 
@@ -323,12 +324,12 @@ export default function StaffMaintenance() {
                       className="border p-2 rounded w-full"
                     />
 
-                    <button
+                    <Button
                       onClick={() => uploadProof(item._id)}
                       className="px-3 py-1 bg-purple-600 text-white rounded"
                     >
                       Upload Proof
-                    </button>
+                    </Button>
                   </div>
                 )}
 
@@ -342,12 +343,12 @@ export default function StaffMaintenance() {
                       onClick={(e) => e.stopPropagation()}
                       className="max-w-[90%] max-h-[90%] rounded shadow-lg"
                     />
-                    <button
+                    <Button
                       className="absolute top-5 right-5 text-red-500 text-3xl"
                       onClick={() => setPreviewImg(null)}
                     >
                       ✕
-                    </button>
+                    </Button>
                   </div>
                 )}
 
@@ -380,12 +381,12 @@ export default function StaffMaintenance() {
 
                             {/* DELETE BUTTON */}
                             {item.status === "in-progress" && (
-                              <button
+                              <Button
                                 onClick={() => deleteImage(item._id, img.url)}
                                 className="absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded"
                               >
                                 ✕
-                              </button>
+                              </Button>
                             )}
                           </div>
 
@@ -438,14 +439,14 @@ export default function StaffMaintenance() {
                   <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-lg w-[400px] space-y-4 relative">
                       {/* CLOSE */}
-                      <button
+                      <Button
                         onClick={() =>
                           setCompleteModal({ open: false, id: null })
                         }
                         className="absolute top-2 right-3 text-xl text-gray-600"
                       >
                         ✕
-                      </button>
+                      </Button>
 
                       <h2 className="text-lg font-semibold">
                         Complete Maintenance
@@ -503,12 +504,12 @@ export default function StaffMaintenance() {
                       </div>
 
                       {/* CONFIRM BUTTON */}
-                      <button
+                      <Button
                         onClick={() => handleComplete(completeModal.id)}
                         className="w-full bg-green-600 text-white py-2 rounded"
                       >
                         Confirm Complete
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 )}

@@ -173,7 +173,7 @@ export default function Amenities() {
                       View
                     </Button>
 
-                    <button
+                    <Button
                       variant="outline"
                       size="sm"
                       className="flex-1"
@@ -182,7 +182,7 @@ export default function Amenities() {
                       }
                     >
                       Report Issue
-                    </button>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

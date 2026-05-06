@@ -86,6 +86,12 @@ export default function BookAmenity() {
   return (
     <div className="max-w-2xl mx-auto p-6 shadow rounded-2xl">
       <h1 className="text-2xl font-bold mb-6">Book Amenity</h1>
+      <Button
+        onClick={() => navigate("/tenant/amenities")}
+        className="bg-gray-500 text-white px-3 py-1 rounded"
+      >
+        Cancel
+      </Button>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Date */}

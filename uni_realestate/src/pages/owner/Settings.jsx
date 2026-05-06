@@ -335,13 +335,13 @@ export default function ProfileCard() {
                 </h2>
               )}
               <div className="absolute top-4 right-4">
-                <button
+                <Button
                   onClick={handleLogout}
                   className="p-2 rounded-full hover:bg-red-100 transition"
                   title="Logout"
                 >
                   <LogOutIcon className="w-6 h-6 text-red-600" />
-                </button>
+                </Button>
               </div>
               <p className="text-lg text-gray-500">{user.role}</p>
 
@@ -494,7 +494,7 @@ export default function ProfileCard() {
           {Object.keys(settings).map((key) => (
             <div key={key} className="flex justify-between items-center">
               <span className="capitalize">{key} Alerts</span>
-              <button
+              <Button
                 onClick={() => handleToggle(key)}
                 className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
                   settings[key] ? "bg-blue-600" : "bg-gray-300"
@@ -505,7 +505,7 @@ export default function ProfileCard() {
                     settings[key] ? "translate-x-6" : ""
                   }`}
                 />
-              </button>
+              </Button>
             </div>
           ))}
         </div>

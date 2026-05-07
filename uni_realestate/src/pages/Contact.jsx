@@ -32,9 +32,73 @@ const ContactHeader = () => {
     message: "",
   });
 
+   {
+     /*-----------name validation--------------------- */
+   }
+   const validateName = (name) => {
+     const regex = /^[A-Za-z\s]+$/;
+     return regex.test(name);
+   };
+
+  const isValidName = validateName(formData.fullname);
+
+   {
+     /*======================email validation======================== */
+   }
+   const validateEmail = (email) => {
+     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+     return emailRegex.test(email);
+   };
+   const emailIsValid = validateEmail(formData.email);
+
+
+const domain = formData.email.split("@")[1];
+
+const validDomains = [
+  "gmail.com",
+  "yahoo.com",
+  "outlook.com",
+  "hotmail.com",
+  "icloud.com",
+];
+
+const isCorrectDomain = validDomains.includes(domain);
+
+     {
+       /*======================phone validation======================== */
+     }
+     const validatePhone = (phone) => {
+       const phoneRegex = /^[0-9]{10}$/;
+       return phoneRegex.test(phone);
+     };
+     const phoneIsValid = validatePhone(formData.phone);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Validation for fullname
+    if (name === "fullname") {
+      const regex = /^[A-Za-z\s]*$/;
+      if (!regex.test(value)) return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Create updated form
+    const updatedForm = {
+      ...formData,
+      [name]: value,
+    };
+
+    setFormData(updatedForm);
+
+   
+    
   };
+
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -45,7 +109,7 @@ const handleSubmit = async (e) => {
 
     // clear form after submit
     setFormData({
-      name: "",
+      fullname: "",
       email: "",
       phone: "",
       subject: "",
@@ -57,6 +121,7 @@ const handleSubmit = async (e) => {
     toast.error(err.response?.data?.message || "Failed to send message");
   }
 };
+
 
   return (
     <>
@@ -184,13 +249,28 @@ const handleSubmit = async (e) => {
               {/* Full Name */}
               <input
                 type="text"
-                name="name"
+                name="fullname"
                 placeholder="Full Name"
-                value={formData.name}
+                value={formData.fullname}
                 onChange={handleChange}
                 required
-                className="w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className={`w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-red-900 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                  formData.fullname
+                    ? isValidName
+                      ? "border-green-400 focus:ring-green-400"
+                      : "border-red-500 focus:ring-red-400"
+                    : "border-white/30 focus:ring-purple-400"
+                }`}
               />
+              {formData.fullname && (
+                <p
+                  className={`mt-2 text-sm ${isValidName ? "text-green-400" : "text-red-400"}`}
+                >
+                  {isValidName
+                    ? "✓ Valid name"
+                    : "✗ Only letters and spaces allowed"}
+                </p>
+              )}
 
               {/* Email */}
               <input
@@ -200,8 +280,29 @@ const handleSubmit = async (e) => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className={`w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-red-900 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                  formData.email && isCorrectDomain
+                    ? emailIsValid
+                      ? "border-green-400 focus:ring-green-400"
+                      : "border-red-500 focus:ring-red-400"
+                    : "border-white/30 focus:ring-purple-400"
+                }`}
               />
+              {formData.email && (
+                <p
+                  className={`mt-2 text-sm ${
+                    emailIsValid && isCorrectDomain
+                      ? "text-green-400"
+                      : "text-red-400"
+                  }`}
+                >
+                  {emailIsValid && isCorrectDomain
+                    ? "✓ Valid email address"
+                    : !emailIsValid
+                      ? "✗ Email must be lowercase and valid format"
+                      : "✗ Please check email domain spelling"}
+                </p>
+              )}
 
               {/* Phone */}
               <input
@@ -209,9 +310,32 @@ const handleSubmit = async (e) => {
                 name="phone"
                 placeholder="Phone Number"
                 value={formData.phone}
-                onChange={handleChange}
-                className="w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) => {
+                  const onlyNumbers = e.target.value.replace(/\D/g, "");
+                  handleChange({
+                    target: { name: "phone", value: onlyNumbers },
+                  });
+                }}
+                maxLength={10}
+                className={`w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border  dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                  formData.phone
+                    ? phoneIsValid
+                      ? "border-green-400 focus:ring-green-400"
+                      : "border-red-500 focus:ring-red-400"
+                    : "border-white/30 focus:ring-purple-400"
+                }`}
               />
+              {formData.phone && (
+                <p
+                  className={`mt-2 text-sm ${
+                    phoneIsValid ? "text-green-400" : "text-red-400"
+                  }`}
+                >
+                  {phoneIsValid
+                    ? "✓ Valid phone number"
+                    : "✗ Phone number must be exactly 10 digits"}
+                </p>
+              )}
 
               {/* Inquiry Type Dropdown */}
               <select
@@ -219,10 +343,12 @@ const handleSubmit = async (e) => {
                 value={formData.inquiryType}
                 onChange={handleChange}
                 required
-                className="w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className={`w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500`}
               >
                 <option value="">Select Inquiry Type</option>
-                <option value="accept my property request">Accept My property Request </option>
+                <option value="accept my property request">
+                  Accept My property Request{" "}
+                </option>
                 <option value="reactivate account">Reactivate Account</option>
                 <option value="other">Other</option>
               </select>
@@ -252,6 +378,12 @@ const handleSubmit = async (e) => {
               {/* Submit Button */}
               <button
                 type="submit"
+                disabled={
+                  !isValidName ||
+                  !emailIsValid ||
+                  !phoneIsValid ||
+                  !isCorrectDomain
+                }
                 className="w-full py-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition duration-300 shadow-lg hover:shadow-indigo-500/50"
               >
                 Send Message

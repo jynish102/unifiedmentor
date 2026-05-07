@@ -26,7 +26,7 @@ export default function SupportRequest(){
       fetchRequests();
     }, []);
 
-    const handleResolve = async (id) => {
+    const handleResolve = async (id,email) => {
          if (!id) {
            console.error("ID is undefined");
            return;
@@ -35,8 +35,12 @@ export default function SupportRequest(){
         await API.put(`/support/${id}`);
 
         setRequests((prev) =>
-          prev.map((r) => (r._id === id ? { ...r, status: "resolved" } : r)),
+          prev.map((r) => 
+            (r._id === id 
+              ? { ...r, status: "resolved" } 
+              : r)),
         );
+        toast.success("Reactivation Successfully")
       } catch (err) {
         console.error(err.response?.data?.message);
       }
@@ -81,7 +85,7 @@ export default function SupportRequest(){
 
               <div className="flex flex-col gap-2">
                 {/* Reactivate button */}
-                {req.inquiryType === "reactivate account" && (
+                {req.inquiryType === "reactivate account" &&  !req.reactivated &&  (
                   <Button
                     onClick={() => handleReactivate(req.email)}
                     className="bg-green-600 text-white px-3 py-1 rounded"
@@ -93,7 +97,7 @@ export default function SupportRequest(){
                 {/* Resolve button */}
                 {req.status !== "resolved" && (
                   <Button
-                    onClick={() => handleResolve(req._id || req.id)}
+                    onClick={() => handleResolve(req._id , req.email)}
                     className="bg-blue-600 text-white px-3 py-1 rounded"
                   >
                     Mark Resolved

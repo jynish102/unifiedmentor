@@ -335,13 +335,13 @@ export default function ProfileCard() {
                 </h2>
               )}
               <div className="absolute top-4 right-4">
-                <Button
+                <button
                   onClick={handleLogout}
                   className="p-2 rounded-full hover:bg-red-100 transition"
                   title="Logout"
                 >
                   <LogOutIcon className="w-6 h-6 text-red-600" />
-                </Button>
+                </button>
               </div>
               <p className="text-lg text-gray-500">{user.role}</p>
 
@@ -475,16 +475,6 @@ export default function ProfileCard() {
         </div>
       </div>
 
-      {/* Logout Button */}
-      <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
-        <h2 className="text-xl font-semibold text-red-600 mb-4">
-          Account Actions
-        </h2>
-
-        <Button onClick={handleLogout} className="bg-red-600 text-white">
-          Logout
-        </Button>
-      </div>
 
       {/* Notification Settings */}
       <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
@@ -494,7 +484,7 @@ export default function ProfileCard() {
           {Object.keys(settings).map((key) => (
             <div key={key} className="flex justify-between items-center">
               <span className="capitalize">{key} Alerts</span>
-              <Button
+              <button
                 onClick={() => handleToggle(key)}
                 className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
                   settings[key] ? "bg-blue-600" : "bg-gray-300"
@@ -505,7 +495,7 @@ export default function ProfileCard() {
                     settings[key] ? "translate-x-6" : ""
                   }`}
                 />
-              </Button>
+              </button>
             </div>
           ))}
         </div>
@@ -540,18 +530,7 @@ export default function ProfileCard() {
         </Button>
       </div>
 
-      {/* Delete Account */}
-      <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6 border border-red-300">
-        <h2 className="text-xl font-semibold text-red-600 mb-2">
-          Delete Account
-        </h2>
-
-        <p className="text-gray-600 mb-4">
-          This action is permanent and cannot be undone.
-        </p>
-
-        <Button className="bg-red-600 text-white">Delete Account</Button>
-      </div>
+      
     </div>
   );
 }

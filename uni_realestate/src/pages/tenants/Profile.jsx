@@ -365,13 +365,13 @@ export default function TenantProfile() {
                   )}
 
                   <div className="absolute top-4 right-4">
-                    <Button
+                    <button
                       onClick={handleLogout}
                       className="p-2 rounded-full hover:bg-red-100 transition"
                       title="Logout"
                     >
                       <LogOut className="w-6 h-6 text-red-600" />
-                    </Button>
+                    </button>
                   </div>
 
                   <p className="text-gray-500 capitalize">{tenant.role}</p>
@@ -589,7 +589,7 @@ export default function TenantProfile() {
             {Object.keys(settings).map((key) => (
               <div key={key} className="flex justify-between items-center">
                 <span className="capitalize">{key} Alerts</span>
-                <Button
+                <button
                   onClick={() => handleToggle(key)}
                   className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
                     settings[key] ? "bg-blue-600" : "bg-gray-300"
@@ -600,7 +600,7 @@ export default function TenantProfile() {
                       settings[key] ? "translate-x-6" : ""
                     }`}
                   />
-                </Button>
+                </button>
               </div>
             ))}
           </div>

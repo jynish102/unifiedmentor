@@ -382,13 +382,13 @@ const statusConfig = getStatusConfig(staff.isActive);
                   )}
 
                   <div className="absolute top-4 right-4">
-                    <Button
+                    <button
                       onClick={handleLogout}
                       className="p-2 rounded-full hover:bg-red-100 transition"
                       title="Logout"
                     >
                       <LogOut className="w-6 h-6 text-red-600" />
-                    </Button>
+                    </button>
                   </div>
 
                   <p className="text-gray-500 capitalize">{staff.role}</p>
@@ -561,7 +561,7 @@ const statusConfig = getStatusConfig(staff.isActive);
             {Object.keys(settings).map((key) => (
               <div key={key} className="flex justify-between items-center">
                 <span className="capitalize">{key} Alerts</span>
-                <Button
+                <bdoutton
                   onClick={() => handleToggle(key)}
                   className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
                     settings[key] ? "bg-blue-600" : "bg-gray-300"
@@ -572,7 +572,7 @@ const statusConfig = getStatusConfig(staff.isActive);
                       settings[key] ? "translate-x-6" : ""
                     }`}
                   />
-                </Button>
+                </bdoutton>
               </div>
             ))}
           </div>

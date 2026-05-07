@@ -145,14 +145,14 @@ export function AdminDashboardLayout() {
                         navigate("/admin/profile");
                         setOpen(false);
                       }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-black"
                     >
                       Profile
                     </Button>
 
                     <Button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100  hover:text-red-500"
                     >
                       Logout
                     </Button>

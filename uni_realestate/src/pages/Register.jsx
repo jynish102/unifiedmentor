@@ -106,6 +106,7 @@ const Register = () => {
       return () => clearTimeout(timer);
     }
   }, [formData.confirmPassword, formData.password]);
+
   {
     /*======================email validation======================== */
   }
@@ -114,6 +115,18 @@ const Register = () => {
     return emailRegex.test(email);
   };
   const emailIsValid = validateEmail(formData.email);
+
+const domain = formData.email.split("@")[1];
+
+const validDomains = [
+  "gmail.com",
+  "yahoo.com",
+  "outlook.com",
+  "hotmail.com",
+  "icloud.com",
+];
+
+const isCorrectDomain = validDomains.includes(domain);
 
   {
     /*======================phone validation======================== */
@@ -201,7 +214,7 @@ const Register = () => {
               placeholder="Email Address"
               className={`w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-white/70 border focus:outline-none focus:ring-2 transition ${
                 formData.email
-                  ? emailIsValid
+                  ? emailIsValid && isCorrectDomain
                     ? "border-green-400 focus:ring-green-400"
                     : "border-red-500 focus:ring-red-400"
                   : "border-white/30 focus:ring-purple-400"
@@ -210,12 +223,16 @@ const Register = () => {
             {formData.email && (
               <p
                 className={`mt-2 text-sm ${
-                  emailIsValid ? "text-green-400" : "text-red-400"
+                  emailIsValid && isCorrectDomain
+                    ? "text-green-400"
+                    : "text-red-400"
                 }`}
               >
-                {emailIsValid
+                {emailIsValid && isCorrectDomain
                   ? "✓ Valid email address"
-                  : "✗ Email must be lowercase and valid format"}
+                  : !emailIsValid
+                    ? "✗ Email must be lowercase and valid format"
+                    : "✗ Please check email domain spelling"}
               </p>
             )}
 
@@ -391,7 +408,13 @@ const Register = () => {
 
             <button
               type="submit"
-              disabled={!emailIsValid || !passwordsMatch || !phoneIsValid}
+              disabled={
+                !isValidName ||
+                !emailIsValid ||
+                !passwordsMatch ||
+                !phoneIsValid ||
+                !isCorrectDomain
+              }
               className={`w-full py-3 rounded-xl font-semibold transition ${
                 passwordsMatch
                   ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:scale-105"

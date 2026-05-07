@@ -5,6 +5,21 @@ const propertySchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: String,
 
+    propertyType: {
+      type: String,
+      enum: [
+        "Apartment",
+        "House",
+        "Villa",
+        "Shop",
+        "Warehouse",
+        "land",
+        "others",
+      ],
+      required: true,
+    },
+    
+
     address: { type: String, required: true },
     city: String,
 
@@ -25,19 +40,6 @@ const propertySchema = new mongoose.Schema(
       enum: ["residential", "commercial"],
       required: true,
       default: "residential",
-    },
-
-    propertyType: {
-      type: String,
-      enum: [
-        "Apartment",
-        "House",
-        "Villa",
-        "Shop",
-        "Warehouse",
-        "land",
-        "others",
-      ],
     },
 
     listingType: {
@@ -99,7 +101,7 @@ const propertySchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["available", "maintenance","booked" , "sold"],
+      enum: ["available", "maintenance", "booked", "sold"],
       default: "available",
     },
 

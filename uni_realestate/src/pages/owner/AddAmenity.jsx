@@ -189,154 +189,304 @@ export default function AddAmenity() {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Add Amenity</h2>
-      <Button
-        onClick={() => navigate("/owner/amenities")}
-        className="bg-gray-500 text-white px-3 py-1 rounded"
-      >
-        Cancel
-      </Button>
+    <div className="max-w-5xl mx-auto p-6">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-t-2xl p-6 text-white shadow-lg">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold">
+              {id ? "Update Amenity" : "Add New Amenity"}
+            </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          name="name"
-          type="text"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-        />
+            <p className="text-sm text-white/80 mt-1">
+              Fill all details about the amenity
+            </p>
+          </div>
 
-        <Input
-          name="description"
-          type="text"
-          placeholder="Description"
-          value={formData.description}
-          onChange={handleChange}
-        />
-
-        <Input
-          name="price"
-          type="number"
-          placeholder="Price"
-          value={formData.price}
-          onChange={handleChange}
-        />
-
-        <Input
-          name="capacity"
-          type="number"
-          placeholder="Capacity"
-          value={formData.capacity}
-          onChange={handleChange}
-        />
-
-        <Input
-          name="location"
-          type="text"
-          placeholder="Location"
-          value={formData.location}
-          onChange={handleChange}
-        />
-        <Input
-          className="flex items-center gap-2"
-          name="start"
-          placeholder="Start Time"
-          type="time"
-          value={formData.operatingHours?.start}
-          onChange={(e) => handleTimeChange("start", e.target.value)}
-        />
-
-        <Input
-          className="flex items-center gap-2"
-          name="end"
-          placeholder="End Time"
-          type="time"
-          value={formData.operatingHours?.end}
-          onChange={(e) => handleTimeChange("end", e.target.value)}
-        />
-
-        <select
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        >
-          <option value="operational">Operational</option>
-          <option value="maintenance">Maintenance</option>
-        </select>
-      
-        {formData.status === "maintenance" && (
-        <select
-          name="priority"
-          value={formData.priority}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        >
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-        )}
-
-        <Input
-          className="flex items-center gap-2"
-          name="upcomingMaintenanceDate"
-          type="date"
-          placeholder="Maintenance Date"
-          value={formData.upcomingMaintenanceDate}
-          onChange={handleChange}
-        />
-
-        <div className="flex gap-3 flex-wrap mt-2">
-          {/* Existing Images (Edit Mode) */}
-          {existingImages.map((img, index) => (
-            <div key={index} className="relative">
-              <img
-                src={`http://localhost:5000/${img}`}
-                alt="amenity"
-                className="w-24 h-24 object-cover rounded"
-              />
-
-              <button
-                type="button"
-                onClick={() => handleRemoveExistingImage(index)}
-                className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-1"
-              >
-                ❌
-              </button>
-            </div>
-          ))}
-
-          {/* New Images */}
-          {images.map((file, index) => (
-            <div key={index} className="relative">
-              <button
-                type="button"
-                onClick={() => handleRemoveNewImage(index)}
-                className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-1"
-              >
-                ❌
-              </button>
-              <img
-                src={file.preview}
-                alt="preview"
-                className="w-24 h-24 object-cover rounded"
-              />
-            </div>
-          ))}
+          <Button
+            onClick={() => navigate("/owner/amenities")}
+            className="bg-white/20 hover:bg-white/30 border border-white/30 text-white"
+          >
+            Cancel
+          </Button>
         </div>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleImageChange}
-        />
+      </div>
 
-        <Button type="submit" className="w-full">
-          {id ? "Update Amenity" : "Add Amenity"}
-        </Button>
-      </form>
+      {/* Main Card */}
+      <div className="bg-white shadow-2xl rounded-b-2xl p-8">
+        <form onSubmit={handleSubmit} className="space-y-10">
+          {/* ================= BASIC INFO ================= */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-5">
+              Basic Information
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Amenity Name
+                </label>
+
+                <Input
+                  name="name"
+                  type="text"
+                  placeholder="Swimming Pool"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="h-11"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Location
+                </label>
+
+                <Input
+                  name="location"
+                  type="text"
+                  placeholder="Tower A - Ground Floor"
+                  value={formData.location}
+                  onChange={handleChange}
+                  className="h-11"
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description
+                </label>
+
+                <textarea
+                  name="description"
+                  placeholder="Describe this amenity..."
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows={4}
+                  className="w-full border border-gray-300 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ================= DETAILS ================= */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-5">
+              Amenity Details
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Price
+                </label>
+
+                <Input
+                  name="price"
+                  type="number"
+                  placeholder="100"
+                  value={formData.price}
+                  onChange={handleChange}
+                  className="h-11"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Capacity
+                </label>
+
+                <Input
+                  name="capacity"
+                  type="number"
+                  placeholder="50"
+                  value={formData.capacity}
+                  onChange={handleChange}
+                  className="h-11"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Status
+                </label>
+
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500"
+                >
+                  <option value="operational">Operational</option>
+                  <option value="maintenance">Maintenance</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* ================= OPERATING HOURS ================= */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-5">
+              Operating Hours
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Start Time
+                </label>
+
+                <Input
+                  name="start"
+                  type="time"
+                  value={formData.operatingHours?.start}
+                  onChange={(e) => handleTimeChange("start", e.target.value)}
+                  className="h-11"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  End Time
+                </label>
+
+                <Input
+                  name="end"
+                  type="time"
+                  value={formData.operatingHours?.end}
+                  onChange={(e) => handleTimeChange("end", e.target.value)}
+                  className="h-11"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ================= MAINTENANCE ================= */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-5">
+              Maintenance Information
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {formData.status === "maintenance" && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Priority Level
+                  </label>
+
+                  <select
+                    name="priority"
+                    value={formData.priority}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Upcoming Maintenance Date
+                </label>
+
+                <Input
+                  name="upcomingMaintenanceDate"
+                  type="date"
+                  value={formData.upcomingMaintenanceDate}
+                  onChange={handleChange}
+                  className="h-11"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ================= IMAGE UPLOAD ================= */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-5">
+              Amenity Images
+            </h3>
+
+            {/* Upload Box */}
+            <label className="border-2 border-dashed border-gray-300 rounded-2xl p-10 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition">
+              <p className="font-semibold text-gray-700">
+                Click to Upload Images
+              </p>
+
+              <p className="text-sm text-gray-400 mt-1">PNG, JPG up to 10MB</p>
+
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
+
+            {/* Images */}
+            <div className="flex flex-wrap gap-4 mt-6">
+              {/* Existing Images */}
+              {existingImages.map((img, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={`http://localhost:5000/${img}`}
+                    alt="amenity"
+                    className="w-28 h-28 rounded-xl object-cover shadow-md"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveExistingImage(index)}
+                    className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+
+              {/* New Images */}
+              {images.map((file, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={file.preview}
+                    alt="preview"
+                    className="w-28 h-28 rounded-xl object-cover shadow-md"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveNewImage(index)}
+                    className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ================= BUTTONS ================= */}
+          <div className="flex justify-end gap-4 pt-4">
+            <Button
+              type="button"
+              onClick={() => navigate("/owner/amenities")}
+              variant="outline"
+            >
+              Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-8"
+            >
+              {id ? "Update Amenity" : "Add Amenity"}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

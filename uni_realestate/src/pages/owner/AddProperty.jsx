@@ -247,12 +247,7 @@ export default function AddProperty() {
             </p>
           </div>
 
-          <Button
-            onClick={() => navigate("/owner/properties")}
-            className="bg-white/20 hover:bg-white/30 text-white border border-white/30"
-          >
-            Cancel
-          </Button>
+        
         </div>
       </div>
 

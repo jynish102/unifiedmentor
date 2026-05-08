@@ -177,6 +177,7 @@ export function Properties() {
                       <Eye size={14} />
                       View
                     </Button>
+                    
                   </div>
                 </CardContent>
               </Card>

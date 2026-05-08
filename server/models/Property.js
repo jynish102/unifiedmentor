@@ -18,13 +18,15 @@ const propertySchema = new mongoose.Schema(
       ],
       required: true,
     },
-    
 
     address: { type: String, required: true },
-    city: String,
 
-    price: { type: Number, required: true },
-    deposit: Number,
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    zipcode: { type: Number, required: true, min: 0 },
+
+    price: { type: Number, required: true, min: 0 },
+    deposit: { type: Number, min: 0 },
 
     paymentFrequency: {
       type: String,
@@ -51,15 +53,18 @@ const propertySchema = new mongoose.Schema(
     bedrooms: {
       type: Number,
       default: 0,
+      min: 0,
     },
 
     bathrooms: {
       type: Number,
       default: 0,
+      min: 0,
     },
 
     area: {
       type: Number,
+      min: 0,
     },
 
     furnishing: {
@@ -71,10 +76,12 @@ const propertySchema = new mongoose.Schema(
     floor: {
       type: Number,
       default: 0,
+      min: 0,
     },
     totalFloors: {
       type: Number,
       default: 0,
+      min: 0,
     },
 
     parking: Boolean,
@@ -90,11 +97,13 @@ const propertySchema = new mongoose.Schema(
     units: {
       type: Number,
       default: 1,
+      min: 0,
     },
 
     occupied: {
       type: Number,
       default: 0,
+      min: 0,
     },
 
     images: [String],
@@ -106,6 +115,12 @@ const propertySchema = new mongoose.Schema(
     },
 
     availableFrom: Date,
+
+    approvalStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
 
     owner: {
       type: mongoose.Schema.Types.ObjectId,

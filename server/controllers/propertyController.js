@@ -16,11 +16,11 @@ exports.addProperty = async (req, res) => {
       ...req.body,
       images: imagePaths,
       owner: req.user.id,
-      
+      approvalStatus: "pending",
     });
 
     res.status(201).json({
-      message: "Property added successfully",
+      message: "Property request submitted for admin approval",
       property,
     });
   } catch (error) {
@@ -94,6 +94,7 @@ exports.getMyProperties = async (req, res) => {
 
     const properties = await Property.find({
       owner: ownerId,
+      approvalStatus : "approved"
     });
 
     res.json({

@@ -122,6 +122,7 @@ export default function PropertyDetails() {
       </p>
       <p>
         <b>Address:</b> {property.address}, {property.city}
+        {property.state}, {property.zipcode}
       </p>
       <p>
         <b>Deposit:</b> {property.deposit}

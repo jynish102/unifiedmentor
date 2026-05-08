@@ -26,7 +26,7 @@ export default function SupportRequest(){
       fetchRequests();
     }, []);
 
-    const handleResolve = async (id,email) => {
+    const handleResolve = async (id) => {
          if (!id) {
            console.error("ID is undefined");
            return;
@@ -46,9 +46,17 @@ export default function SupportRequest(){
       }
     };
 
-    const handleReactivate = async (email) => {
+    const handleReactivate = async (id, email) => {
       try {
         await API.put("/auth/reactivate", { email });
+
+        // update UI
+        setRequests((prev) =>
+          prev.map((r) => 
+            (r._id === id 
+              ? { ...r, reactivated: true } 
+              : r)),
+        );
 
         toast.success("User reactivated");
       } catch (err) {
@@ -87,7 +95,7 @@ export default function SupportRequest(){
                 {/* Reactivate button */}
                 {req.inquiryType === "reactivate account" &&  !req.reactivated &&  (
                   <Button
-                    onClick={() => handleReactivate(req.email)}
+                    onClick={() => handleReactivate(req._id , req.email)}
                     className="bg-green-600 text-white px-3 py-1 rounded"
                   >
                     Reactivate

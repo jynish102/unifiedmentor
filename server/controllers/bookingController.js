@@ -157,7 +157,7 @@ exports.updateBookingStatus = async (req, res) => {
     }
 
     //  Admin
-    if (role === "admin" && ["approved", "rejected"].includes(status)) {
+    if (role === "owner" && ["approved", "rejected"].includes(status)) {
       booking.status = status;
     }
 

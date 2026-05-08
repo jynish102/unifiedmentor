@@ -19,6 +19,7 @@ import ResetPassword from "./pages/ResetPassword";
 
 //admin
 import AdminDashboard  from "./pages/admin/AdminDashboard";
+import PropertyRequests from "./pages/admin/PropertyRequests";
 import { Properties } from "./pages/admin/Properties";
 import { Tenants } from "./pages/admin/Tenants";
 import { Amenities } from "./pages/admin/Amenities";
@@ -27,17 +28,17 @@ import PropertyDetails from "./pages/admin/PropertyDetails";
 import AdminProfile from "./pages/admin/AdminProfile";
 import AddAmenity from "./pages/admin/AdminProfile";
 import AmenityDetails from "./pages/admin/AmenityDetails";
-import BookingRequests from "./pages/admin/BookingRequests";
 import SupportRequest from "./pages/admin/SupportRequests";
 
 //owner
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
 import  OwnerProperties  from "./pages/owner/Properties";
 import OwnerAddProperty  from "./pages/owner/AddProperty";
-import  OwnerPropertyDetails  from "./pages/owner/PropertyDetails";
+import OwnerPropertyDetails  from "./pages/owner/PropertyDetails";
 import OwnerAmenities  from "./pages/owner/Amenities";
 import OwnerAddAmenity from "./pages/owner/AddAmenity";
 import OwnerAmenityDetails from "./pages/owner/AmenityDetails";
+import BookingRequests from "./pages/owner/BookingRequests";
 import StaffList from "./pages/owner/StaffManagement";
 import OwnerMaintenance from "./pages/owner/Maintenance";
 import OwnerTenant from "./pages/owner/Tenants"
@@ -97,9 +98,10 @@ function App() {
           //admin routes
           <Route path="/admin" element={<AdminDashboardLayout />}>
             <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/properties-requests" element={<PropertyRequests />} />
             <Route path="properties" element={<Properties />} />
             <Route path="/admin/profile" element={<AdminProfile />} />
-           
+
             <Route path="/admin/properties/:id" element={<PropertyDetails />} />
             <Route path="amenities" element={<Amenities />} />
             <Route
@@ -109,7 +111,7 @@ function App() {
             <Route path="/admin/amenities/edit/:id" element={<AddAmenity />} />
             <Route path="/admin/amenities/:id" element={<AmenityDetails />} />
             <Route path="tenants" element={<Tenants />} />
-            <Route path="bookings" element={<BookingRequests />} />
+
             <Route path="maintenance" element={<Maintenance />} />
             <Route
               path="/admin/support-requests"
@@ -145,6 +147,7 @@ function App() {
               path="/owner/amenities/:id"
               element={<OwnerAmenityDetails />}
             />
+            <Route path="bookings" element={<BookingRequests />} />
             <Route path="/owner/staff" element={<StaffList />} />
             <Route path="/owner/maintenance" element={<OwnerMaintenance />} />
             <Route path="/owner/tenants" element={<OwnerTenant />} />
@@ -174,7 +177,7 @@ function App() {
               element={<AmenityBooking />}
             />
             <Route path="/tenant/bookings" element={<AllBooking />} />
-            <Route path="/tenant/message" element={<TenantMessage/>} />
+            <Route path="/tenant/message" element={<TenantMessage />} />
             <Route
               path="/tenant/maintenance/create/:type/:id"
               element={<CreateMaintenance />}

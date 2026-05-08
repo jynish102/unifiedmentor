@@ -91,7 +91,8 @@ export default function PropertyDetails() {
         <b>Description:</b> {property.description}
       </p>
       <p>
-        <b>Address:</b> {property.address}, {property.city}
+        <b>Address:</b> {property.address}, {property.city} , {property.state} ,{" "}
+        {property.zipcode}
       </p>
       <p>
         <b>Deposit:</b> {property.deposit}

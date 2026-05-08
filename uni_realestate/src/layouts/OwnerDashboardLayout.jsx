@@ -10,7 +10,8 @@ import {
   User,
   Wrench,
   Dumbbell,
-  Inbox
+  Inbox,
+  Calendar
 } from "lucide-react";
 import { useState } from "react";
 
@@ -22,6 +23,7 @@ export  function OwnerDashboardLayout() {
     { path: "/owner/ownerdashboard", name: "Dashboard", icon: LayoutDashboard },
     { path: "/owner/properties", name: "Properties", icon: Building2 },
     { path: "/owner/amenities", name: "Amenities", icon: Dumbbell },
+     { path: "/owner/bookings", name: "Bookings", icon: Calendar },
     { path: "/owner/staff", name: "Staff ", icon: User },
     { path: "/owner/maintenance", name: "Maintenance", icon: Wrench },
     { path: "/owner/tenants", name: "Tenants", icon: User },

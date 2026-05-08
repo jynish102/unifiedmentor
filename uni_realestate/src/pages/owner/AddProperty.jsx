@@ -23,6 +23,8 @@ export default function AddProperty() {
     description: "",
     address: "",
     city: "",
+    state: "",
+    zipcode: "",
     price: "",
     deposit: "",
     paymentFrequency: "monthly",
@@ -46,7 +48,18 @@ export default function AddProperty() {
     occupied: 0,
     status: "available",
     availableFrom: "",
+    approvalStatus: "pending",
   });
+
+  //Zip Validation
+  const validateZipCode = (zipcode) => {
+    const zipcodeRegex = /^[0-9]{6}$/;
+    return zipcodeRegex.test(zipcode);
+  };
+  const zipcodeIsValid = validateZipCode(formData.zipcode);
+
+  //
+  const isLand = formData.propertyType === "land";
 
   const [images, setImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
@@ -57,8 +70,8 @@ export default function AddProperty() {
         const token = localStorage.getItem("token");
         const res = await API.get(`/property/${id}`, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         const data = res.data;
         // console.log("API DATA:", data);
@@ -67,6 +80,8 @@ export default function AddProperty() {
           description: data.description || "",
           address: data.address || "",
           city: data.city || "",
+          state: data.state || "",
+          zipcode: data.zipcode || "",
           price: data.price || "",
           deposit: data.deposit || "",
           paymentFrequency: data.paymentFrequency || "monthly",
@@ -92,6 +107,7 @@ export default function AddProperty() {
           availableFrom: data.availableFrom
             ? data.availableFrom.split("T")[0]
             : "",
+          approvalStatus: data.approvalStatus || "pending",
         });
 
         setExistingImages(res.data.images || []);
@@ -108,7 +124,30 @@ export default function AddProperty() {
   // }, [images]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Prevent negative values
+    if (
+      [
+        "price",
+        "deposit",
+        "bedrooms",
+        "bathrooms",
+        "area",
+        "floor",
+        "totalFloors",
+        "units",
+        "occupied",
+        "zipcode",
+      ].includes(name)
+    ) {
+      if (value < 0) return;
+    }
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   const handleImageChange = (e) => {
@@ -178,8 +217,7 @@ export default function AddProperty() {
       toast.error("Max 5 images allowed");
       return;
     }
-     
-    
+
     if (Number(formData.occupied) > Number(formData.units)) {
       toast.error("Occupied cannot exceed total units");
       return;
@@ -218,7 +256,7 @@ export default function AddProperty() {
         await API.post("/property/add", data, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        toast.success("Property Added ");
+        toast.success("Property Request Added Succesfully");
       }
 
       navigate("/owner/properties");
@@ -246,8 +284,6 @@ export default function AddProperty() {
               Fill all required details for your property listing
             </p>
           </div>
-
-        
         </div>
       </div>
 
@@ -274,6 +310,7 @@ export default function AddProperty() {
                   className="h-11 w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition"
                   placeholder="e.g., Luxury Downtown Apartment"
                   required
+                  autoFocus
                 />
               </div>
 
@@ -350,7 +387,7 @@ export default function AddProperty() {
                   placeholder="Full Address"
                   value={formData.address}
                   onChange={handleChange}
-                  className="h-11 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  className="h-11 w-100 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   required
                 />
               </div>
@@ -371,16 +408,16 @@ export default function AddProperty() {
                 />
               </div>
 
-              {/* <div>
-                <label className="block text-sm font-medium text-gray-700 mx-1 mb-2">
-                  City*
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mx-1 mb-1 mt-2">
+                  State*
                 </label>
 
                 <Input
-                  name="city"
+                  name="state"
                   type="text"
-                  placeholder="City"
-                  value={formData.city}
+                  placeholder="State"
+                  value={formData.state}
                   onChange={handleChange}
                   className="h-11  px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   required
@@ -388,20 +425,38 @@ export default function AddProperty() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mx-1 mb-2">
-                  City*
+                <label className="block text-sm font-medium text-gray-700 mx-1 mb-1 mt-2">
+                  Zip Code*
                 </label>
 
                 <Input
-                  name="city"
-                  type="text"
-                  placeholder="City"
-                  value={formData.city}
+                  name="zipcode"
+                  type="number"
+                  min="0"
+                  placeholder="Zip/Pin code (6-digit)"
+                  value={formData.zipcode}
                   onChange={handleChange}
-                  className="h-11  px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  className={`h-11  px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition ${
+                    formData.zipcode
+                      ? zipcodeIsValid
+                        ? "border-green-400 focus:ring-green-400"
+                        : "border-red-500 focus:ring-red-400"
+                      : "border-white/30 focus:ring-purple-400"
+                  }`}
                   required
                 />
-              </div> */}
+                {formData.zipcode && (
+                  <p
+                    className={`mt-2 text-sm ${
+                      zipcodeIsValid ? "text-green-400" : "text-red-400"
+                    }`}
+                  >
+                    {zipcodeIsValid
+                      ? "✓ Valid Zip/Pin code"
+                      : "✗ Zip / Pin must be 6 digit."}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
@@ -420,6 +475,7 @@ export default function AddProperty() {
                 <Input
                   name="price"
                   type="number"
+                  min="0"
                   placeholder="50000"
                   value={formData.price}
                   onChange={handleChange}
@@ -436,6 +492,7 @@ export default function AddProperty() {
                 <Input
                   name="deposit"
                   type="number"
+                  min="0"
                   placeholder="10000"
                   value={formData.deposit}
                   onChange={handleChange}
@@ -479,6 +536,7 @@ export default function AddProperty() {
                 <Input
                   name="bedrooms"
                   type="number"
+                  min="0"
                   value={formData.bedrooms || ""}
                   onChange={handleChange}
                   className="h-11"
@@ -493,6 +551,7 @@ export default function AddProperty() {
                 <Input
                   name="bathrooms"
                   type="number"
+                  min="0"
                   value={formData.bathrooms || ""}
                   onChange={handleChange}
                   className="h-11"
@@ -507,6 +566,7 @@ export default function AddProperty() {
                 <Input
                   name="area"
                   type="number"
+                  min="0"
                   value={formData.area}
                   onChange={handleChange}
                   className="h-11"
@@ -516,60 +576,63 @@ export default function AddProperty() {
           </div>
 
           {/* ================= BUILDING INFO ================= */}
-          <div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-5">
-              Building Information
-            </h3>
+          {!isLand && (
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-5">
+                Building Information
+              </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Furnishing
-                </label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Furnishing
+                  </label>
 
-                <select
-                  name="furnishing"
-                  onChange={handleChange}
-                  value={formData.furnishing || "Semi-Furnished"}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="Furnished">Furnished</option>
-                  <option value="Semi-Furnished">Semi-Furnished</option>
-                  <option value="Unfurnished">Unfurnished</option>
-                </select>
-              </div>
+                  <select
+                    name="furnishing"
+                    onChange={handleChange}
+                    value={formData.furnishing || "Semi-Furnished"}
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Furnished">Furnished</option>
+                    <option value="Semi-Furnished">Semi-Furnished</option>
+                    <option value="Unfurnished">Unfurnished</option>
+                  </select>
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Floor
-                </label>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Floor
+                  </label>
 
-                <Input
-                  name="floor"
-                  type="number"
-                  value={formData.floor}
-                  onChange={handleChange}
-                  className="h-11"
-                />
-              </div>
+                  <Input
+                    name="floor"
+                    type="number"
+                    min="0"
+                    value={formData.floor}
+                    onChange={handleChange}
+                    className="h-11"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Total Floors
+                  </label>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Total Floors
-                </label>
-
-                <Input
-                  name="totalFloors"
-                  type="number"
-                  value={formData.totalFloors}
-                  onChange={handleChange}
-                  className="h-11"
-                />
+                  <Input
+                    name="totalFloors"
+                    type="number"
+                    min="0"
+                    value={formData.totalFloors}
+                    onChange={handleChange}
+                    className="h-11"
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* ================= AMENITIES ================= */}
+          {/* ================= Description ================= */}
           <div>
             <h3 className="text-xl font-semibold text-gray-800 mb-5">
               Description
@@ -586,99 +649,105 @@ export default function AddProperty() {
           </div>
 
           {/* ================= AMENITIES ================= */}
-          <div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-5">
-              Amenities
-            </h3>
+          {!isLand && (
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-5">
+                Amenities
+              </h3>
 
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              <label className="flex items-center gap-2 border rounded-xl p-3 cursor-pointer hover:bg-gray-50">
-                <input
-                  type="checkbox"
-                  name="parking"
-                  checked={formData.parking}
-                  onChange={handleParkingChange}
-                />
-                Parking
-              </label>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <label className="flex items-center gap-2 border rounded-xl p-3 cursor-pointer hover:bg-gray-50">
+                  <input
+                    type="checkbox"
+                    name="parking"
+                    checked={formData.parking}
+                    onChange={handleParkingChange}
+                  />
+                  Parking
+                </label>
 
-              <label className="flex items-center gap-2 border rounded-xl p-3 cursor-pointer hover:bg-gray-50">
-                <input
-                  type="checkbox"
-                  name="lift"
-                  checked={formData.amenities?.lift || false}
-                  onChange={handleAmenityChange}
-                />
-                Lift
-              </label>
+                <label className="flex items-center gap-2 border rounded-xl p-3 cursor-pointer hover:bg-gray-50">
+                  <input
+                    type="checkbox"
+                    name="lift"
+                    checked={formData.amenities?.lift || false}
+                    onChange={handleAmenityChange}
+                  />
+                  Lift
+                </label>
 
-              <label className="flex items-center gap-2 border rounded-xl p-3 cursor-pointer hover:bg-gray-50">
-                <input
-                  type="checkbox"
-                  name="gym"
-                  checked={formData.amenities?.gym || false}
-                  onChange={handleAmenityChange}
-                />
-                Gym
-              </label>
+                <label className="flex items-center gap-2 border rounded-xl p-3 cursor-pointer hover:bg-gray-50">
+                  <input
+                    type="checkbox"
+                    name="gym"
+                    checked={formData.amenities?.gym || false}
+                    onChange={handleAmenityChange}
+                  />
+                  Gym
+                </label>
 
-              <label className="flex items-center gap-2 border rounded-xl p-3 cursor-pointer hover:bg-gray-50">
-                <input
-                  type="checkbox"
-                  name="security"
-                  checked={formData.amenities?.security || false}
-                  onChange={handleAmenityChange}
-                />
-                Security
-              </label>
+                <label className="flex items-center gap-2 border rounded-xl p-3 cursor-pointer hover:bg-gray-50">
+                  <input
+                    type="checkbox"
+                    name="security"
+                    checked={formData.amenities?.security || false}
+                    onChange={handleAmenityChange}
+                  />
+                  Security
+                </label>
 
-              <label className="flex items-center gap-2 border rounded-xl p-3 cursor-pointer hover:bg-gray-50">
-                <input
-                  type="checkbox"
-                  name="wifi"
-                  checked={formData.amenities?.wifi || false}
-                  onChange={handleAmenityChange}
-                />
-                WiFi
-              </label>
+                <label className="flex items-center gap-2 border rounded-xl p-3 cursor-pointer hover:bg-gray-50">
+                  <input
+                    type="checkbox"
+                    name="wifi"
+                    checked={formData.amenities?.wifi || false}
+                    onChange={handleAmenityChange}
+                  />
+                  WiFi
+                </label>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* ================= STATUS ================= */}
+
           <div>
             <h3 className="text-xl font-semibold text-gray-800 mb-5">
               Availability & Status
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Units
-                </label>
+              {!isLand && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Units
+                    </label>
 
-                <Input
-                  name="units"
-                  type="number"
-                  value={formData.units || 1}
-                  onChange={handleChange}
-                  className="h-11"
-                />
-              </div>
+                    <Input
+                      name="units"
+                      type="number"
+                      value={formData.units || 1}
+                      onChange={handleChange}
+                      className="h-11"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Occupied Units
-                </label>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Occupied Units
+                    </label>
 
-                <Input
-                  name="occupied"
-                  type="number"
-                  value={formData.occupied || 0}
-                  onChange={handleChange}
-                  className="h-11"
-                />
-              </div>
-
+                    <Input
+                      name="occupied"
+                      type="number"
+                      value={formData.occupied || 0}
+                      onChange={handleChange}
+                      className="h-11"
+                    />
+                  </div>
+                </>
+              )}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Status
@@ -694,6 +763,37 @@ export default function AddProperty() {
                   <option value="maintenance">Maintenance</option>
                   <option value="booked">Booked</option>
                   <option value="sold">Sold</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Available Form
+                </label>
+
+                <Input
+                  name="availableFrom"
+                  type="string"
+                  value={formData.availableFrom || ""}
+                  onChange={handleChange}
+                  className="h-11"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Approval Status
+                </label>
+
+                <select
+                  name="approvalStatus"
+                  value={formData.approvalStatus || "pending"}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="approved">Approved</option>
+                  <option value="reject">Reject</option>
                 </select>
               </div>
             </div>
@@ -773,8 +873,9 @@ export default function AddProperty() {
             <Button
               type="submit"
               className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+              disabled={!zipcodeIsValid}
             >
-              {id ? "Update Property" : "Publish Property"}
+              {id ? "Update Property" : "Request To Add Property"}
             </Button>
           </div>
         </form>

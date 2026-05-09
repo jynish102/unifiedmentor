@@ -12,6 +12,9 @@ import {
   Trash2,
   Eye,
   Banknote,
+  CheckCircle,
+  Clock3,
+  XCircle
 } from "lucide-react";
 import { useState, useEffect, } from "react";
 import toast from "react-hot-toast"
@@ -32,7 +35,7 @@ export function Properties() {
         setProperties(res.data);
       } catch (err) {
         console.log(err);
-        toast.error(err.response?.data?.messages || "feild to fetch data")
+        toast.error(err.response?.data?.messages || "failed to fetch data")
       }
     };
 
@@ -49,7 +52,7 @@ export function Properties() {
   // Status color
   const getStatusColor = (status) => {
     switch (status) {
-      case "available":
+      case "available,approved" :
         return "bg-green-100 text-green-700";
       case "occupied":
         return "bg-blue-100 text-blue-700";
@@ -57,6 +60,37 @@ export function Properties() {
         return "bg-orange-100 text-orange-700";
       default:
         return "bg-gray-100 text-gray-700";
+    }
+  };
+
+  const getApprovalBadge = (status) => {
+    switch (status) {
+      case "approved":
+        return (
+          <Badge className="bg-green-100 text-green-700 flex items-center gap-1">
+            <CheckCircle size={14} />
+            Approved
+          </Badge>
+        );
+
+      case "pending":
+        return (
+          <Badge className="bg-yellow-100 text-yellow-700 flex items-center gap-1">
+            <Clock3 size={14} />
+            Pending
+          </Badge>
+        );
+
+      case "rejected":
+        return (
+          <Badge className="bg-red-100 text-red-700 flex items-center gap-1">
+            <XCircle size={14} />
+            Rejected
+          </Badge>
+        );
+
+      default:
+        return null;
     }
   };
 
@@ -70,8 +104,6 @@ export function Properties() {
           <h2 className="text-3xl font-bold text-slate-900">Properties</h2>
           <p className="text-slate-500 mt-1">Manage your rental properties</p>
         </div>
-
-        
       </div>
 
       {/* Search + List */}
@@ -92,6 +124,41 @@ export function Properties() {
               />
             </div>
           </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Card>
+              <CardContent className="pt-6">
+                <p className="text-sm text-gray-600">Total Properties</p>
+                <p className="text-2xl font-bold mt-1">{properties.length}</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <p className="text-sm text-gray-600">Occupied Units</p>
+                <p className="text-2xl font-bold mt-1">
+                  {properties.reduce(
+                    (total, p) => total + (p.occupied || 0),
+                    0,
+                  )}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <p className="text-sm text-gray-600">Total Monthly Revenue</p>
+                <p className="text-2xl font-bold mt-1">
+                  ₹
+                  {properties
+                    .reduce(
+                      (sum, p) => sum + (p.price || 0) * (p.occupied || 0),
+                      0,
+                    )
+                    .toLocaleString()}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
         </CardHeader>
 
         <CardContent>
@@ -104,19 +171,24 @@ export function Properties() {
                 <CardContent className="p-6">
                   {/* Top */}
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                      <Home className="text-blue-600" size={24} />
+                    <div className="w-12 h-12 mt-3 rounded-lg bg-blue-100 flex items-center justify-center">
+                      <Home className="text-blue-600 " size={24} />
                     </div>
 
-                    <Badge className={getStatusColor(property.status)}>
+                    <Badge
+                      className={`mt-3 ${getStatusColor(property.status)}`}
+                    >
                       {property.status}
                     </Badge>
+                    {/* Right side approval status */}
+                  
                   </div>
 
                   {/* Name */}
                   <h3 className="font-bold text-lg text-slate-900 mb-2">
-                    {property.title}
+                    {property.title} {getApprovalBadge(property.approvalStatus)}
                   </h3>
+                  {/* Right side approval status */}
 
                   {/* Info */}
                   <div className="space-y-2 text-sm text-slate-600">
@@ -177,7 +249,6 @@ export function Properties() {
                       <Eye size={14} />
                       View
                     </Button>
-                    
                   </div>
                 </CardContent>
               </Card>

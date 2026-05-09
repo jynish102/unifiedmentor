@@ -7,10 +7,12 @@ const authorizeRoles = require("../middleware/authorizeRoles");
 
 const {
   addProperty,
+  getPropertyRequests,
   getProperties,
   getMyProperties,
   getPropertyById,
   updateProperty,
+  updateApprovalStatus,
   deleteProperty,
 } = require("../controllers/propertyController");
 
@@ -22,6 +24,7 @@ router.post(
   addProperty,
 );
 
+router.get( "/requests" , authMiddleware, authorizeRoles("admin"), getPropertyRequests)
 router.get("/", getProperties);
 router.get("/my-properties", authMiddleware, getMyProperties);
 router.get(
@@ -38,6 +41,8 @@ router.put(
   upload.array("images", 5),
   updateProperty,
 );
+
+router.put("/request/:id", authMiddleware, authorizeRoles("admin"), updateApprovalStatus);
 router.delete("/:id", authMiddleware, authorizeRoles("owner"), deleteProperty);
 
 module.exports = router;

@@ -19,7 +19,10 @@ import {
   Pencil,
   Trash2,
   Wallet,
-  Banknote
+  Banknote,
+  CheckCircle,
+  Clock3,
+  XCircle
 } from "lucide-react";
 import { ImageWithFallback } from "../../components/ui/imageWithFallback";
 import { useState, useEffect } from "react";
@@ -60,13 +63,44 @@ export  default function Properties() {
   const getStatusColor = (status) => {
     switch (status) {
       case "occupied":
-        return "bg-green-100 text-green-700";
+        return "bg-green-100 text-green-700 text-lg";
       case "vacant":
-        return "bg-yellow-100 text-yellow-700";
+        return "bg-yellow-100 text-yellow-700 text-lg";
       case "maintenance":
-        return "bg-orange-100 text-orange-700";
+        return "bg-orange-100 text-orange-700 text-lg";
       default:
-        return "bg-gray-100 text-gray-700";
+        return "bg-gray-100 text-gray-700 text-lg";
+    }
+  };
+
+  const getApprovalBadge = (status) => {
+    switch (status) {
+      case "approved":
+        return (
+          <Badge className="bg-green-100 text-green-700 absolute top-3 left-3 flex items-center gap-1">
+            <CheckCircle size={30} />
+            Approved
+          </Badge>
+        );
+
+      case "pending":
+        return (
+          <Badge className="bg-yellow-100 text-yellow-700 absolute top-3 left-3 flex items-center gap-1">
+            <Clock3 size={30} />
+            Pending
+          </Badge>
+        );
+
+      case "rejected":
+        return (
+          <Badge className="bg-red-100 text-red-700 absolute top-3 left-3 flex items-center gap-1">
+            <XCircle size={30} />
+            Rejected
+          </Badge>
+        );
+
+      default:
+        return null;
     }
   };
 
@@ -167,7 +201,7 @@ export  default function Properties() {
           </CardContent>
         </Card>
       </div>
-      
+
       {filteredProperties.length === 0 ? (
         <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
           <p className="text-5xl mb-3">🏠</p>
@@ -196,11 +230,15 @@ export  default function Properties() {
                     e.target.src = "/default-image.jpg";
                   }}
                 />
+
                 <Badge
                   className={`absolute top-3 right-3 ${getStatusColor(property.status)}`}
                 >
                   {property.status}
                 </Badge>
+
+                {/* Right side approval status */}
+                {getApprovalBadge(property.approvalStatus)}
               </div>
 
               <CardHeader>

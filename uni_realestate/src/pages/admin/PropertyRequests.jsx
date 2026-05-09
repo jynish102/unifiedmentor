@@ -25,6 +25,7 @@ import { ImageWithFallback } from "../../components/ui/imageWithFallback";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"
 
 export default function PropertiesRequest() {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ export default function PropertiesRequest() {
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const res = await API.get("/property/my-properties", {
+        const res = await API.get("/property/requests", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -54,6 +55,32 @@ export default function PropertiesRequest() {
 
     fetchProperties();
   }, []);
+
+  const handleApprovalStatus = async (id, status) => {
+    try {
+      await API.put(
+        `/property/request/${id}`,
+        {
+          approvalStatus: status,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+
+      setProperties((prev) =>
+        prev.map((p) => (p._id === id ? { ...p, approvalStatus: status } : p)),
+      );
+
+      toast.success(`Property ${status}`);
+    } catch (err) {
+      console.log("Error",err.res?.data || err.message);
+
+      toast.error("Action failed",err.response?.data?.message);
+    }
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -107,6 +134,36 @@ export default function PropertiesRequest() {
           </div>
         </CardContent>
       </Card>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-sm text-gray-600">Total Properties</p>
+            <p className="text-2xl font-bold mt-1">{properties.length}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-sm text-gray-600">Occupied Units</p>
+            <p className="text-2xl font-bold mt-1">
+              {properties.reduce((total, p) => total + (p.occupied || 0), 0)}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-sm text-gray-600">Total Monthly Revenue</p>
+            <p className="text-2xl font-bold mt-1">
+              ₹
+              {properties
+                .reduce((sum, p) => sum + (p.price || 0) * (p.occupied || 0), 0)
+                .toLocaleString()}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       {filteredProperties.length === 0 ? (
         <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
           <p className="text-5xl mb-3">🏠</p>
@@ -208,23 +265,29 @@ export default function PropertiesRequest() {
                     <Eye size={14} />
                     View
                   </Button>
-                  
+
                   {property.approvalStatus === "pending" && (
                     <Button
                       variant="outline"
                       size="sm"
                       className="flex-1 bg-green-600 hover:bg-green-700"
+                      onClick={() =>
+                        handleApprovalStatus(property._id, "approved")
+                      }
                     >
                       Accept
                     </Button>
                   )}
 
-                  {/* Delete */}
-                  {property.approvalStatus === "rejected" && (
+                  {/* Reject */}
+                  {property.approvalStatus === "pending" && (
                     <Button
                       variant="outline"
                       size="sm"
                       className="flex-1 bg-red-600 hover:bg-red-700"
+                      onClick={() =>
+                        handleApprovalStatus(property._id, "rejected")
+                      }
                     >
                       Reject
                     </Button>
@@ -235,37 +298,6 @@ export default function PropertiesRequest() {
           ))}
         </div>
       )}
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-gray-600">Total Properties</p>
-            <p className="text-2xl font-bold mt-1">{properties.length}</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-gray-600">Occupied</p>
-            <p className="text-2xl font-bold mt-1">
-              {properties.filter((p) => p.status === "occupied").length}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-gray-600">Total Monthly Revenue</p>
-            <p className="text-2xl font-bold mt-1">
-              $
-              {properties
-                .filter((p) => p.status === "occupied")
-                .reduce((sum, p) => sum + p.price, 0)
-                .toLocaleString()}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }

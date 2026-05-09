@@ -122,6 +122,8 @@ const propertySchema = new mongoose.Schema(
       default: "pending",
     },
 
+    approvedAt: Date,
+
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

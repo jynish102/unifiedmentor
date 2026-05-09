@@ -29,12 +29,82 @@ exports.addProperty = async (req, res) => {
   }
 };
 
+//get property Request
+exports.getPropertyRequests = async (req, res) => {
+  try {
+    const properties = await Property.find({
+      approvalStatus: "pending",
+    })
+      .populate("owner", "fullname email phone")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: properties.length,
+      data: properties,
+    });
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
+
+//update Approval Status
+exports.updateApprovalStatus = async (req, res) => {
+  try {
+    // only admin
+    if (req.user.role !== "admin") {
+      return res.status(403).json({
+        message: "Access denied",
+      });
+    }
+
+    const { approvalStatus } = req.body;
+
+    if (!["approved", "rejected"].includes(approvalStatus)) {
+      return res.status(400).json({
+        message: "Invalid status",
+      });
+    }
+
+    const property = await Property.findById(req.params.id);
+
+    if (!property) {
+      return res.status(404).json({
+        message: "Property not found",
+      });
+    }
+
+    property.approvalStatus = approvalStatus;
+    property.approvedAt = new Date();
+
+    await property.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Property ${approvalStatus} successfully`,
+      data: property,
+    });
+  } catch (err) {
+    console.log(err.res?.data || err.message);
+
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
 //Get Properties
 exports.getProperties = async (req, res) => {
   try {
-    const properties = await Property.find().populate(
+    const properties = await Property.find({approvalStatus : "approved"}).populate(
       "owner",
       "fullname email",
+     
     );
 
     res.json(properties);
@@ -86,6 +156,14 @@ exports.getPropertyById = async (req, res) => {
 // GET owner properties
 exports.getMyProperties = async (req, res) => {
   try {
+    //  await Property.updateMany(
+    //    { approvalStatus: { $exists: false } },
+    //    {
+    //      $set: {
+    //        approvalStatus: "approved",
+    //      },
+    //    },
+    //  );
     const ownerId = req.user.id;
     // console.log("USER:", req.user);
 
@@ -94,7 +172,7 @@ exports.getMyProperties = async (req, res) => {
 
     const properties = await Property.find({
       owner: ownerId,
-      // approvalStatus : "approved"
+      
     });
 
     res.json({

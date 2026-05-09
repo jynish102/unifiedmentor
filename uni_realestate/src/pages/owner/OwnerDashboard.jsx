@@ -147,7 +147,7 @@ export  function OwnerDashboard() {
             <div className="text-2xl font-bold">
               {dashboard?.bookings?.totalTenants || 0}
             </div>
-            <p className="text-xs text-gray-600 mt-1">92% occupancy rate</p>
+            <p>{dashboard?.properties?.occupancyRate || 0}% occupancy rate</p>
           </CardContent>
         </Card>
 
@@ -160,11 +160,10 @@ export  function OwnerDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${dashboard?.revenue?.monthly || 0}
+              ₹{dashboard?.bookings?.totalRevenue?.toLocaleString() || 0}
             </div>
             <p className="text-xs text-green-600 mt-1 flex items-center">
-              <TrendingUp className="size-3 mr-1" />
-              +12.3% from last month
+              {dashboard?.properties?.revenueChange || "0%"} from last month
             </p>
           </CardContent>
         </Card>
@@ -180,7 +179,10 @@ export  function OwnerDashboard() {
             <div className="text-2xl font-bold">
               {dashboard?.maintenance?.pending || 0}
             </div>
-            <p className="text-xs text-gray-600 mt-1">2 maintenance requests</p>
+            <p className="text-xs text-gray-600 mt-1">
+              {" "}
+              {dashboard?.maintenance?.total || 0} maintenance requests
+            </p>
           </CardContent>
         </Card>
       </div>

@@ -19,6 +19,7 @@ export default function AddAmenity() {
     operatingHours: {
       start: "",
       end: "",
+      closesNextDay: "",
     },
     status: "operational",
     priority: "medium",
@@ -51,7 +52,9 @@ export default function AddAmenity() {
           operatingHours: {
             start: data.operatingHours?.start?.slice(0, 5) || "",
             end: data.operatingHours?.end?.slice(0, 5) || "",
+            closesNextDay: data.operatingHours?.closesNextDay || 0,
           },
+
           status: data.status || "operational",
           priority: data.priority || "medium",
           upcomingMaintenanceDate: data.upcomingMaintenanceDate || "",
@@ -72,7 +75,7 @@ export default function AddAmenity() {
   // }, [images]);
 
   const handleChange = (e) => {
-    const { name,value } = e.target
+    const { name, value } = e.target;
     if (
       [
         "price",
@@ -90,10 +93,35 @@ export default function AddAmenity() {
       if (value < 0) return;
     }
     setFormData({
-       ...formData, 
-       [name]: value });
+      ...formData,
+      [name]: value,
+    });
   };
 
+  //Operating Hours
+  const validateOperatingHours = (start, end, closesNextDay) => {
+    if (!start || !end) {
+      setTimeError("");
+      return;
+    }
+
+    // Same time not allowed
+    if (start === end) {
+      setTimeError("Start time and end time cannot be same");
+      return;
+    }
+
+    // Same-day validation
+    if (!closesNextDay && start > end) {
+      setTimeError("End time must be after start time");
+      return;
+    }
+
+    // Valid
+    setTimeError("");
+  };
+
+  //timeChange Function
   const handleTimeChange = (field, value) => {
     setFormData((prev) => {
       const updated = {
@@ -104,15 +132,34 @@ export default function AddAmenity() {
         },
       };
 
-      if (
-        updated.operatingHours.start &&
-        updated.operatingHours.end &&
-        updated.operatingHours.start > updated.operatingHours.end
-      ) {
-       setTimeError("Start time must be before end time");
-      }else{
-        setTimeError("");
-      }
+      validateOperatingHours(
+        updated.operatingHours.start,
+        updated.operatingHours.end,
+        updated.operatingHours.closesNextDay,
+      );
+
+      return updated;
+    });
+  };
+
+  //close next Day Function
+  const handleNextDayChange = (e) => {
+    const checked = e.target.checked;
+
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        operatingHours: {
+          ...prev.operatingHours,
+          closesNextDay: checked,
+        },
+      };
+
+      validateOperatingHours(
+        updated.operatingHours.start,
+        updated.operatingHours.end,
+        checked,
+      );
 
       return updated;
     });
@@ -161,6 +208,21 @@ export default function AddAmenity() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!nameIsValid) {
+      toast.error("Please enter valid amenity name");
+      return;
+    }
+
+    if (formData.price < 0) {
+      toast.error("Price cannot be negative");
+      return;
+    }
+
+    if (formData.capacity < 1) {
+      toast.error("Capacity must be at least 1");
+      return;
+    }
+    
     if (existingImages.length + images.length > 5) {
       toast.error("Max 5 images allowed");
       return;
@@ -378,7 +440,21 @@ export default function AddAmenity() {
               Operating Hours
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Closes Next Day
+                </label>
+
+                <input
+                  type="checkbox"
+                  name="closesNextDay"
+                  checked={formData.operatingHours.closesNextDay}
+                  onChange={handleNextDayChange}
+                  className="h-11"
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Start Time
@@ -392,9 +468,6 @@ export default function AddAmenity() {
                   className="h-11"
                   required
                 />
-                {timeError && (
-                  <p className="text-red-500 text-sm mt-2">{timeError}</p>
-                )}
               </div>
 
               <div>
@@ -410,6 +483,9 @@ export default function AddAmenity() {
                   className="h-11"
                   required
                 />
+                {timeError && (
+                  <p className="text-red-500 text-sm mt-2">{timeError}</p>
+                )}
               </div>
             </div>
           </div>
@@ -534,9 +610,7 @@ export default function AddAmenity() {
             <Button
               type="submit"
               className="bg-emerald-600 hover:bg-emerald-700 text-white px-8"
-              disabled={
-                !nameIsValid || formData.price < 0 || formData.capacity < 1
-              }
+             
             >
               {id ? "Update Amenity" : "Add Amenity"}
             </Button>

@@ -79,6 +79,10 @@ export default function BookingRequests() {
   const propertyCount = bookings.filter((b) => b.type === "property").length;
 
   const amenityCount = bookings.filter((b) => b.type === "amenity").length;
+
+  const calculateDays = (start, end) => {
+    return Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24));
+  };
    
   const handleStatusChange = async (id, type, status) => {
     try {
@@ -156,7 +160,7 @@ export default function BookingRequests() {
         </CardHeader>
 
         {/* Tabs */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 ml-2">
           {["all", "property", "amenity"].map((tab) => (
             <Button
               key={tab}
@@ -181,16 +185,16 @@ export default function BookingRequests() {
         <CardContent>
           <div className="grid md:grid-cols-2 gap-4">
             {bookings.map((b) => (
-              <Card key={b._id} className="bg-white border">
-                <CardContent className="p-6 space-y-4">
+              <Card key={b._id} className="bg-white border mt-3">
+                <CardContent className="p-6 space-y-4 ">
                   {/* Top badges */}
-                  <div className="flex justify-between items-center">
-                    <div className="flex gap-2">
-                      <Badge className="bg-slate-100 text-slate-700">
+                  <div className="flex justify-between items-center ">
+                    <div className="flex gap-2 ">
+                      <Badge className="bg-slate-100 text-slate-700 mt-3">
                         {b.type.toUpperCase()}
                       </Badge>
 
-                      <Badge className={getStatusColor(b.status)}>
+                      <Badge className={`mt-3 ${getStatusColor(b.status)}`}>
                         {b.status.toUpperCase()}
                       </Badge>
                     </div>
@@ -216,23 +220,28 @@ export default function BookingRequests() {
                       <p className="text-slate-400">DATE & TIME</p>
                       {b.startDate
                         ? new Date(b.startDate).toLocaleString("en-IN", {
-                          dateStyle: "medium",
-                          timeStyle: "short",
-                          }
-                        )
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          })
                         : new Date(b.date).toLocaleString("en-IN", {
-                          dateStyle: "medium",
-                          timeStyle: "short", 
-                          }
-                        )
-                      }
-
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          })}
                     </div>
 
                     <div>
-                      <p className="text-slate-400">DURATION</p>
-                      <p>{b.duration}</p>
-                      {b.guests && <p>{b.guests}</p>}
+                      
+                      {b.guests ? (
+                        <>
+                          <p className="text-slate-400">GUESTS</p>
+                          <p>{b.guests} Guests</p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-slate-400">DURATION</p>
+                          <p>{calculateDays(b.startDate, b.endDate)} Days</p>
+                        </>
+                      )}
                     </div>
                   </div>
 

@@ -248,10 +248,7 @@ export default function Tenants() {
                     {/* Action */}
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                          View
-                        </Button>
-
+                       
                         <Button
                           size="sm"
                           className="bg-blue-600 text-white"

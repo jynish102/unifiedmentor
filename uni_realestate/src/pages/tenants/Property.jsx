@@ -72,16 +72,16 @@ export default function Properties() {
  
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ml-3">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold text-gray-900">Properties</h2>
-          <p className="text-gray-600 mt-1">Manage your rental properties</p>
+          
         </div>
       </div>
 
       <Card>
-        <CardContent className="pt-6">
+        <CardContent className="pt-6 ">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-gray-400" />
@@ -208,36 +208,7 @@ export default function Properties() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-gray-600">Total Properties</p>
-            <p className="text-2xl font-bold mt-1">{properties.length}</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-gray-600">Occupied</p>
-            <p className="text-2xl font-bold mt-1">
-              {properties.filter((p) => p.status === "occupied").length}
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-gray-600">Total Monthly Revenue</p>
-            <p className="text-2xl font-bold mt-1">
-              $
-              {properties
-                .filter((p) => p.status === "occupied")
-                .reduce((sum, p) => sum + p.rent, 0)
-                .toLocaleString()}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      
     </div>
   );
 }

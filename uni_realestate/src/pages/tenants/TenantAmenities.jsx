@@ -105,8 +105,8 @@ export default function Amenities() {
                 <CardContent className="p-6">
                   {/* Top */}
                   <div className="flex items-start justify-between mb-4">
-                    <div className="text-3xl">🏢</div>
-                    <div className="flex items-center gap-2">
+                    <div className="text-3xl mt-3">🏢</div>
+                    <div className="flex items-center gap-2 mt-3">
                       {getStatusIcon(amenity.status)}
                       <Badge
                         className={

@@ -7,44 +7,80 @@ import toast from "react-hot-toast";
 
 export default function AddBooking() {
   const navigate = useNavigate();
-  const { propertyId} = useParams();
+  const { propertyId } = useParams();
+
+  const [dateError, setDateError] = useState("");
 
   const [formData, setFormData] = useState({
     startDate: "",
     endDate: "",
     rentAmount: "",
+    paymentFrequency: "",
     status: "pending",
     paymentStatus: "pending",
   });
 
+  // Fetch Property
   useEffect(() => {
     const fetchProperty = async () => {
-      const res = await API.get(`/property/${propertyId}`);
+      try {
+        const res = await API.get(`/property/${propertyId}`);
 
-      setFormData((prev) => ({
-        ...prev,
-        rentAmount: res.data.price,
-        paymentFrequency: res.data.paymentFrequency,
-        
-      }));
+        setFormData((prev) => ({
+          ...prev,
+          rentAmount: res.data.price,
+          paymentFrequency: res.data.paymentFrequency,
+        }));
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     fetchProperty();
   }, [propertyId]);
-  
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  // Validate Dates
+  const validateDates = (start, end) => {
+    if (!start || !end) {
+      setDateError("");
+      return;
+    }
+
+    if (new Date(start) >= new Date(end)) {
+      setDateError("End date must be after start date");
+      return;
+    }
+
+    setDateError("");
   };
 
+  // Handle Change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    const updated = {
+      ...formData,
+      [name]: value,
+    };
+
+    setFormData(updated);
+
+    if (name === "startDate" || name === "endDate") {
+      validateDates(
+        name === "startDate" ? value : updated.startDate,
+        name === "endDate" ? value : updated.endDate,
+      );
+    }
+  };
+
+  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    //  Date validation
-    if (new Date(formData.startDate) >= new Date(formData.endDate)) {
-      alert("End date must be after start date");
+    if (dateError) {
+      toast.error("Please fix date errors");
       return;
     }
-    // console.log("PROPERTY ID:", propertyId);
 
     try {
       const token = localStorage.getItem("token");
@@ -53,7 +89,6 @@ export default function AddBooking() {
         "/property-bookings",
         {
           property: propertyId,
-          
           ...formData,
         },
         {
@@ -61,80 +96,160 @@ export default function AddBooking() {
         },
       );
 
-      toast.success("Booking Requested ");
+      toast.success("Booking Requested");
       navigate("/tenant/properties");
     } catch (err) {
       console.error(err);
+
       toast.error(err.response?.data?.message || "Error creating booking");
     }
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Book Property</h2>
+    <div className="max-w-4xl mx-auto p-6">
+      {/* HEADER */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-2xl p-6 text-white shadow-lg">
+        <h2 className="text-3xl font-bold">Book Property</h2>
 
-      <Button
-        onClick={() => navigate(-1)}
-        className="bg-gray-500 text-white px-3 py-1 rounded mb-3"
-      >
-        Cancel
-      </Button>
+        <p className="text-white/80 text-sm mt-1">
+          Fill booking details to request property booking
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Start Date */}
-        <Input
-          name="startDate"
-          type="date"
-          value={formData.startDate}
-          onChange={handleChange}
-        />
+      {/* MAIN CARD */}
+      <div className="bg-white rounded-b-2xl shadow-2xl p-8">
+        <form onSubmit={handleSubmit} className="space-y-10">
+          {/* BOOKING DATES */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-5">
+              Booking Dates
+            </h3>
 
-        {/* End Date */}
-        <Input
-          name="endDate"
-          type="date"
-          value={formData.endDate}
-          onChange={handleChange}
-        />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Start Date */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Start Date*
+                </label>
 
-        {/* Rent Amount */}
-       
-          <p className="text-sm text-slate-500">Rent</p>
-          <p className="text-lg font-bold text-slate-900">
-            ₹{formData.rentAmount?.toLocaleString()} / {formData.paymentFrequency}
-          </p>
-      
+                <Input
+                  name="startDate"
+                  type="date"
+                  value={formData.startDate}
+                  onChange={handleChange}
+                  className={`h-11 ${dateError ? "border-red-500" : ""}`}
+                  required
+                />
+              </div>
 
-        {/* status */}
-        <select
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          className="border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="rejected">Rejected</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
+              {/* End Date */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  End Date*
+                </label>
 
-        {/* paymentStatus */}
-        <select
-          name="paymentStatus"
-          value={formData.paymentStatus}
-          onChange={handleChange}
-          className="border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="pending">Pending</option>
-          <option value="paid">Paid</option>
-          <option value="unpaid">Unpaid</option>
-        </select>
+                <Input
+                  name="endDate"
+                  type="date"
+                  value={formData.endDate}
+                  onChange={handleChange}
+                  className={`h-11 ${dateError ? "border-red-500" : ""}`}
+                  required
+                />
 
-        <Button type="submit" className="w-full">
-          Request Booking
-        </Button>
-      </form>
+                {dateError && (
+                  <p className="text-red-500 text-sm mt-2">{dateError}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* RENT DETAILS */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-5">
+              Rent Information
+            </h3>
+
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+              <p className="text-sm text-slate-500 mb-2">Rent Amount</p>
+
+              <p className="text-3xl font-bold text-slate-900">
+                ₹{formData.rentAmount?.toLocaleString()}
+              </p>
+
+              <p className="text-sm text-slate-500 mt-1 capitalize">
+                Per {formData.paymentFrequency}
+              </p>
+            </div>
+          </div>
+
+          {/* BOOKING STATUS */}
+          <div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-5">
+              Booking Status
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Status */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Booking Status
+                </label>
+
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="rejected">Rejected</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+
+              {/* Payment Status */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Payment Status
+                </label>
+
+                <select
+                  name="paymentStatus"
+                  value={formData.paymentStatus}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="paid">Paid</option>
+                  <option value="unpaid">Unpaid</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* BUTTONS */}
+          <div className="flex justify-end gap-4 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+              disabled={!!dateError}
+            >
+              Request Booking
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

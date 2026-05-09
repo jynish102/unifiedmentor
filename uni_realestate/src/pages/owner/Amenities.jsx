@@ -120,6 +120,14 @@ export default function Amenities() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Card>
+              <CardContent className="pt-6">
+                <p className="text-sm text-gray-600">Total Amenities</p>
+                <p className="text-2xl font-bold mt-1">{amenities.length}</p>
+              </CardContent>
+            </Card>
+          </div>
         </CardHeader>
 
         <CardContent>
@@ -134,8 +142,8 @@ export default function Amenities() {
                 <CardContent className="p-6">
                   {/* Top */}
                   <div className="flex items-start justify-between mb-4">
-                    <div className="text-3xl">🏢</div>
-                    <div className="flex items-center gap-2">
+                    <div className="text-3xl mt-2">🏢</div>
+                    <div className="flex items-center gap-2 mt-2">
                       {getStatusIcon(amenity.status)}
                       <Badge
                         className={

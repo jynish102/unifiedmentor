@@ -26,19 +26,19 @@ import {
   Wrench,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../../utils/api";
 
 export default function Maintenance() {
   const [requests, setRequests] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // ✅ FETCH FROM BACKEND
+  // FETCH FROM BACKEND
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/maintenance"); // 🔁 change URL
-        setRequests(res.data);
+        const res = await API.get("/maintenance"); 
+        setRequests(res.data.data);
       } catch (err) {
         console.error("Error fetching maintenance data:", err);
       }
@@ -48,18 +48,21 @@ export default function Maintenance() {
   }, []);
 
   // FILTER LOGIC
-  const filteredRequests = requests.filter((request) => {
-    const matchesSearch =
-      request.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.unit?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.tenant?.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredRequests = Array.isArray(requests)
+    ? requests.filter((request) => {
+        const matchesSearch =
+          request.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          request.unit?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          request.tenant?.fullname
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase());
 
-    const matchesStatus =
-      statusFilter === "all" || request.status === statusFilter;
+        const matchesStatus =
+          statusFilter === "all" || request.status === statusFilter;
 
-    return matchesSearch && matchesStatus;
-  });
-
+        return matchesSearch && matchesStatus;
+      })
+    : [];
   //  COLORS
   const getPriorityColor = (priority) => {
     switch (priority) {
@@ -106,7 +109,7 @@ export default function Maintenance() {
     }
   };
 
-  // ✅ STATS (dynamic)
+  // STATS (dynamic)
   const stats = [
     { label: "Total Requests", value: requests.length },
     {
@@ -132,10 +135,6 @@ export default function Maintenance() {
             Maintenance Requests
           </h2>
         </div>
-        <Button className="gap-2">
-          <Plus size={18} />
-          New Request
-        </Button>
       </div>
 
       {/* STATS */}
@@ -201,8 +200,8 @@ export default function Maintenance() {
               {filteredRequests.map((req) => (
                 <TableRow key={req._id}>
                   <TableCell>{req.title}</TableCell>
-                  <TableCell>{req.unit}</TableCell>
-                  <TableCell>{req.tenant}</TableCell>
+                  <TableCell>{req.property?.title}</TableCell>
+                  <TableCell>{req.tenant?.fullname?.toLowerCase()}</TableCell>
 
                   <TableCell>
                     <Badge className={getPriorityColor(req.priority)}>
@@ -219,7 +218,14 @@ export default function Maintenance() {
                     </Badge>
                   </TableCell>
 
-                  <TableCell>{req.dateCreated}</TableCell>
+                  <TableCell>
+                    {" "}
+                    {new Date(req.createdAt).toLocaleString("en-IN", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -94,7 +94,7 @@ exports.getMyProperties = async (req, res) => {
 
     const properties = await Property.find({
       owner: ownerId,
-      approvalStatus : "approved"
+      // approvalStatus : "approved"
     });
 
     res.json({

@@ -8,10 +8,11 @@ import toast from "react-hot-toast";
 export default function AddAmenity() {
   const navigate = useNavigate();
   const { id, propertyId } = useParams();
+  const [timeError, setTimeError] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
-    description: "",
+    description: "N/A",
     price: "",
     capacity: "1",
     location: "",
@@ -23,6 +24,13 @@ export default function AddAmenity() {
     priority: "medium",
     upcomingMaintenanceDate: "",
   });
+
+  //name validation
+  const validateName = (name) => {
+    return /^[A-Za-z\s]{2,}$/.test(name);
+  };
+
+  const nameIsValid = validateName(formData.name);
 
   const [images, setImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
@@ -64,7 +72,26 @@ export default function AddAmenity() {
   // }, [images]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name,value } = e.target
+    if (
+      [
+        "price",
+        "deposit",
+        "bedrooms",
+        "bathrooms",
+        "area",
+        "floor",
+        "totalFloors",
+        "units",
+        "occupied",
+        "capacity",
+      ].includes(name)
+    ) {
+      if (value < 0) return;
+    }
+    setFormData({
+       ...formData, 
+       [name]: value });
   };
 
   const handleTimeChange = (field, value) => {
@@ -82,7 +109,9 @@ export default function AddAmenity() {
         updated.operatingHours.end &&
         updated.operatingHours.start > updated.operatingHours.end
       ) {
-        alert("Start time must be before end time");
+       setTimeError("Start time must be before end time");
+      }else{
+        setTimeError("");
       }
 
       return updated;
@@ -134,6 +163,10 @@ export default function AddAmenity() {
     e.preventDefault();
     if (existingImages.length + images.length > 5) {
       toast.error("Max 5 images allowed");
+      return;
+    }
+    if (timeError) {
+      toast.error("Please fix operating hours");
       return;
     }
 
@@ -202,13 +235,6 @@ export default function AddAmenity() {
               Fill all details about the amenity
             </p>
           </div>
-
-          <Button
-            onClick={() => navigate("/owner/amenities")}
-            className="bg-white/20 hover:bg-white/30 border border-white/30 text-white"
-          >
-            Cancel
-          </Button>
         </div>
       </div>
 
@@ -224,7 +250,7 @@ export default function AddAmenity() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Amenity Name
+                  Amenity Name*
                 </label>
 
                 <Input
@@ -233,8 +259,26 @@ export default function AddAmenity() {
                   placeholder="Swimming Pool"
                   value={formData.name}
                   onChange={handleChange}
-                  className="h-11"
+                  className={`h-11 border ${
+                    formData.name
+                      ? nameIsValid
+                        ? "border-green-400"
+                        : "border-red-500"
+                      : "border-gray-300"
+                  }`}
+                  required
                 />
+                {formData.name && (
+                  <p
+                    className={`text-sm mt-2 ${
+                      nameIsValid ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    {nameIsValid
+                      ? "✓ Valid name"
+                      : "✗ Only letters and spaces allowed"}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -249,6 +293,7 @@ export default function AddAmenity() {
                   value={formData.location}
                   onChange={handleChange}
                   className="h-11"
+                  required
                 />
               </div>
 
@@ -260,7 +305,7 @@ export default function AddAmenity() {
                 <textarea
                   name="description"
                   placeholder="Describe this amenity..."
-                  value={formData.description}
+                  value={formData.description || ""}
                   onChange={handleChange}
                   rows={4}
                   className="w-full border border-gray-300 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -278,16 +323,18 @@ export default function AddAmenity() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Price
+                  Price*
                 </label>
 
                 <Input
                   name="price"
                   type="number"
+                  min="0"
                   placeholder="100"
                   value={formData.price}
                   onChange={handleChange}
                   className="h-11"
+                  required
                 />
               </div>
 
@@ -299,6 +346,7 @@ export default function AddAmenity() {
                 <Input
                   name="capacity"
                   type="number"
+                  min="1"
                   placeholder="50"
                   value={formData.capacity}
                   onChange={handleChange}
@@ -342,7 +390,11 @@ export default function AddAmenity() {
                   value={formData.operatingHours?.start}
                   onChange={(e) => handleTimeChange("start", e.target.value)}
                   className="h-11"
+                  required
                 />
+                {timeError && (
+                  <p className="text-red-500 text-sm mt-2">{timeError}</p>
+                )}
               </div>
 
               <div>
@@ -356,6 +408,7 @@ export default function AddAmenity() {
                   value={formData.operatingHours?.end}
                   onChange={(e) => handleTimeChange("end", e.target.value)}
                   className="h-11"
+                  required
                 />
               </div>
             </div>
@@ -481,6 +534,9 @@ export default function AddAmenity() {
             <Button
               type="submit"
               className="bg-emerald-600 hover:bg-emerald-700 text-white px-8"
+              disabled={
+                !nameIsValid || formData.price < 0 || formData.capacity < 1
+              }
             >
               {id ? "Update Amenity" : "Add Amenity"}
             </Button>

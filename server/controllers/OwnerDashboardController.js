@@ -96,6 +96,14 @@ exports.getOwnerDashboard = async (req, res) => {
     ]);
 
     // 5. Property Change
+    const now = new Date();
+
+    const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+
     const currentMonthProperties = await Property.countDocuments({
       owner: ownerId,
       createdAt: { $gte: startOfCurrentMonth },
@@ -111,13 +119,14 @@ exports.getOwnerDashboard = async (req, res) => {
 
     let propertyChange = 0;
 
-    if (lastMonthProperties > 0) {
+    if (lastMonthProperties === 0) {
+      propertyChange = currentMonthProperties;
+    } else {
       propertyChange = (
         ((currentMonthProperties - lastMonthProperties) / lastMonthProperties) *
         100
       ).toFixed(1);
     }
-    
     // console.log("unitsData:", unitsData);
     // console.log("totalUnits:", totalUnits);
     // console.log("occupiedUnits:", occupiedUnits);
@@ -133,6 +142,9 @@ exports.getOwnerDashboard = async (req, res) => {
 
     // tenant calculation
     const currentTenants = totalTenants;
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+
 
     const lastMonthTenants = await Booking.distinct("user", {
       property: { $in: propertyIds },
@@ -207,9 +219,7 @@ exports.getOwnerDashboard = async (req, res) => {
       date: b.createdAt,
     }));
 
-    const currentMonth = new Date().getMonth() + 1;
-    const currentYear = new Date().getFullYear();
-
+    
     const currentMonthRevenue = await Booking.aggregate([
       {
         $match: {

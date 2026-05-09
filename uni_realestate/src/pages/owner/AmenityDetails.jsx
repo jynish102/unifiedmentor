@@ -69,7 +69,7 @@ export default function AmenityDetails() {
 
       {/* Details */}
       <p>
-        <b>Description:</b> {amenity.description}
+        <b>Description:</b> {amenity.description || "N/A"}
       </p>
 
       <p>

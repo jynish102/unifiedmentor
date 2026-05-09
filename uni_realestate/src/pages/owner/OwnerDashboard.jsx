@@ -295,7 +295,7 @@ export  function OwnerDashboard() {
             <div className="space-y-4">
               {dashboard?.activity?.map((activity, index) => (
                 <div
-                  key={activity.id}
+                  key={activity._id || activity.date || index}
                   className="flex items-start space-x-4 pb-4 border-b last:border-b-0 last:pb-0"
                 >
                   <div className="mt-1">

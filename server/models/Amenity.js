@@ -20,20 +20,27 @@ const amenitySchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
+      min: 0,
     },
 
     capacity: {
       type: Number,
       default: 1,
+      min: 1,
     },
 
     location: {
       type: String,
+      required: true,
     },
 
     operatingHours: {
-      start: { type: String },
-      end: { type: String },
+      start: { type: String, required: true },
+      end: { type: String, required: true },
+      closesNextDay: {
+        type: Boolean,
+        default: false,
+      },
     },
 
     status: {
@@ -45,7 +52,7 @@ const amenitySchema = new mongoose.Schema(
     priority: {
       type: String,
       enum: ["low", "medium", "high"],
-      
+
       required: function () {
         return this.status === "maintenance";
       },

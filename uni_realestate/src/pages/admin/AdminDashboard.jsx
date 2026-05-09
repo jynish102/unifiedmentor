@@ -23,7 +23,7 @@ import { Building2, Users, DollarSign, TrendingUp } from "lucide-react";
 import API from "../../utils/api";
 import toast from "react-hot-toast";
 
-// 🎯 Icon mapping (backend sends string)
+//  Icon mapping (backend sends string)
 const iconMap = {
   Building2,
   Users,

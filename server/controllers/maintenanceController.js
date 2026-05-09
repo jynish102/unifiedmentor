@@ -11,6 +11,7 @@ exports.createMaintenance = async (req, res) => {
 
     const propertyId = req.body.property;
     const amenityId = req.body.amenity;
+    
     const userId = req.user._id || req.user.id;
 
     //  Both not allowed

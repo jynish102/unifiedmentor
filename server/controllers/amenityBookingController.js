@@ -1,4 +1,7 @@
+const Booking = require("../models/Booking");
 const AmenityBooking = require("../models/AmenityBooking");
+const Property = require("../models/Property");
+const Amenity = require("../models/Amenity");
 
 // CREATE BOOKING (with conflict check)
 exports.createAmenityBooking = async (req, res) => {
@@ -34,7 +37,6 @@ exports.createAmenityBooking = async (req, res) => {
         message: "End time must be after start time",
       });
     }
-
 
     // Conflict check
     const existing = await AmenityBooking.findOne({
@@ -83,6 +85,44 @@ exports.getAllAmenityBookings = async (req, res) => {
   res.json({ success: true, data: bookings });
 };
 
+//owner booking Request
+exports.getOwnerBookingRequests = async (req, res) => {
+  try {
+    const ownerId = req.user.id;
+
+    
+
+    // OWNER AMENITIES
+    const amenities = await Amenity.find({ owner: ownerId }).select("_id");
+
+    const amenityIds = amenities.map((a) => a._id);
+
+    
+
+    /* -------------------------------- AMENITY BOOKINGS ------------------------------- */
+
+    const amenityBookings = await AmenityBooking.find({
+      amenity: { $in: amenityIds },
+    })
+      .populate("user", "fullname email")
+      .populate("amenity", "name")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+
+    
+
+      amenityBookings,
+    });
+  } catch (error) {
+    console.log(error.res?.data || error.message);
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 // GET BY AMENITY
 exports.getBookingsByAmenity = async (req, res) => {
@@ -96,26 +136,26 @@ exports.getBookingsByAmenity = async (req, res) => {
     return res.status(404).json({
       message: "No bookings found for this amenity",
     });
-  }  
+  }
 
   res.json({ success: true, data: bookings });
 };
 
 // GET BOOKING BY USER
 exports.getUserBookings = async (req, res) => {
-  try{
+  try {
     const bookings = await AmenityBooking.find({
       user: req.user.id,
     })
-      .populate("amenity", "name address price") 
-      .populate("user", "fullname email"); 
+      .populate("amenity", "name address price")
+      .populate("user", "fullname email");
 
     res.json({
       success: true,
       count: bookings.length,
       data: bookings,
     });
-  }catch (err) {
+  } catch (err) {
     res.status(500).json({
       success: false,
       message: err.message,
@@ -141,8 +181,8 @@ exports.updateBookingStatus = async (req, res) => {
     }
 
     const booking = await AmenityBooking.findById(id);
-     console.log("BOOKING USER:", booking.user.toString());
-     console.log("LOGGED USER:", req.user.id.toString());
+    console.log("BOOKING USER:", booking.user.toString());
+    console.log("LOGGED USER:", req.user.id.toString());
 
     if (!booking) {
       return res.status(404).json({
@@ -168,7 +208,6 @@ exports.updateBookingStatus = async (req, res) => {
         message: "Not allowed to perform this action",
       });
     }
-   
 
     await booking.save();
 
@@ -190,7 +229,7 @@ exports.deleteAmenityBooking = async (req, res) => {
 
   res.json({
     success: true,
-    message: "Amenity booking deleted"
+    message: "Amenity booking deleted",
   });
 };
 

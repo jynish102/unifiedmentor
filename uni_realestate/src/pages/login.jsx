@@ -130,6 +130,7 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
+                autoFocus
                 className="w-full mt-1 px-4 py-3 rounded-xl bg-white/20 border border-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500 placeholder-white/60"
               />
             </div>

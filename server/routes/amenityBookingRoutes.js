@@ -6,6 +6,7 @@ const authorizeRoles = require("../middleware/authorizeRoles");
 const {
   createAmenityBooking,
   getAllAmenityBookings,
+  getOwnerBookingRequests,
   getBookingsByAmenity,
   getUserBookings,
   updateBookingStatus,
@@ -15,6 +16,7 @@ const {
 
 router.post("/", authMiddleware, createAmenityBooking);
 router.get("/", getAllAmenityBookings);
+router.get("/owner-booking-requests", authMiddleware, getOwnerBookingRequests);
 router.get("/amenity/:amenityId", getBookingsByAmenity);
 router.get("/my-amenity-bookings", authMiddleware, getUserBookings);
 

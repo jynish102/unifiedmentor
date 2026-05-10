@@ -26,11 +26,11 @@ exports.getProfileData = async (req, res) => {
     }
 
     // 3. If tenant → fetch booking
-    const booking = await Booking.find({ user: userId }).populate(
-      "property",
-      "title address",
-    );
-    const today = new Date();
+    const booking = await Booking.find({ user: userId })
+      .populate("property", "title address  paymentFrequency deposit")
+      .sort({ createdAt: -1 });
+    
+      const today = new Date();
 
     let counts = {
       active: 0,
@@ -85,9 +85,7 @@ exports.getProfileData = async (req, res) => {
 
       rentAmount: booking?.rentAmount,
       deposit: booking?.deposit,
-
       status : latestStatus,
-
       amenities,
     };
 

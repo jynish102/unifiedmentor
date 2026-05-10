@@ -6,6 +6,7 @@ const authorizeRoles = require("../middleware/authorizeRoles");
 const {
   createBooking,
   getAllBookings,
+  getOwnerBookingRequests,
   getUserBookings,
   updateBookingStatus,
   deleteBooking,
@@ -16,9 +17,11 @@ router.post("/", authMiddleware, createBooking);
 
 router.get("/", getAllBookings);
 
+router.get("/owner-booking-requests", authMiddleware, getOwnerBookingRequests);
+
 router.get("/my-property-bookings", authMiddleware, getUserBookings);
 
-router.put("/:id/status", authMiddleware, updateBookingStatus);
+router.put("/:id/status", authMiddleware,authorizeRoles("owner"), updateBookingStatus);
 
 router.delete("/:id", authMiddleware, authorizeRoles(["admin"]), deleteBooking);
 

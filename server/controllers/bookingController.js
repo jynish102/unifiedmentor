@@ -1,6 +1,8 @@
 const Booking = require("../models/Booking");
 const Property = require("../models/Property");
 const User = require("../models/User");
+const AmenityBooking = require("../models/AmenityBooking");
+const Amenity = require("../models/Amenity");
 
 
 // CREATE BOOKING
@@ -103,6 +105,42 @@ exports.getAllBookings = async (req, res) => {
     success: true,
     data: bookings,
   });
+};
+
+// owner booking request
+exports.getOwnerBookingRequests = async (req, res) => {
+  try {
+    const ownerId = req.user.id;
+    console.log(ownerId)
+
+    // OWNER PROPERTIES
+    const properties = await Property.find({ owner: ownerId }).select("_id");
+
+    const propertyIds = properties.map((p) => p._id);
+
+
+    /* -------------------------------- PROPERTY BOOKINGS ------------------------------- */
+
+    const propertyBookings = await Booking.find({
+      property: { $in: propertyIds },
+    })
+      .populate("user", "fullname email")
+      .populate("property", "title address")
+      .sort({ createdAt: -1 });
+    res.json({
+      success: true,
+
+      propertyBookings,
+
+   
+    });
+  } catch (error) {
+    console.log(error.res?.data || error.message);
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 // GET BOOKING BY USER

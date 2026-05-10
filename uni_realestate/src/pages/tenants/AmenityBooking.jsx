@@ -36,72 +36,92 @@ export default function BookAmenity() {
     fetchAmenity();
   }, [amenityId]);
 
-  const validateAmenityHours = (start, end) => {
-    if (!amenity?.operatingHours) return true;
-
-    const open = amenity.operatingHours.start;
-    const close = amenity.operatingHours.end;
-    const closesNextDay = amenity.operatingHours.closesNextDay;
-
-    // Same-day amenity
-    if (!closesNextDay) {
-      if (start < open || end > close) {
-        setTimeError(`Amenity available only between ${open} and ${close}`);
-        return false;
-      }
-    }
-
-    // Cross-midnight amenity
-    else {
-      const valid = start >= open || start <= close;
-
-      if (!valid) {
-        setTimeError(
-          `Amenity available between ${open} and ${close} (Next Day)`,
-        );
-        return false;
-      }
-    }
-
-    setTimeError("");
-    return true;
-  };
-
   // Validate Time
- const validateTime = (start, end, closesNextDay) => {
-   if (!start || !end) {
+ const validateTime = (start, end) => {
+   if (!start || !end || !amenity?.operatingHours) {
      setTimeError("");
      return;
    }
 
-   // Same time not allowed
-   if (start === end) {
-     setTimeError("Start and end time cannot be same");
+   const open = amenity.operatingHours.start;
+   const close = amenity.operatingHours.end;
+   const closesNextDay = amenity.operatingHours.closesNextDay;
+
+   const toMinutes = (time) => {
+     const [h, m] = time.split(":").map(Number);
+     return h * 60 + m;
+   };
+
+   let startMin = toMinutes(start);
+   let endMin = toMinutes(end);
+   let openMin = toMinutes(open);
+   let closeMin = toMinutes(close);
+
+   // Same time
+   if (startMin === endMin) {
+     setTimeError("Start time and end time cannot be same");
      return;
    }
 
-   // Same-day validation only
-   if (!closesNextDay && start > end) {
-     setTimeError("End time must be after start time");
-     return;
+   // SAME DAY
+   if (!closesNextDay) {
+     if (endMin <= startMin) {
+       setTimeError("End time must be after start time");
+       return;
+     }
+
+     if (startMin < openMin || endMin > closeMin) {
+       setTimeError(
+         `Amenity available only between ${formatTime(open)} and ${formatTime(close)}`,
+       );
+       return;
+     }
+   }
+
+   // CLOSES NEXT DAY
+   else {
+     // Convert overnight times
+     if (closeMin < openMin) {
+       closeMin += 24 * 60;
+     }
+
+     if (endMin < startMin) {
+       endMin += 24 * 60;
+     }
+
+     // booking after midnight
+     if (startMin < openMin) {
+       startMin += 24 * 60;
+     }
+
+     if (endMin < openMin) {
+       endMin += 24 * 60;
+     }
+
+     if (startMin < openMin || startMin > closeMin || endMin > closeMin) {
+       setTimeError(
+         `Amenity available between ${formatTime(open)} and ${formatTime(close)} (Next Day)`,
+       );
+       return;
+     }
    }
 
    setTimeError("");
  };
 
- const formatTime = (time) => {
-   if (!time) return "";
+  const formatTime = (time) => {
+    if (!time) return "";
 
-   const [hour, minute] = time.split(":");
+    const [hour, minute] = time.split(":");
 
-   const h = parseInt(hour);
+    const h = parseInt(hour);
 
-   const ampm = h >= 12 ? "PM" : "AM";
+    const ampm = h >= 12 ? "PM" : "AM";
 
-   const formattedHour = h % 12 || 12;
+    const formattedHour = h % 12 || 12;
 
-   return `${formattedHour}:${minute} ${ampm}`;
- };
+    return `${formattedHour}:${minute} ${ampm}`;
+  };
 
   // Handle Change
   const handleChange = (e) => {
@@ -117,20 +137,20 @@ export default function BookAmenity() {
 
     setFormData(updated);
 
+    // Updated times
+    const updatedStart = name === "startTime" ? value : updated.startTime;
+
+    const updatedEnd = name === "endTime" ? value : updated.endTime;
+
     // Validate Time
     if (name === "startTime" || name === "endTime") {
       validateTime(
-        name === "startTime" ? value : updated.startTime,
-        name === "endTime" ? value : updated.endTime,
-        amenity?.operatingHours?.closesNextDay,
+        updatedStart,
+        updatedEnd,
+       
       );
-       validateAmenityHours(
-         name === "startTime" ? value : updated.startTime,
-         name === "endTime" ? value : updated.endTime,
-       );
     }
   };
-
   // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -148,8 +168,11 @@ export default function BookAmenity() {
       const endDateTime = new Date(`${formData.date}T${formData.endTime}`);
 
       // Overnight booking support
-      
-      if (formData.closesNextDay) {
+      // Overnight booking
+      if (
+        amenity?.operatingHours?.closesNextDay &&
+        formData.endTime < formData.startTime
+      ) {
         endDateTime.setDate(endDateTime.getDate() + 1);
       }
 
@@ -181,7 +204,7 @@ export default function BookAmenity() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6 ">
       {/* HEADER */}
       <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-t-2xl p-6 text-white shadow-lg">
         <h2 className="text-3xl font-bold">Book Amenity</h2>
@@ -212,6 +235,7 @@ export default function BookAmenity() {
                   name="date"
                   value={formData.date}
                   onChange={handleChange}
+                  min={new Date().toISOString().split("T")[0]}
                   className="h-11"
                   required
                 />
@@ -242,7 +266,7 @@ export default function BookAmenity() {
               Available:{"  "}
               {formatTime(amenity?.operatingHours?.start)} -
               {formatTime(amenity?.operatingHours?.end)}
-              {amenity?.operatingHours?.closesNextDay && " (Next Day)"}
+              {amenity?.operatingHours?.closesNextDay && " (Close Next Day)"}
             </p>
             <h3 className="text-xl font-semibold text-gray-800 mb-5">
               Time Slot

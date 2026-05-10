@@ -17,19 +17,19 @@ export default function BookingRequests() {
         let res;
 
         if (activeTab === "property") {
-          res = await API.get("/property-bookings");
+          res = await API.get("/property-bookings/owner-booking-requests");
 
           // add type manually
-          const data = res.data.data.map((b) => ({
+          const data = res.data.propertyBookings.map((b) => ({
             ...b,
             type: "property",
           }));
 
           setBookings(data);
         } else if (activeTab === "amenity") {
-          res = await API.get("/amenity-bookings");
+          res = await API.get("/amenity-bookings/owner-booking-requests");
 
-          const data = res.data.data.map((b) => ({
+          const data = res.data.amenityBookings.map((b) => ({
             ...b,
             type: "amenity",
           }));
@@ -38,16 +38,16 @@ export default function BookingRequests() {
         } else {
           // ALL → call both APIs
           const [propertyRes, amenityRes] = await Promise.all([
-            API.get("/property-bookings"),
-            API.get("/amenity-bookings"),
+            API.get("/property-bookings/owner-booking-requests"),
+            API.get("/amenity-bookings/owner-booking-requests"),
           ]);
 
-          const propertyData = propertyRes.data.data.map((b) => ({
+          const propertyData = propertyRes.data.propertyBookings.map((b) => ({
             ...b,
             type: "property",
           }));
 
-          const amenityData = amenityRes.data.data.map((b) => ({
+          const amenityData = amenityRes.data.amenityBookings.map((b) => ({
             ...b,
             type: "amenity",
           }));
@@ -55,7 +55,7 @@ export default function BookingRequests() {
           setBookings([...propertyData, ...amenityData]);
         }
       } catch (err) {
-        console.error(err);
+        console.log("Error",err.res?.data || err.message);
       }
     };
     fetchBookings();
@@ -104,7 +104,7 @@ export default function BookingRequests() {
         prev.map((b) => (b._id === id ? { ...b, status } : b)),
       );
     } catch (err) {
-      console.error(err);
+      console.log("Error",err.res?.data || err.message);
     }
   };
 

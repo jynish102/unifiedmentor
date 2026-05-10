@@ -254,6 +254,7 @@ const handleSubmit = async (e) => {
                 value={formData.fullname}
                 onChange={handleChange}
                 required
+                autoFocus
                 className={`w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-red-900 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
                   formData.fullname
                     ? isValidName

@@ -16,6 +16,20 @@ export default function AmenityDetails() {
     return `http://localhost:5000/${img.replace(/\\/g, "/")}`;
   };
 
+  const formatTime = (time) => {
+    if (!time) return "";
+
+    const [hour, minute] = time.split(":");
+
+    const h = parseInt(hour);
+
+    const ampm = h >= 12 ? "PM" : "AM";
+
+    const formattedHour = h % 12 || 12;
+
+    return `${formattedHour}:${minute} ${ampm}`;
+  };
+
   useEffect(() => {
     const fetchAmenity = async () => {
       try {
@@ -97,7 +111,9 @@ export default function AmenityDetails() {
       <p>
         <b>Operating Hours:</b>{" "}
         {amenity?.operatingHours?.start && amenity?.operatingHours?.end
-          ? `${amenity.operatingHours.start} - ${amenity.operatingHours.end}`
+          ? `${formatTime(amenity.operatingHours.start)} - ${formatTime(
+              amenity.operatingHours.end,
+            )}${amenity.operatingHours.closesNextDay ? " (Next Day)" : ""}`
           : "N/A"}
       </p>
 

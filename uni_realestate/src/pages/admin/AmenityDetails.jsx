@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 
 export default function AmenityDetails() {
@@ -14,6 +14,20 @@ export default function AmenityDetails() {
   const getImageUrl = (img) => {
     if (!img) return "/default-image.jpg";
     return `http://localhost:5000/${img.replace(/\\/g, "/")}`;
+  };
+
+  const formatTime = (time) => {
+    if (!time) return "";
+
+    const [hour, minute] = time.split(":");
+
+    const h = parseInt(hour);
+
+    const ampm = h >= 12 ? "PM" : "AM";
+
+    const formattedHour = h % 12 || 12;
+
+    return `${formattedHour}:${minute} ${ampm}`;
   };
 
   useEffect(() => {
@@ -85,24 +99,33 @@ export default function AmenityDetails() {
       </p>
 
       <p>
-        <b>Operating Hours:</b>{" "}
-        {amenity?.operatingHours?.start && amenity?.operatingHours?.end
-          ? `${amenity.operatingHours.start} - ${amenity.operatingHours.end}`
-          : "N/A"}
-      </p>
-
+  <b>Operating Hours:</b>{" "}
+  {amenity?.operatingHours?.start &&
+  amenity?.operatingHours?.end
+    ? `${formatTime(
+        amenity.operatingHours.start
+      )} - ${formatTime(
+        amenity.operatingHours.end
+      )}${
+        amenity.operatingHours.closesNextDay
+          ? " (Next Day)"
+          : ""
+      }`
+    : "N/A"}
+</p>
       <p>
         <b>Status:</b> {amenity.status}
       </p>
-      
+
       {amenity.status === "maintenance" && (
-      <p>
-        <b>Priority:</b> {amenity.priority || "medium"}
-      </p>
+        <p>
+          <b>Priority:</b> {amenity.priority || "medium"}
+        </p>
       )}
 
       <p>
-        <b>Upcoming Maintenance Date:</b> {amenity.upcomingMaintenanceDate || ""}
+        <b>Upcoming Maintenance Date:</b>{" "}
+        {amenity.upcomingMaintenanceDate || ""}
       </p>
 
       <p>

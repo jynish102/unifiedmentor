@@ -3,7 +3,16 @@ const AmenityBooking = require("../models/AmenityBooking");
 // CREATE BOOKING (with conflict check)
 exports.createAmenityBooking = async (req, res) => {
   try {
-    const { amenity,  date, startTime, endTime } = req.body;
+    const {
+      amenity,
+      date,
+      startTime,
+      endTime,
+      guests,
+      note,
+      status,
+      paymentStatus,
+    } = req.body;
     if (!req.user || !req.user.id) {
       return res.status(401).json({
         message: "User not authenticated",
@@ -17,13 +26,22 @@ exports.createAmenityBooking = async (req, res) => {
       });
     }
 
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+
+    if (start >= end) {
+      return res.status(400).json({
+        message: "End time must be after start time",
+      });
+    }
+
 
     // Conflict check
     const existing = await AmenityBooking.findOne({
       amenity,
       date,
-      startTime: { $lt: endTime },
-      endTime: { $gt: startTime },
+      startTime: { $lt: end },
+      endTime: { $gt: start },
     });
 
     if (existing) {
@@ -36,8 +54,12 @@ exports.createAmenityBooking = async (req, res) => {
       amenity,
       user,
       date,
-      startTime,
-      endTime,
+      startTime: start,
+      endTime: end,
+      guests,
+      note,
+      status,
+      paymentStatus,
     });
 
     await booking.save();

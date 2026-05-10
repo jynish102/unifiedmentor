@@ -85,11 +85,11 @@ export default function PropertiesRequest() {
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-700";
+        return "py-1 bg-yellow-100 text-yellow-700";
       case "approved":
-        return "bg-green-100 text-green-700";
+        return "py-1  bg-green-100 text-green-700";
       case "rejected":
-        return "bg-red-100 text-red-700";
+        return "py-1 bg-red-100 text-red-700";
       default:
         return "bg-gray-100 text-gray-700";
     }
@@ -189,7 +189,7 @@ export default function PropertiesRequest() {
                   }}
                 />
                 <Badge
-                  className={`absolute top-3 right-3 ${getStatusColor(property.approvalStatus)}`}
+                  className={`absolute px-5 py-5 top-3 right-3 !text-base ${getStatusColor(property.approvalStatus)}`}
                 >
                   {property.approvalStatus}
                 </Badge>

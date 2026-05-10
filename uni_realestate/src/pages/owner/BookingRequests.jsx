@@ -190,11 +190,13 @@ export default function BookingRequests() {
                   {/* Top badges */}
                   <div className="flex justify-between items-center ">
                     <div className="flex gap-2 ">
-                      <Badge className="bg-slate-100 text-slate-700 mt-3">
+                      <Badge className="bg-slate-100 text-slate-700 mt-3 px-3 py-3 !text-base">
                         {b.type.toUpperCase()}
                       </Badge>
 
-                      <Badge className={`mt-3 ${getStatusColor(b.status)}`}>
+                      <Badge
+                        className={`mt-3 px-3 py-3 !text-base ${getStatusColor(b.status)}`}
+                      >
                         {b.status.toUpperCase()}
                       </Badge>
                     </div>
@@ -230,7 +232,6 @@ export default function BookingRequests() {
                     </div>
 
                     <div>
-                      
                       {b.guests ? (
                         <>
                           <p className="text-slate-400">GUESTS</p>

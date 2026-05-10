@@ -204,14 +204,14 @@ export default function Maintenance() {
                   <TableCell>{req.tenant?.fullname?.toLowerCase()}</TableCell>
 
                   <TableCell>
-                    <Badge className={getPriorityColor(req.priority)}>
+                    <Badge className={`px-3 py-3 !text-base ${getPriorityColor(req.priority)}`}>
                       {req.priority}
                     </Badge>
                   </TableCell>
 
                   <TableCell>
                     <Badge className={getStatusColor(req.status)}>
-                      <span className="flex items-center gap-1">
+                      <span className="flex items-center gap-1 px-3 py-3 !text-base">
                         {getStatusIcon(req.status)}
                         {req.status}
                       </span>

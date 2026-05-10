@@ -176,12 +176,11 @@ export function Properties() {
                     </div>
 
                     <Badge
-                      className={`mt-3 ${getStatusColor(property.status)}`}
+                      className={`mt-3 px-5 py-5 !text-base ${getStatusColor(property.status)}`}
                     >
                       {property.status}
                     </Badge>
                     {/* Right side approval status */}
-                  
                   </div>
 
                   {/* Name */}

@@ -76,7 +76,6 @@ export default function Properties() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold text-gray-900">Properties</h2>
-          
         </div>
       </div>
 
@@ -117,7 +116,7 @@ export default function Properties() {
                 }}
               />
               <Badge
-                className={`absolute top-3 right-3 ${getStatusColor(property.status)}`}
+                className={`absolute top-3 right-3 px-3 py-3 !text-base ${getStatusColor(property.status)}`}
               >
                 {property.status}
               </Badge>
@@ -154,7 +153,7 @@ export default function Properties() {
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">Monthly Rent:</span>
                 <span className="font-medium text-green-600 flex items-center">
-                 ₹{property.price?.toLocaleString()} /
+                  ₹{property.price?.toLocaleString()} /
                   {property.paymentFrequency}
                 </span>
               </div>
@@ -207,8 +206,6 @@ export default function Properties() {
           </Card>
         ))}
       </div>
-
-      
     </div>
   );
 }

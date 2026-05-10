@@ -52,7 +52,7 @@ export default function Amenities() {
 
   const getStatusIcon = (status) => {
     return status === "operational" ? (
-      <CheckCircle className="size-5 text-green-600 space-x-10" />
+      <CheckCircle className="size-6 text-green-600 space-x-10" />
     ) : (
       <AlertCircle className="size-4 text-orange-600  space-x-2" />
     );
@@ -146,11 +146,11 @@ export default function Amenities() {
                     <div className="flex items-center gap-2 mt-2">
                       {getStatusIcon(amenity.status)}
                       <Badge
-                        className={
+                        className={`px-3 py-3 !text-base ${
                           amenity.status === "operational"
                             ? "bg-green-100 text-green-700"
                             : "bg-orange-100 text-orange-700"
-                        }
+                        }`}
                       >
                         {amenity.status}
                       </Badge>

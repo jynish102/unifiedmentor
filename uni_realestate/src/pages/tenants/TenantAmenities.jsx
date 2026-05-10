@@ -109,11 +109,11 @@ export default function Amenities() {
                     <div className="flex items-center gap-2 mt-3">
                       {getStatusIcon(amenity.status)}
                       <Badge
-                        className={
+                        className={`px-3 py-3 !text-base ${
                           amenity.status === "operational"
                             ? "bg-green-100 text-green-700"
                             : "bg-orange-100 text-orange-700"
-                        }
+                        }`}
                       >
                         {amenity.status}
                       </Badge>

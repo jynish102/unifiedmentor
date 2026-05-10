@@ -232,7 +232,7 @@ export  default function Properties() {
                 />
 
                 <Badge
-                  className={`absolute top-3 right-3 ${getStatusColor(property.status)}`}
+                  className={`absolute top-3 right-3 px-3 py-3 !text-base ${getStatusColor(property.status)}`}
                 >
                   {property.status}
                 </Badge>

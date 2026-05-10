@@ -99,7 +99,9 @@ export default function TenantMaintenance() {
                 <div className="flex justify-between items-center">
                   <h3 className="font-semibold text-lg">{item.title}</h3>
 
-                  <Badge className={getStatusColor(item.status)}>
+                  <Badge
+                    className={`mt-3 px-3 py-3 !text-base ${getStatusColor(item.status)}`}
+                  >
                     {item.status}
                   </Badge>
                 </div>
@@ -112,6 +114,22 @@ export default function TenantMaintenance() {
                 <p className="text-sm text-gray-500">
                   🏠 {item.property?.title}
                 </p>
+
+                {/*  STEPPER END */}
+                <div className="flex justify-between items-center text-sm">
+                  <Badge
+                    className={`px-3 py-3 !text-base ${getPriorityColor(item.priority)}`}
+                  >
+                    {item.priority}
+                  </Badge>
+
+                  <span className="text-gray-500">
+                    {new Date(item.createdAt).toLocaleString("en-IN", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </span>
+                </div>
 
                 {previewImg && (
                   <div
@@ -157,8 +175,6 @@ export default function TenantMaintenance() {
                             <span className="absolute bottom-0 left-0 bg-blue-600 text-white text-[10px] px-1 rounded">
                               In Progress
                             </span>
-
-                          
                           </div>
 
                           {/* DATE */}
@@ -276,16 +292,6 @@ export default function TenantMaintenance() {
                       </div>
                     </>
                   )}
-                </div>
-                {/*  STEPPER END */}
-                <div className="flex justify-between items-center text-sm">
-                  <Badge className={getPriorityColor(item.priority)}>
-                    {item.priority}
-                  </Badge>
-
-                  <span className="text-gray-500">
-                    {new Date(item.createdAt).toLocaleDateString()}
-                  </span>
                 </div>
               </CardContent>
             </Card>

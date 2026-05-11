@@ -3,11 +3,13 @@ const Property = require("../models/Property");
 const User = require("../models/User");
 const AmenityBooking = require("../models/AmenityBooking");
 const Amenity = require("../models/Amenity");
+const Notification = require("../models/Notifications")
 
 
 // CREATE BOOKING
 exports.createBooking = async (req, res) => {
   try {
+    const currentUser = await User.findById(req.user.id);
     // console.log("PROPERTY ID:", req.body.property);
     const property = await Property.findById(req.body.property);
     // const user = await User.findById(req.body.user);
@@ -39,11 +41,8 @@ exports.createBooking = async (req, res) => {
       });
     }
 
-   
-
     const {  startDate, endDate, rentAmount } = req.body;
     
-
     // Check if property already booked for these dates
     const existingBooking = await Booking.findOne({
       property: property._id,
@@ -83,6 +82,19 @@ exports.createBooking = async (req, res) => {
     });
 
     await booking.save();
+    
+    await Notification.create({
+      user: property.owner, // admin id
+      title: "New Property Booking Request",
+      message: `${currentUser.fullname} added a new Property Booking Request`,
+      type: "booking",
+
+      relatedId: booking._id,
+      relatedModel: "Booking",
+
+      redirectUrl: `/owner/bookings-request`,
+    });
+
 
     res.status(201).json({
       success: true,

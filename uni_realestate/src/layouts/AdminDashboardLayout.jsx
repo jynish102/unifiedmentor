@@ -129,9 +129,14 @@ export function AdminDashboardLayout() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon">
+             
+              <Button variant="ghost" size="icon" onClick={() => {
+                        navigate("/admin/notification");
+                      
+                      }}>
                 <Bell size={20} />
               </Button>
+             
               <div className="relative" ref={dropdownRef}>
                 <div
                   onClick={() => setOpen(!open)}

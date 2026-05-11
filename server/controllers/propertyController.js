@@ -1,10 +1,15 @@
 const Property = require("../models/Property");
 const mongoose = require("mongoose");
+const Notification = require("../models/Notifications")
+const User = require("../models/user");
+
 exports.addProperty = async (req, res) => {
   try {
-    // console.log("BODY:", req.body);
+    // console.log("BODY:", req.user);
     // console.log("FILES:", req.files);
     const imagePaths = req.files?.map((file) => file.path) || [];
+    const admin = await User.findOne({ role: "admin" });
+    const currentUser = await User.findById(req.user.id);
     
     if (req.body.occupied > req.body.units) {
       return res.status(400).json({
@@ -19,6 +24,21 @@ exports.addProperty = async (req, res) => {
       approvalStatus: "pending",
     });
 
+    if(admin){
+    await Notification.create({
+      user: admin._id,
+      title: "New Property Request",
+      message: `${currentUser.fullname} added a new property`,
+      type: "property-request",
+
+      relatedId: property._id,
+      relatedModel: "Property",
+
+      redirectUrl: `/admin/properties-requests`,
+    });
+  }
+
+
     res.status(201).json({
       message: "Property request submitted for admin approval",
       property,
@@ -32,6 +52,7 @@ exports.addProperty = async (req, res) => {
 //get property Request
 exports.getPropertyRequests = async (req, res) => {
   try {
+    
     const properties = await Property.find({
       approvalStatus: "pending",
     })

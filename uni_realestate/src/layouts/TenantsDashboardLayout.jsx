@@ -116,7 +116,7 @@ export function TenantsDashboardLayout() {
       )}
 
       {/* Sidebar */}
-      <aside className="hidden lg:flex flex-col w-64 bg-white border-r">
+      <aside className="fixed top-0 left-0 z-40 hidden lg:flex flex-col w-64 h-screen bg-white border-r">
         <div className="p-6 border-b">
           <h1 className="text-2xl font-bold text-blue-600">TenantHub</h1>
           <p className="text-sm text-gray-600 mt-1">
@@ -130,7 +130,7 @@ export function TenantsDashboardLayout() {
       </aside>
 
       {/* Main content */}
-      <div className="lg:ml-64">
+      <div className="lg:ml-64 flex-1">
         {/* Header */}
         <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
           <div className="flex items-center justify-between px-4 py-4 gap-4">

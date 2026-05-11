@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Booking = require("../models/Booking");
 const AmenityBooking = require("../models/AmenityBooking");
 
+
 exports.getProfileData = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -75,16 +76,16 @@ exports.getProfileData = async (req, res) => {
       ...user.toObject(),
        name: user.fullname,
 
-      property: booking?.property?.title,
-      address: booking?.property?.address,
-      paymentFrequency : booking?.property?.paymentFrequency,
-      unit: booking?.unit,
+      property: latestBooking?.property?.title,
+      address: latestBooking?.property?.address,
+      paymentFrequency : latestBooking?.property?.paymentFrequency,
+      unit: latestBooking?.unit,
 
-      leaseStart: booking?.startDate,
-      leaseEnd: booking?.endDate,
+      leaseStart: latestBooking?.startDate,
+      leaseEnd: latestBooking?.endDate,
 
-      rentAmount: booking?.rentAmount,
-      deposit: booking?.deposit,
+      rentAmount: latestBooking?.rentAmount,
+      deposit: latestBooking?.deposit,
       status : latestStatus,
       amenities,
     };

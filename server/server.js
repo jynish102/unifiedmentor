@@ -60,7 +60,7 @@ app.use("/api" , supportRoutes);
 
 app.use("/api/messages", messageRoutes);
 
-app.use("api/notifications" , notificationRoutes)
+app.use("/api/notifications" , notificationRoutes)
 
 // Connect MongoDB
 mongoose

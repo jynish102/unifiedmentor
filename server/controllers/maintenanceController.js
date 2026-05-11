@@ -3,16 +3,29 @@ const Property = require("../models/Property");
 const User = require("../models/User");
 const Amenity = require("../models/Amenity");
 const mongoose = require("mongoose");
+const Notification = require("../models/Notifications")
 
 // CREATE MAINTENANCE REQUEST
 exports.createMaintenance = async (req, res) => {
   try {
-    const mongoose = require("mongoose");
-
     const propertyId = req.body.property;
     const amenityId = req.body.amenity;
-    
     const userId = req.user._id || req.user.id;
+    const currentUser = await User.findById(req.user.id);
+    
+    let ownerId = null;
+
+   // If maintenance for property
+    if (propertyId) {
+      const propertyData = await Property.findById(propertyId);
+      ownerId = propertyData.owner;
+    }
+
+    if (amenityId) {
+      const amenityData = await Amenity.findById(amenityId)
+      .populate("property");
+      ownerId = amenityData.property.owner;
+    }
 
     //  Both not allowed
     if (propertyId && amenityId) {
@@ -73,6 +86,21 @@ exports.createMaintenance = async (req, res) => {
     });
 
     await maintenance.save();
+
+    if(ownerId){
+      await Notification.create({
+        user: ownerId, // admin id
+        title: "New Maintenance",
+        message: `${currentUser.fullname} added a new maintenance`,
+        type: "maintenance",
+
+        relatedId: maintenance._id,
+        relatedModel: "Maintenance",
+
+        redirectUrl: `/owner/maintenance`,
+      });
+    }
+
 
     res.status(201).json({
       success: true,

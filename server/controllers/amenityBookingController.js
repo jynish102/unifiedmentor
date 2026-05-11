@@ -2,10 +2,14 @@ const Booking = require("../models/Booking");
 const AmenityBooking = require("../models/AmenityBooking");
 const Property = require("../models/Property");
 const Amenity = require("../models/Amenity");
+const Notification = require("../models/Notifications");
+const User = require("../models/user")
 
 // CREATE BOOKING (with conflict check)
 exports.createAmenityBooking = async (req, res) => {
   try {
+    const currentUser = await User.findById(req.user.id);
+    
     const {
       amenity,
       date,
@@ -22,6 +26,8 @@ exports.createAmenityBooking = async (req, res) => {
       });
     }
     const user = req.user.id;
+    const amenityData = await Amenity.findById(amenity).populate("property");
+
 
     if (!amenity || !date || !startTime || !endTime) {
       return res.status(400).json({
@@ -65,6 +71,21 @@ exports.createAmenityBooking = async (req, res) => {
     });
 
     await booking.save();
+
+    if(amenityData?.property?.owner){
+    await Notification.create({
+      user: amenityData.property.owner, // admin id
+      title: "New Amenity Booking Request",
+      message: `${currentUser.fullname} added a new amenity booking request`,
+      type: "amenity-booking",
+
+      relatedId: booking._id,
+      relatedModel: "AmenityBooking",
+
+      redirectUrl: `/owner/bookings-request`,
+    });
+  }
+
 
     res.status(201).json({
       success: true,

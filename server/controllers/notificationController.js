@@ -1,5 +1,6 @@
-const Notifications = require("../models/Notifications");
+const Notification = require("../models/Notifications");
 const mongoose = require("mongoose");
+const Use = require("../models/user");
 
 /* ---------------------------------------------------
    CREATE NOTIFICATION
@@ -15,7 +16,7 @@ exports.createNotification = async (req, res) => {
       type,
       relatedId,
       relatedModel,
-      redirectUrl
+      redirectUrl,
     });
 
     res.status(201).json({
@@ -38,9 +39,17 @@ exports.createNotification = async (req, res) => {
 --------------------------------------------------- */
 exports.getMyNotifications = async (req, res) => {
   try {
+
+
     const notifications = await Notification.find({
       user: req.user.id,
     }).sort({ createdAt: -1 });
+
+    // console.log("REQ USER:", req.user.id);
+
+    // const all = await Notification.find();
+
+    // console.log(all);
 
     res.json({
       success: true,
@@ -48,7 +57,7 @@ exports.getMyNotifications = async (req, res) => {
       data: notifications,
     });
   } catch (error) {
-    console.error("Get Notifications Error:", error);
+    console.error("Get Notifications Error:", error.res?.data || error.message);
 
     res.status(500).json({
       success: false,

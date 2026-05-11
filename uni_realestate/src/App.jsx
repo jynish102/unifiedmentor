@@ -58,7 +58,7 @@ import TenantAmenityDetails from "./pages/tenants/AmenityDetails";
 import AmenityBooking from "./pages/tenants/AmenityBooking";
 import AllBooking from "./pages/tenants/AllBookings";
 import TenantMessage from "./pages/tenants/Message";
-import  CreateMaintenance   from "./pages/tenants/CreateMaintenance";
+import CreateMaintenance   from "./pages/tenants/CreateMaintenance";
 import TenantMaintenance  from "./pages/tenants/TenantMaintenance";
 import TenantNotification from "./pages/tenants/TenantNotification"; 
 
@@ -102,8 +102,9 @@ function App() {
             <Route path="/ForgotPassword" element={<ForgotPassword />} />
             <Route path="/ResetPassword/:token" element={<ResetPassword />} />
           </Route>
+
           //admin routes
-          <Route path="/admin" element={<AdminDashboardLayout />}>
+          <Route path="/admin" element={<AdminDashboardLayout />} >
             <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/admin/properties-requests" element={<PropertyRequests />} />
             <Route path="properties" element={<Properties />} />
@@ -124,7 +125,9 @@ function App() {
               path="/admin/support-requests"
               element={<SupportRequest />}
             />
+            <Route path="/admin/notification" element={<AdminNotification />} />
           </Route>
+
           //owner routes
           <Route path="/owner" element={<OwnerDashboardLayout />}>
             <Route path="ownerdashboard" element={<OwnerDashboard />} />
@@ -154,12 +157,13 @@ function App() {
               path="/owner/amenities/:id"
               element={<OwnerAmenityDetails />}
             />
-            <Route path="bookings" element={<BookingRequests />} />
+            <Route path="bookings-request" element={<BookingRequests />} />
             <Route path="/owner/staff" element={<StaffList />} />
             <Route path="/owner/maintenance" element={<OwnerMaintenance />} />
             <Route path="/owner/tenants" element={<OwnerTenant />} />
             <Route path="/owner/messages" element={<OwnerMessages />} />
             <Route path="settings" element={<Settings />} />
+             <Route path="/owner/notification" element={<OwnerNotification />} />
           </Route>
           //tenant routes
           <Route path="/tenant" element={<TenantsDashboardLayout />}>
@@ -191,12 +195,14 @@ function App() {
             />
             <Route path="/tenant/maintenance" element={<TenantMaintenance />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="/tenant/notification" element={<TenantNotification />} />
           </Route>
 
           //staff routes
           <Route path="/staff" element={<StaffDashboardLayout />}>
             <Route path="/staff/maintenance" element={<StaffMaintenance />} />
             <Route path="/staff/profile" element={<StaffProfile />} />
+             <Route path="/staff/notification" element={<StaffNotification />} />
           </Route>
         </Routes>
       </Router>

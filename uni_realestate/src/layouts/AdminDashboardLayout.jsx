@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Building2,
@@ -14,7 +14,7 @@ import {
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -126,13 +126,6 @@ export function AdminDashboardLayout() {
                 <Menu size={20} />
               </button>
 
-              <div className="relative flex-1 max-w-md">
-                <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                  size={18}
-                />
-                <Input placeholder="Search..." className="pl-10" />
-              </div>
             </div>
 
             <div className="flex items-center gap-2">
@@ -177,6 +170,7 @@ export function AdminDashboardLayout() {
           <Outlet />
         </main>
       </div>
+
     </div>
   );
 }

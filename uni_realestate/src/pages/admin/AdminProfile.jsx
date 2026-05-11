@@ -525,9 +525,6 @@ export default function StaffProfile() {
             ))}
           </div>
         </div>
-
-        
-        
       </div>
     </div>
   );

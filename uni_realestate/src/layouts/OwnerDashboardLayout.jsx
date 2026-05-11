@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from "react-router";
+import { Outlet, Link, useLocation, useNavigate } from "react-router";
 import {
   LayoutDashboard,
   Building2,
@@ -11,19 +11,25 @@ import {
   Wrench,
   Dumbbell,
   Inbox,
-  Calendar
+  Calendar,
+  Bell
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { Button } from "../components/ui/button";
 
-export  function OwnerDashboardLayout() {
+
+export function OwnerDashboardLayout() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigation = [
     { path: "/owner/ownerdashboard", name: "Dashboard", icon: LayoutDashboard },
     { path: "/owner/properties", name: "Properties", icon: Building2 },
     { path: "/owner/amenities", name: "Amenities", icon: Dumbbell },
-     { path: "/owner/bookings", name: "Bookings", icon: Calendar },
+    { path: "/owner/bookings", name: "Bookings", icon: Calendar },
     { path: "/owner/staff", name: "Staff ", icon: User },
     { path: "/owner/maintenance", name: "Maintenance", icon: Wrench },
     { path: "/owner/tenants", name: "Tenants", icon: User },
@@ -37,6 +43,25 @@ export  function OwnerDashboardLayout() {
     }
     return location.pathname.startsWith(path);
   };
+
+  //handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
+   const dropdownRef = useRef();
+  
+    useEffect(() => {
+      const handleClickOutside = (e) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+          setOpen(false);
+        }
+      };
+  
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -94,19 +119,63 @@ export  function OwnerDashboardLayout() {
       </aside>
 
       {/* Main content */}
-      <main className="lg:ml-64 pt-16 lg:pt-0">
-        <div className="p-4 lg:p-8">
-          <Outlet />
-        </div>
-      </main>
+      <div className="lg:ml-64">
+        {/* Header */}
+        <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
+          <div className="flex items-center justify-between px-4 py-4 gap-4">
+            <div className="flex items-center gap-4 flex-1">
+              <button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden"
+                onClick={() => setSidebarOpen(true)}
+              >
+                <Menu size={20} />
+              </button>
+            </div>
 
-      {/* Mobile menu overlay */}
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      )}
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="icon">
+                <Bell size={20} />
+              </Button>
+              <div className="relative" ref={dropdownRef}>
+                <div
+                  onClick={() => setOpen(!open)}
+                  className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white"
+                >
+                  JD
+                </div>
+
+                {open && (
+                  <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-50">
+                    <Button
+                      onClick={() => {
+                        navigate("/owner/settings");
+                        setOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-black"
+                    >
+                      Profile
+                    </Button>
+
+                    <Button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100  hover:text-red-500"
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Page content */}
+        <main className="p-6">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

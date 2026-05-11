@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Home,
   Calendar,
@@ -7,14 +7,14 @@ import {
   Menu,
   Bell,
   Dumbbell,
-MailIcon
+  MailIcon,
 } from "lucide-react";
 
 import { Button } from "../components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import { Badge } from "../components/ui/badge";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import API from "../utils/api";
 
 const navigation = [
@@ -27,7 +27,9 @@ const navigation = [
   { path: "/tenant/profile", name: "Profile", icon: User },
 ];
 
-// ✅ MOVE THIS OUTSIDE
+
+
+
 function NavLinks({ location }) {
   return (
     <>
@@ -62,6 +64,9 @@ function NavLinks({ location }) {
 export function TenantsDashboardLayout() {
   const location = useLocation();
   const [tenant, setTenant] = useState(null);
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -81,8 +86,35 @@ export function TenantsDashboardLayout() {
     fetchUser();
   }, []);
 
+  //handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
+   const dropdownRef = useRef();
+  
+    useEffect(() => {
+      const handleClickOutside = (e) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+          setOpen(false);
+        }
+      };
+  
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
   return (
     <div className="flex h-screen bg-gray-50">
+      {/* Mobile sidebar backdrop */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r">
         <div className="p-6 border-b">
@@ -95,64 +127,63 @@ export function TenantsDashboardLayout() {
         <nav className="flex-1 p-4 space-y-2">
           <NavLinks location={location} />
         </nav>
-
-        <div className="p-4 border-t">
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <div className="size-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-              {tenant?.fullname ?
-                  tenant.fullname
-                .split(" ")
-                .map((n) => n[0])
-                .join(""):"U"}
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate">{tenant?.fullname || "user"}</p>
-              <p className="text-xs text-gray-600 truncate">
-                {tenant?.unit || "no unit"}
-              </p>
-            </div>
-          </div>
-        </div>
       </aside>
 
-      {/* Main */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Mobile Header */}
-        <header className="lg:hidden flex items-center justify-between p-4 bg-white border-b">
-          <Sheet>
-            <SheetTrigger asChild>
+      {/* Main content */}
+      <div className="lg:ml-64">
+        {/* Header */}
+        <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
+          <div className="flex items-center justify-between px-4 py-4 gap-4">
+            <div className="flex items-center gap-4 flex-1">
+              <button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden"
+                onClick={() => setSidebarOpen(true)}
+              >
+                <Menu size={20} />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
               <Button variant="ghost" size="icon">
-                <Menu className="size-6" />
+                <Bell size={20} />
               </Button>
-            </SheetTrigger>
+              <div className="relative" ref={dropdownRef}>
+                <div
+                  onClick={() => setOpen(!open)}
+                  className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white"
+                >
+                  JD
+                </div>
 
-            <SheetContent side="left" className="w-64 p-0">
-              <div className="p-6 border-b">
-                <h1 className="text-2xl font-bold text-blue-600">TenantHub</h1>
-                <p className="text-sm text-gray-600 mt-1">
-                  {tenant?.property || "building"}
-                </p>
+                {open && (
+                  <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-50">
+                    <Button
+                      onClick={() => {
+                        navigate("/tenant/profile");
+                        setOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-black"
+                    >
+                      Profile
+                    </Button>
+
+                    <Button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100  hover:text-red-500"
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                )}
               </div>
-
-              <nav className="p-4 space-y-2">
-                <NavLinks location={location} />
-              </nav>
-            </SheetContent>
-          </Sheet>
-
-          <h1 className="text-xl font-bold text-blue-600">TenantHub</h1>
-
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="size-5" />
-            <Badge className="absolute -top-1 -right-1 size-5 flex items-center justify-center bg-red-500 text-white text-xs">
-              3
-            </Badge>
-          </Button>
+            </div>
+          </div>
         </header>
 
-        {/* Content */}
-        <main className="flex-1 overflow-auto">
+        {/* Page content */}
+        <main className="p-6">
           <Outlet />
         </main>
       </div>

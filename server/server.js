@@ -19,6 +19,7 @@ const profileRoutes = require("./routes/profileRoutes");
 const userRoutes = require("./routes/userRoutes");
 const supportRoutes = require("./routes/supportRoutes");
 const messageRoutes = require("./routes/messageRoutes.js")
+const notificationRoutes = require("./routes/notificationRoutes.js")
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -45,7 +46,6 @@ app.use("/api/staff", userRoutes);
 
 app.use("/api/maintenance", maintenanceRoutes);
 
-
 app.use("/api/admin", adminRoutes);
 
 app.use("/api/owner", ownerDashboardRoutes);
@@ -59,6 +59,8 @@ app.use("/api" , profileRoutes);
 app.use("/api" , supportRoutes);
 
 app.use("/api/messages", messageRoutes);
+
+app.use("api/notifications" , notificationRoutes)
 
 // Connect MongoDB
 mongoose

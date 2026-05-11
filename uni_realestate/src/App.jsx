@@ -29,6 +29,7 @@ import AdminProfile from "./pages/admin/AdminProfile";
 import AddAmenity from "./pages/admin/AdminProfile";
 import AmenityDetails from "./pages/admin/AmenityDetails";
 import SupportRequest from "./pages/admin/SupportRequests";
+import AdminNotification from "./pages/admin/AdminNotifications";
 
 //owner
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
@@ -44,6 +45,7 @@ import OwnerMaintenance from "./pages/owner/Maintenance";
 import OwnerTenant from "./pages/owner/Tenants"
 import OwnerMessages from "./pages/owner/Messages";
 import Settings from "./pages/owner/Settings";
+import OwnerNotification from "./pages/owner/OwnerNotifications"; 
 
 //tenants
 import { Dashboard as TenantsDashboard } from "./pages/tenants/Dashboard";
@@ -58,8 +60,13 @@ import AllBooking from "./pages/tenants/AllBookings";
 import TenantMessage from "./pages/tenants/Message";
 import  CreateMaintenance   from "./pages/tenants/CreateMaintenance";
 import TenantMaintenance  from "./pages/tenants/TenantMaintenance";
+import TenantNotification from "./pages/tenants/TenantNotification"; 
+
+//staff
 import StaffProfile from "./pages/staff/StaffProfile";
 import StaffMaintenance from "./pages/staff/AssignMaintenance";
+import StaffNotification from "./pages/staff/StaffNotification";
+
 
 
 
@@ -185,6 +192,7 @@ function App() {
             <Route path="/tenant/maintenance" element={<TenantMaintenance />} />
             <Route path="profile" element={<Profile />} />
           </Route>
+
           //staff routes
           <Route path="/staff" element={<StaffDashboardLayout />}>
             <Route path="/staff/maintenance" element={<StaffMaintenance />} />

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Bell } from "lucide-react";
+import { Bell, CheckCheck } from "lucide-react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
-import { CheckCheck } from "lucide-react";
+
 
 export default function AdminNotifications() {
   const [notifications, setNotifications] = useState([]);

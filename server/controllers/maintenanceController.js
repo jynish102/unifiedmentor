@@ -340,10 +340,13 @@ exports.assignMaintenance = async (req, res) => {
   try {
     const { id } = req.params;
     const { assignedTo } = req.body;
+   
     const ownerId = req.user._id || req.user.id;
 
     // 1. Check maintenance exists
     const maintenance = await Maintenance.findById(id);
+    
+    
 
     if (!maintenance) {
       return res.status(404).json({
@@ -418,6 +421,30 @@ exports.assignMaintenance = async (req, res) => {
     });
 
     await maintenance.save();
+    await Notification.create({
+      user: maintenance.assignedTo,
+
+      title: "New Maintenance Assigned",
+
+      message: `You have been assigned a maintenance task: ${maintenance.title}`,
+
+      type: "maintenance-assigned",
+
+      relatedId: maintenance._id,
+      relatedModel: "Maintenance",
+
+      redirectUrl: "/staff/maintenance",
+    });
+
+    await Notification.create({
+      user: maintenance.tenant,
+      title: "Maintenance Assigned",
+      message: `Your maintenance request "${maintenance.title}" has been assigned`,
+      type: "maintenance-update",
+      relatedId: maintenance._id,
+      relatedModel: "Maintenance",
+      redirectUrl: "/tenant/maintenance",
+    });
 
     res.json({
       success: true,
@@ -440,6 +467,8 @@ exports.updateMaintenanceStatus = async (req, res) => {
     const role = req.user.role;
 
     const maintenance = await Maintenance.findById(id);
+    
+   
 
     if (!maintenance) {
       return res.status(404).json({ message: "Maintenance not found" });
@@ -557,6 +586,23 @@ exports.updateMaintenanceStatus = async (req, res) => {
     });
 
     await maintenance.save();
+
+   
+
+    await Notification.create({
+      user: maintenance.tenant,
+
+      title: "Maintenance Request Assigned",
+
+      message: `Your maintenance request "${maintenance.title}" has been assigned to staff`,
+
+      type: "maintenance-update",
+
+      relatedId: maintenance._id,
+      relatedModel: "Maintenance",
+
+      redirectUrl: "/tenant/maintenance",
+    });
 
     res.json({
       success: true,

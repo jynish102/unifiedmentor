@@ -104,6 +104,30 @@ exports.updateApprovalStatus = async (req, res) => {
     property.approvedAt = new Date();
 
     await property.save();
+    await Notification.create({
+      user: property.owner,
+
+      title:
+        approvalStatus === "approved"
+          ? "Property Approved"
+          : "Property Rejected",
+
+      message:
+        approvalStatus === "approved"
+          ? `${property.title} has been approved by admin`
+          : `${property.title} has been rejected by admin`,
+
+      type:
+        approvalStatus === "approved"
+          ? "property-approved"
+          : "property-rejected",
+
+      relatedId: property._id,
+      relatedModel: "Property",
+
+      redirectUrl: "/owner/properties",
+    });
+
 
     res.status(200).json({
       success: true,

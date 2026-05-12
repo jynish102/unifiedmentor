@@ -13,7 +13,20 @@ const notificationSchema = new mongoose.Schema(
 
     type: {
       type: String,
-      enum: ["property-request", "booking","amenity-booking", "maintenance"],
+      enum: [
+        "property-request",
+        "booking",
+        "amenity-booking",
+        "maintenance",
+        "property-approved",
+        "property-rejected",
+        "booking-approved",
+        "booking-rejected",
+        "amenityBooking-approved",
+        "amenityBooking-rejected",
+        "maintenance-assigned",
+        "maintenance-update",
+      ],
     },
 
     isRead: {
@@ -25,13 +38,11 @@ const notificationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
     },
 
-    
     relatedModel: {
       type: String,
-      enum: ["Property" , "Booking", "AmenityBooking","Maintenance" ],
+      enum: ["Property", "Booking", "AmenityBooking", "Maintenance"],
     },
 
- 
     redirectUrl: {
       type: String,
     },

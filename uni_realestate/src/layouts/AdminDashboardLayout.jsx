@@ -132,7 +132,6 @@ export function AdminDashboardLayout() {
              
               <Button variant="ghost" size="icon" onClick={() => {
                         navigate("/admin/notification");
-                      
                       }}>
                 <Bell size={20} />
               </Button>

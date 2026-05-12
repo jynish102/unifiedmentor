@@ -106,7 +106,13 @@ export function StaffDashboardLayout() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  navigate("/staff/notification");
+                }}
+              >
                 <Bell size={20} />
               </Button>
               <div className="relative" ref={dropdownRef}>

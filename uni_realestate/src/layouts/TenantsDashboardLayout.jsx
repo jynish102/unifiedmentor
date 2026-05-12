@@ -145,7 +145,12 @@ export function TenantsDashboardLayout() {
               </button>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div
+              className="flex items-center gap-2"
+              onClick={() => {
+                navigate("/tenant/notification");
+              }}
+            >
               <Button variant="ghost" size="icon">
                 <Bell size={20} />
               </Button>

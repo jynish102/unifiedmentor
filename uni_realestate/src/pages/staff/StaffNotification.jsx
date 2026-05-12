@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { Bell } from "lucide-react";
+import { Bell, CheckCheck } from "lucide-react";
 import API from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 
 export default function StaffNotifications() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
+
 
   useEffect(() => {
     fetchNotifications();
@@ -26,6 +29,32 @@ export default function StaffNotifications() {
     }
   };
 
+  const handleNotificationClick = async (notification) => {
+    try {
+      await API.put(
+        `/notifications/${notification._id}/read`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+
+      setNotifications((prev) =>
+        prev.map((n) =>
+          n._id === notification._id ? { ...n, isRead: true } : n,
+        ),
+      );
+
+      if (notification.redirectUrl) {
+        navigate(notification.redirectUrl);
+      }
+    } catch (error) {
+      console.log(error.res?.data || error);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-6">
       {/* Header */}
@@ -35,9 +64,7 @@ export default function StaffNotifications() {
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Notifications
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
 
           <p className="text-sm text-gray-500">
             Stay updated with latest activity
@@ -55,9 +82,7 @@ export default function StaffNotifications() {
         <div className="bg-white rounded-2xl shadow-md p-10 text-center">
           <Bell className="mx-auto text-gray-300 size-10 mb-3" />
 
-          <p className="text-gray-500 font-medium">
-            No notifications found
-          </p>
+          <p className="text-gray-500 font-medium">No notifications found</p>
         </div>
       ) : (
         /* Notification List */
@@ -70,6 +95,7 @@ export default function StaffNotifications() {
                   ? "border-blue-500 bg-blue-50"
                   : "border-gray-100"
               }`}
+              onClick={() => handleNotificationClick(notification)}
             >
               <div className="flex justify-between items-start gap-4 px-3 py-3">
                 <div className="flex-1">
@@ -79,8 +105,11 @@ export default function StaffNotifications() {
                       {notification.title}
                     </h2>
 
-                    {!notification.isRead && (
-                      <span className="size-2 rounded-full bg-blue-500" />
+                    {notification.isRead && (
+                      <div className="flex items-center gap-1 mt-2 text-blue-500">
+                        <CheckCheck className="size-5" />
+                        <span className="text-small">Read</span>
+                      </div>
                     )}
                   </div>
 
@@ -96,16 +125,13 @@ export default function StaffNotifications() {
                 </div>
 
                 {/* Date */}
-                <div className="text-xs text-gray-400 whitespace-nowrap">
-                  {new Date(notification.createdAt).toLocaleString(
-                    "en-IN",
-                    {
-                      day: "2-digit",
-                      month: "short",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    }
-                  )}
+                <div className="text-base text-gray-400 whitespace-nowrap">
+                  {new Date(notification.createdAt).toLocaleString("en-IN", {
+                    day: "2-digit",
+                    month: "short",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </div>
               </div>
             </div>

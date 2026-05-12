@@ -52,27 +52,27 @@ export default function OwnerMaintenance() {
     fetchStaff();
   }, []);
 
-  const updateStatus = async (id, status) => {
-    try {
-      const token = localStorage.getItem("token");
+  // const updateStatus = async (id, status) => {
+  //   try {
+  //     const token = localStorage.getItem("token");
 
-      await API.put(
-        `/maintenance/${id}/status`,
-        { status },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+  //     await API.put(
+  //       `/maintenance/${id}/status`,
+  //       { status },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       },
+  //     );
 
-      toast.success("Status updated");
-      fetchMaintenance();
-    } catch (err) {
-      console.error(err);
-      toast.error("Error fetching maintenance:", err);
-    }
-  };
+  //     toast.success("Status updated");
+  //     fetchMaintenance();
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error("Error fetching maintenance:", err);
+  //   }
+  // };
 
   // Assign maintenance
   const assignMaintenance = async (id) => {

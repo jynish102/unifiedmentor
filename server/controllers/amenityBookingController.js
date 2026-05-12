@@ -191,7 +191,7 @@ exports.updateBookingStatus = async (req, res) => {
     const { id } = req.params;
 
     const role = req.user.role.toLowerCase();
-    console.log("ROLE:", role);
+    // console.log("ROLE:", role);
 
     const validStatus = ["pending", "approved", "rejected", "cancelled"];
     if (!validStatus.includes(status)) {
@@ -202,8 +202,8 @@ exports.updateBookingStatus = async (req, res) => {
     }
 
     const booking = await AmenityBooking.findById(id);
-    console.log("BOOKING USER:", booking.user.toString());
-    console.log("LOGGED USER:", req.user.id.toString());
+    // console.log("BOOKING USER:", booking.user.toString());
+    // console.log("LOGGED USER:", req.user.id.toString());
 
     if (!booking) {
       return res.status(404).json({
@@ -231,6 +231,23 @@ exports.updateBookingStatus = async (req, res) => {
     }
 
     await booking.save();
+    await Notification.create({
+      user: booking.user,
+
+      title: status === "approved" ? "Booking Approved" : "Booking Rejected",
+
+      message:
+        status === "approved"
+          ? "Your property booking request has been approved"
+          : "Your property booking request has been rejected",
+
+      type: status === "approved" ? "amenityBooking-approved" : "amenityBooking-rejected",
+
+      relatedId: booking._id,
+      relatedModel: "Booking",
+
+      redirectUrl: "/tenant/bookings",
+    });
 
     res.json({
       success: true,

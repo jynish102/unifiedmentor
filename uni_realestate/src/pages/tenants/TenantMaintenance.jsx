@@ -78,20 +78,20 @@ export default function TenantMaintenance() {
       {/* List */}
       <div className="grid gap-4">
         {maintenance.map((item) => {
-           const inProgressImages = item.proofImages?.filter(
-              (img) => img.status === "in-progress",
-            );
+          const inProgressImages = item.proofImages?.filter(
+            (img) => img.status === "in-progress",
+          );
 
-            const completedImages = item.proofImages?.filter(
-              (img) => img.status === "completed",
-            );
+          const completedImages = item.proofImages?.filter(
+            (img) => img.status === "completed",
+          );
 
-            const formatDate = (date) => {
-              return new Date(date).toLocaleString("en-IN", {
-                dateStyle: "medium",
-                timeStyle: "short",
-              });
-            };
+          const formatDate = (date) => {
+            return new Date(date).toLocaleString("en-IN", {
+              dateStyle: "medium",
+              timeStyle: "short",
+            });
+          };
 
           return (
             <Card key={item._id}>
@@ -223,9 +223,15 @@ export default function TenantMaintenance() {
 
                 {/* STEPPER START */}
                 <div className="mt-3">
-                  {item.status === "rejected" ? (
-                    <div className="text-center text-red-600 font-medium">
-                      Request Rejected
+                  {item.status === "rejected" && item.rejectReason ? (
+                    <div className="mt-3 bg-red-50 border border-red-200 rounded-xl p-3">
+                      <p className="text-sm font-medium text-red-700">
+                        Reject Reason
+                      </p>
+
+                      <p className="text-sm text-red-600 mt-1">
+                        {item.rejectReason}
+                      </p>
                     </div>
                   ) : (
                     <>

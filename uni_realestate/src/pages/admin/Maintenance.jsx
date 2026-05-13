@@ -104,6 +104,8 @@ export default function Maintenance() {
         return <CheckCircle size={16} />;
       case "cancelled":
         return <AlertCircle size={16} />;
+      case "rejected":
+        return <AlertCircle size={16} />;  
       default:
         return null;
     }
@@ -124,6 +126,15 @@ export default function Maintenance() {
       label: "Completed",
       value: requests.filter((r) => r.status === "completed").length,
     },
+    {
+      label: "Cancelled",
+      value: requests.filter((r) => r.status === "cancelled").length,
+    },  
+    {
+      label: "Rejected",
+      value: requests.filter((r) => r.status === "rejected").length,
+    },
+
   ];
 
   return (
@@ -188,10 +199,11 @@ export default function Maintenance() {
             <TableHeader>
               <TableRow>
                 <TableHead>Request</TableHead>
-                <TableHead>Unit</TableHead>
+                <TableHead>Title/Name</TableHead>
                 <TableHead>Tenant</TableHead>
                 <TableHead>Priority</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Reject Reason</TableHead>
                 <TableHead>Date</TableHead>
               </TableRow>
             </TableHeader>
@@ -200,11 +212,13 @@ export default function Maintenance() {
               {filteredRequests.map((req) => (
                 <TableRow key={req._id}>
                   <TableCell>{req.title}</TableCell>
-                  <TableCell>{req.property?.title}</TableCell>
+                  <TableCell>{req.property?.title || req.amenity?.name || "N/A"}</TableCell>
                   <TableCell>{req.tenant?.fullname?.toLowerCase()}</TableCell>
 
                   <TableCell>
-                    <Badge className={`px-3 py-3 !text-base ${getPriorityColor(req.priority)}`}>
+                    <Badge
+                      className={`px-3 py-3 !text-base ${getPriorityColor(req.priority)}`}
+                    >
                       {req.priority}
                     </Badge>
                   </TableCell>
@@ -216,6 +230,21 @@ export default function Maintenance() {
                         {req.status}
                       </span>
                     </Badge>
+                  </TableCell>
+
+                  <TableCell>
+                    {req.rejectReason ? (
+                      <div className="mt-3 bg-red-50 border border-red-200 rounded-xl p-3">
+                        <p className="text-sm font-medium text-red-700">
+                          Reject Reason
+                        </p>
+                        <p className="text-sm text-red-600 mt-1">
+                          {req.rejectReason}
+                        </p>
+                      </div>
+                    ) : (
+                      <span className="text-gray-400 text-sm">—</span>
+                    )}
                   </TableCell>
 
                   <TableCell>

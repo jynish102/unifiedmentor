@@ -147,7 +147,30 @@ exports.getAllMaintenance = async (req, res) => {
     },
 
     // convert array → object
-    { $unwind: "$property" },
+    {
+      $unwind: {
+        path: "$property",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+
+    // JOIN Amenity
+    {
+      $lookup: {
+        from: "amenities",
+        localField: "amenity",
+        foreignField: "_id",
+        as: "amenity",
+      },
+    },
+
+    //convert array → object for amenity
+    {
+      $unwind: {
+        path: "$amenity",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
 
     // JOIN Tenant (User)
     {
@@ -160,7 +183,12 @@ exports.getAllMaintenance = async (req, res) => {
     },
 
     // convert array → object
-    { $unwind: "$tenant" },
+    {
+      $unwind: {
+        path: "$tenant",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
   ]);
 
   res.json({
@@ -456,7 +484,7 @@ exports.assignMaintenance = async (req, res) => {
 exports.updateMaintenanceStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, rejectReason } = req.body;
     const userId = req.user._id || req.user.id;
     const role = req.user.role;
 
@@ -575,10 +603,12 @@ exports.updateMaintenanceStatus = async (req, res) => {
    
     // UPDATE
     maintenance.status = status;
+    maintenance.rejectReason = rejectReason;
 
     maintenance.updates.push({
       message: statusMessages[status],
       status: status,
+     
       updatedBy: userId,
     });
 

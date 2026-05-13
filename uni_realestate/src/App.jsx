@@ -63,6 +63,7 @@ import TenantMaintenance  from "./pages/tenants/TenantMaintenance";
 import TenantNotification from "./pages/tenants/TenantNotification"; 
 
 //staff
+import StaffDashboard from "./pages/staff/StaffDashboard";
 import StaffProfile from "./pages/staff/StaffProfile";
 import StaffMaintenance from "./pages/staff/AssignMaintenance";
 import StaffNotification from "./pages/staff/StaffNotification";
@@ -200,6 +201,7 @@ function App() {
 
           //staff routes
           <Route path="/staff" element={<StaffDashboardLayout />}>
+            <Route path="/staff/dashboard" element={<StaffDashboard />} />
             <Route path="/staff/maintenance" element={<StaffMaintenance />} />
             <Route path="/staff/profile" element={<StaffProfile />} />
              <Route path="/staff/notification" element={<StaffNotification />} />

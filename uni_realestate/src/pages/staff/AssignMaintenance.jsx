@@ -257,7 +257,7 @@ export default function StaffMaintenance() {
                   {item.status === "assigned" && (
                     <Button
                       onClick={() => updateStatus(item._id, "in-progress")}
-                      className="px-3 py-1 bg-blue-600 text-white rounded"
+                      className="cursor-pointer px-3 py-1 bg-blue-600 text-white rounded"
                     >
                       Start Work
                     </Button>
@@ -383,7 +383,7 @@ export default function StaffMaintenance() {
                             {item.status === "in-progress" && (
                               <Button
                                 onClick={() => deleteImage(item._id, img.url)}
-                                className="absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded"
+                                className=" cursor-pointer absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded"
                               >
                                 ✕
                               </Button>
@@ -443,7 +443,7 @@ export default function StaffMaintenance() {
                         onClick={() =>
                           setCompleteModal({ open: false, id: null })
                         }
-                        className="absolute top-2 right-3 text-xl text-gray-600"
+                        className="cursor-pointer absolute top-2 right-3 text-xl text-gray-600"
                       >
                         ✕
                       </Button>
@@ -506,7 +506,7 @@ export default function StaffMaintenance() {
                       {/* CONFIRM BUTTON */}
                       <Button
                         onClick={() => handleComplete(completeModal.id)}
-                        className="w-full bg-green-600 text-white py-2 rounded"
+                        className=" cursor-pointer w-full bg-green-600 text-white py-2 rounded"
                       >
                         Confirm Complete
                       </Button>

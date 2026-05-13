@@ -350,7 +350,7 @@ export default function Tenants() {
             <div className="flex justify-end gap-3 px-6 py-5 border-t bg-gray-50">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-xl px-5 py-2"
+                className="border border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
               >
                 Cancel
               </button>

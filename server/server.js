@@ -16,6 +16,7 @@ const ownerDashboardRoutes = require("./routes/ownerDashboardRoutes");
 const tenantDashboardRoutes = require("./routes/tenantDashboardRoutes");
 const tenantRoutes = require("./routes/tenantRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const staffRoutes = require("./routes/staffRoutes");
 const userRoutes = require("./routes/userRoutes");
 const supportRoutes = require("./routes/supportRoutes");
 const messageRoutes = require("./routes/messageRoutes.js")
@@ -59,6 +60,8 @@ app.use("/api" , supportRoutes);
 app.use("/api/messages", messageRoutes);
 
 app.use("/api/notifications" , notificationRoutes)
+
+app.use("/api/staff", staffRoutes);
 
 // Connect MongoDB
 mongoose

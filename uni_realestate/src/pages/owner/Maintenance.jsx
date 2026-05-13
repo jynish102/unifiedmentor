@@ -10,6 +10,9 @@ export default function OwnerMaintenance() {
   const [staffList, setStaffList] = useState([]);
   const steps = ["pending", "assigned", "in-progress", "completed"];
   const [previewImg, setPreviewImg] = useState(null);
+  const [rejectOpen, setRejectOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [rejectReason, setRejectReason] = useState("");
 
   const fetchMaintenance = async () => {
     try {
@@ -52,13 +55,13 @@ export default function OwnerMaintenance() {
     fetchStaff();
   }, []);
 
-  const updateStatus = async (id, status) => {
+  const updateStatus = async (id, status, reason = "") => {
     try {
       const token = localStorage.getItem("token");
 
       await API.put(
         `/maintenance/${id}/status`,
-        { status },
+        { status, rejectReason: reason },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -69,8 +72,11 @@ export default function OwnerMaintenance() {
       toast.success("Status updated");
       fetchMaintenance();
     } catch (err) {
-      console.log("Error",err.res?.data || err.message);
-      toast.error("Error fetching maintenance:", err.response?.data?.message || err.message);
+      console.log("Error", err.res?.data || err.message);
+      toast.error(
+        "Error fetching maintenance:",
+        err.response?.data?.message || err.message,
+      );
     }
   };
 
@@ -114,7 +120,7 @@ export default function OwnerMaintenance() {
       ) : (
         <div className="grid gap-4">
           {data.map((item) => {
-             const inProgressImages = item.proofImages?.filter(
+            const inProgressImages = item.proofImages?.filter(
               (img) => img.status === "in-progress",
             );
 
@@ -192,6 +198,18 @@ export default function OwnerMaintenance() {
                     {item.status}
                   </span>
                 </div>
+
+                {item.status === "rejected" && item.rejectReason && (
+                  <div className="mt-3 bg-red-50 border border-red-200 rounded-xl p-3">
+                    <p className="text-sm font-medium text-red-700">
+                      Reject Reason
+                    </p>
+
+                    <p className="text-sm text-red-600 mt-1">
+                      {item.rejectReason}
+                    </p>
+                  </div>
+                )}
 
                 {/*  ASSIGN INPUT */}
                 {!item.assignedTo && item.status !== "rejected" && (
@@ -319,8 +337,11 @@ export default function OwnerMaintenance() {
                   <div className="flex gap-2 mt-4">
                     {item.status !== "completed" && (
                       <button
-                        onClick={() => updateStatus(item._id, "rejected")}
-                        className="px-3 py-1 bg-red-600 text-white rounded"
+                        onClick={() => {
+                          setSelectedRequest(item);
+                          setRejectOpen(true);
+                        }}
+                        className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-xl"
                       >
                         Reject
                       </button>
@@ -413,6 +434,87 @@ export default function OwnerMaintenance() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Reject Modal */}
+      {rejectOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-600 to-red-500 px-6 py-5 text-white">
+              <h2 className="text-2xl font-bold">Reject Maintenance Request</h2>
+
+              <p className="text-red-100 text-sm mt-1">
+                Provide a reason before rejecting this request
+              </p>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-5">
+              {/* Maintenance Info */}
+              <div className="bg-gray-50 rounded-2xl p-4 border">
+                <p className="text-sm text-gray-500">Maintenance Title</p>
+
+                <h3 className="font-semibold text-gray-900 mt-1">
+                  {selectedRequest?.title}
+                </h3>
+
+                <p className="text-sm text-gray-500 mt-2">
+                  {selectedRequest?.property?.title ||
+                    selectedRequest?.amenity?.name}
+                </p>
+              </div>
+
+              {/* Reason */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Rejection Reason
+                </label>
+
+                <textarea
+                  rows={5}
+                  value={rejectReason}
+                  onChange={(e) => setRejectReason(e.target.value)}
+                  placeholder="Enter rejection reason..."
+                  className="w-full border border-gray-300 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-red-500 resize-none"
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex justify-end gap-3 px-6 py-5 bg-gray-50 border-t">
+              <Button
+                onClick={() => {
+                  setRejectOpen(false);
+                  setRejectReason("");
+                }}
+                className="border border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
+              >
+                Cancel
+              </Button>
+
+              <Button
+                onClick={async () => {
+                  if (!rejectReason.trim()) {
+                    return toast.error("Reject reason is required");
+                  }
+
+                  await updateStatus(
+                    selectedRequest._id,
+                    "rejected",
+                    rejectReason,
+                  );
+
+                  setRejectOpen(false);
+                  setRejectReason("");
+                }}
+                className="bg-red-600 hover:bg-red-700 text-white rounded-xl px-6"
+              >
+                Reject Request
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -60,7 +60,7 @@ const maintenanceSchema = new mongoose.Schema(
 
     completedAt: Date,
 
-    rejectionReason: String,
+    rejectReason: String,
 
     proofImages: [
       {

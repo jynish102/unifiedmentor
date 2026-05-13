@@ -587,22 +587,20 @@ exports.updateMaintenanceStatus = async (req, res) => {
 
     await maintenance.save();
 
-   
+  await Notification.create({
+    user: maintenance.tenant,
 
-    await Notification.create({
-      user: maintenance.tenant,
+    title: "Maintenance Completed",
 
-      title: "Maintenance Request Assigned",
+    message: `Your maintenance request "${maintenance.title}" has been completed`,
 
-      message: `Your maintenance request "${maintenance.title}" has been assigned to staff`,
+    type: "maintenance-completed",
 
-      type: "maintenance-update",
+    relatedId: maintenance._id,
+    relatedModel: "Maintenance",
 
-      relatedId: maintenance._id,
-      relatedModel: "Maintenance",
-
-      redirectUrl: "/tenant/maintenance",
-    });
+    redirectUrl: "/tenant/maintenance",
+  });
 
     res.json({
       success: true,

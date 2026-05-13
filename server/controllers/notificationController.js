@@ -130,6 +130,26 @@ exports.markAllAsRead = async (req, res) => {
   }
 };
 
+// GET unread notification count
+exports.getUnreadNotificationCount = async (req, res) => {
+  try {
+    const count = await Notification.countDocuments({
+      user: req.user.id,
+      isRead: false,
+    });
+
+    res.json({
+      success: true,
+      count,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 /* ---------------------------------------------------
    DELETE NOTIFICATION
 --------------------------------------------------- */

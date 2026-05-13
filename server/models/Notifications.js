@@ -26,6 +26,7 @@ const notificationSchema = new mongoose.Schema(
         "amenityBooking-rejected",
         "maintenance-assigned",
         "maintenance-update",
+        "maintenance-completed",
       ],
     },
 

@@ -103,12 +103,16 @@ export default function TenantNotifications() {
                     <h2 className="font-semibold text-gray-900">
                       {notification.title}
                     </h2>
-
-                    {notification.isRead && (
-                      <div className="flex items-center gap-1 mt-2 text-blue-500">
-                        <CheckCheck className="size-5" />
-                        <span className="text-small">Read</span>
-                      </div>
+                    
+                    {!notification.isRead ? (
+                      <span className="size-2 rounded-full bg-blue-500" />
+                    ) : (
+                      notification.isRead && (
+                        <div className="flex items-center gap-1  text-blue-500">
+                          <CheckCheck className="size-5" />
+                          <span className="text-small">Read</span>
+                        </div>
+                      )
                     )}
                   </div>
 

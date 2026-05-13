@@ -7,6 +7,7 @@ const {
   createNotification,
   getMyNotifications,
   markAsRead,
+  getUnreadNotificationCount
 } = require("../controllers/notificationController");
 
 router.post(
@@ -18,6 +19,7 @@ router.post(
 
 router.get("/", authMiddleware, getMyNotifications);
 router.put("/:id/read", authMiddleware, markAsRead);
+router.get("/unread-count", authMiddleware, getUnreadNotificationCount);
 
 
 module.exports = router;

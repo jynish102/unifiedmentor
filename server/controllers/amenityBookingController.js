@@ -111,14 +111,16 @@ exports.getOwnerBookingRequests = async (req, res) => {
   try {
     const ownerId = req.user.id;
 
-    
-
     // OWNER AMENITIES
-    const amenities = await Amenity.find({ owner: ownerId }).select("_id");
+   const amenities = await Amenity.find().populate({
+     path: "property",
+     match: { owner: ownerId },
+     select: "_id owner",
+   });
 
-    const amenityIds = amenities.map((a) => a._id);
+   const ownerAmenities = amenities.filter((a) => a.property);
 
-    
+    const amenityIds = ownerAmenities.map((a) => a._id);
 
     /* -------------------------------- AMENITY BOOKINGS ------------------------------- */
 
@@ -131,9 +133,6 @@ exports.getOwnerBookingRequests = async (req, res) => {
 
     res.json({
       success: true,
-
-    
-
       amenityBookings,
     });
   } catch (error) {
@@ -213,7 +212,7 @@ exports.updateBookingStatus = async (req, res) => {
     }
 
     // Admin
-    if (role === "admin" && ["approved", "rejected"].includes(status)) {
+    if (role === "owner" && ["approved", "rejected"].includes(status)) {
       booking.status = status;
     }
 
@@ -244,7 +243,7 @@ exports.updateBookingStatus = async (req, res) => {
       type: status === "approved" ? "amenityBooking-approved" : "amenityBooking-rejected",
 
       relatedId: booking._id,
-      relatedModel: "Booking",
+      relatedModel: "AmenityBooking",
 
       redirectUrl: "/tenant/bookings",
     });

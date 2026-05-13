@@ -25,6 +25,7 @@ router.put(
   authMiddleware,
   updateBookingStatus,
 );
+
 router.delete("/:id", authMiddleware, authorizeRoles(["admin"]), deleteAmenityBooking);
 router.get("/available-amenities", getAvailableAmenities);
 

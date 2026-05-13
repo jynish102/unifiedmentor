@@ -3,17 +3,12 @@ import { Bell, CheckCheck } from "lucide-react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 
-
 export default function AdminNotifications() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+ 
   
-
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
-
   const fetchNotifications = async () => {
     try {
       const res = await API.get("/notifications", {
@@ -23,12 +18,20 @@ export default function AdminNotifications() {
       });
 
       setNotifications(res.data.data || []);
+      
     } catch (error) {
-      console.log("Notification fetch error:", error.res?.data || error.message);
+      console.log(
+        "Notification fetch error:",
+        error.res?.data || error.message,
+      );
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   const handleNotificationClick = async (notification) => {
     try {
@@ -47,6 +50,9 @@ export default function AdminNotifications() {
           n._id === notification._id ? { ...n, isRead: true } : n,
         ),
       );
+
+       localStorage.setItem("notificationUpdated", Date.now());
+
 
       if (notification.redirectUrl) {
         navigate(notification.redirectUrl);
@@ -83,6 +89,7 @@ export default function AdminNotifications() {
         <div className="bg-white rounded-2xl shadow-md p-10 text-center">
           <Bell className="mx-auto text-gray-300 size-10 mb-3" />
 
+
           <p className="text-gray-500 font-medium">No notifications found</p>
         </div>
       ) : (
@@ -106,11 +113,15 @@ export default function AdminNotifications() {
                       {notification.title}
                     </h2>
 
-                    {notification.isRead && (
-                      <div className="flex items-center gap-1 mt-2 text-blue-500">
-                        <CheckCheck className="size-5" />
-                        <span className="text-small">Read</span>
-                      </div>
+                    {!notification.isRead ? (
+                      <span className="size-2 rounded-full bg-blue-500" />
+                    ) : (
+                      notification.isRead && (
+                        <div className="flex items-center gap-1  text-blue-500">
+                          <CheckCheck className="size-5" />
+                          <span className="text-small">Read</span>
+                        </div>
+                      )
                     )}
                   </div>
 

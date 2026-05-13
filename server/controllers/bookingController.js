@@ -123,7 +123,7 @@ exports.getAllBookings = async (req, res) => {
 exports.getOwnerBookingRequests = async (req, res) => {
   try {
     const ownerId = req.user.id;
-    console.log(ownerId)
+    // console.log(ownerId)
 
     // OWNER PROPERTIES
     const properties = await Property.find({ owner: ownerId }).select("_id");

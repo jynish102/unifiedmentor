@@ -111,6 +111,7 @@ export default function CreateMaintenance() {
                 </label>
 
                 <Input
+                  autoFocus
                   name="title"
                   placeholder="Water leakage in bathroom"
                   value={formData.title}

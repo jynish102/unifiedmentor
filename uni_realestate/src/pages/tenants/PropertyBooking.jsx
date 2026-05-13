@@ -133,6 +133,7 @@ export default function AddBooking() {
                 </label>
 
                 <Input
+                  autoFocus
                   name="startDate"
                   type="date"
                   value={formData.startDate}

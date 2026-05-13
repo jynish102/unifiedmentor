@@ -105,11 +105,11 @@ export default function StaffList() {
         <Button
           onClick={() => {
             setOpen(true);
-           generatePassword(); // auto password on open
+            generatePassword(); // auto password on open
           }}
           className="bg-blue-600 text-white px-4 py-2 rounded"
         >
-           Add Staff
+          Add Staff
         </Button>
       </div>
 
@@ -126,73 +126,128 @@ export default function StaffList() {
         ))}
       </div>
 
-   
       {open && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-          <div className="bg-white rounded-xl p-6 w-[400px] space-y-4">
-            <h2 className="text-lg font-semibold">Add Staff</h2>
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden">
+            {/* Header */}
+            <div className="px-6 py-5 border-b bg-gradient-to-r from-blue-600 to-blue-500 text-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold">Add Staff Member</h2>
+                  <p className="text-blue-100 text-sm mt-1">
+                    Create and manage staff access
+                  </p>
+                </div>
 
-            <input
-              name="fullname"
-              placeholder="Full Name"
-              value={form.fullname}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-
-            <input
-              name="email"
-              placeholder="Email"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-
-            <input
-              name="phone"
-              placeholder="Phone"
-              value={form.phone}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-
-            <input
-              name="specialization"
-              placeholder="Role (Cleaner, Guard...)"
-              value={form.specialization}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-            />
-
-            <div className="flex gap-2">
-              <input
-                name="password"
-                placeholder="Password"
-                readOnly
-                value={form.password}
-                className="w-full border p-2 rounded bg-gray-100"
-              />
-              <Button
-                onClick={generatePassword}
-                className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
-              >
-                Generate Password
-              </Button>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="text-white/80 hover:text-white text-xl"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
-            <div className="flex justify-end gap-2">
+            {/* Body */}
+            <div className="p-6 space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">
+                    Full Name
+                  </label>
+
+                  <input
+                    autoFocus
+                    name="fullname"
+                    placeholder="Enter full name"
+                    value={form.fullname}
+                    onChange={handleChange}
+                    className="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">
+                    Email Address
+                  </label>
+
+                  <input
+                    name="email"
+                    placeholder="Enter email"
+                    value={form.email}
+                    onChange={handleChange}
+                    className="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">
+                    Phone Number
+                  </label>
+
+                  <input
+                    name="phone"
+                    placeholder="Enter phone number"
+                    value={form.phone}
+                    onChange={handleChange}
+                    className="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">
+                    Staff Role
+                  </label>
+
+                  <input
+                    name="specialization"
+                    placeholder="Cleaner, Guard..."
+                    value={form.specialization}
+                    onChange={handleChange}
+                    className="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                  Generated Password
+                </label>
+
+                <div className="flex gap-3">
+                  <input
+                    name="password"
+                    placeholder="Password"
+                    readOnly
+                    value={form.password}
+                    className="w-full border border-gray-200 bg-gray-50 rounded-xl p-3"
+                  />
+
+                  <Button
+                    onClick={generatePassword}
+                    className="bg-gray-900 hover:bg-black text-white rounded-xl px-5"
+                  >
+                    Generate
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex justify-end gap-3 px-6 py-5 border-t bg-gray-50">
               <Button
                 onClick={() => setOpen(false)}
-                className="px-4 py-2 border rounded"
+                className="border border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
               >
                 Cancel
               </Button>
 
               <Button
                 onClick={handleSubmit}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6"
               >
-                Save
+                Save Staff
               </Button>
             </div>
           </div>

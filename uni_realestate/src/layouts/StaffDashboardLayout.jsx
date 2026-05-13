@@ -2,18 +2,22 @@ import { Outlet, NavLink, useNavigate} from "react-router";
 import { Home, Building2, ClipboardList, Menu,Bell } from "lucide-react";
 import { useState,useEffect,useRef } from "react";
 import { Button } from "../components/ui/button";
+import API from "../utils/api";
 
 
 export function StaffDashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
 
 
   const navItems = [
     { to: "/staff/dashboard", icon: Home, label: "Dashboard" },
     { to: "/staff/maintenance", icon: ClipboardList, label: "Maintenance" },
-    { to: "/staff/profile", icon: Building2, label: "Profile" },
+    
   ];
 
   //handle logout
@@ -34,6 +38,54 @@ export function StaffDashboardLayout() {
       document.addEventListener("mousedown", handleClickOutside);
       return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
+  
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+          try {
+            const res = await API.get("/profile-data", {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
+
+            setUser(res.data.user);
+          } catch (error) {
+            console.log(error);
+          }
+        };
+      fetchProfile();
+    }, []);
+
+      useEffect(() => {
+        const fetchUnreadCount = async () => {
+          try {
+            const res = await API.get("/notifications/unread-count", {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
+
+            setUnreadCount(res.data.count);
+          } catch (error) {
+            console.log(error);
+          }
+        };
+
+        fetchUnreadCount();
+
+        const handleStorage = () => {
+          fetchUnreadCount();
+        };
+
+        window.addEventListener("storage", handleStorage);
+
+        return () => {
+          window.removeEventListener("storage", handleStorage);
+        };
+      }, []);
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -114,13 +166,28 @@ export function StaffDashboardLayout() {
                 }}
               >
                 <Bell size={20} />
+                {unreadCount > 0 && (
+                  <span className="absolute top-5 right-15 bg-red-500 text-white text-[10px] min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center font-medium">
+                    {unreadCount}
+                  </span>
+                )}
               </Button>
               <div className="relative" ref={dropdownRef}>
                 <div
                   onClick={() => setOpen(!open)}
-                  className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white"
+                  className="w-10 h-10 rounded-full overflow-hidden cursor-pointer border-2 border-blue-500"
                 >
-                  JD
+                  {user?.profileImage ? (
+                    <img
+                      src={`http://localhost:5000/${user.profileImage}`}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+                      {user?.fullname?.charAt(0)?.toUpperCase() || "U"}
+                    </div>
+                  )}
                 </div>
 
                 {open && (

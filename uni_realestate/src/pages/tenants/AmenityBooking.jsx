@@ -231,6 +231,7 @@ export default function BookAmenity() {
                 </label>
 
                 <Input
+                  autoFocus
                   type="date"
                   name="date"
                   value={formData.date}

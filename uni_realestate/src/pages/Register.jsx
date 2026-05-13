@@ -17,7 +17,7 @@ const Register = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -182,6 +182,7 @@ const isCorrectDomain = validDomains.includes(domain);
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
+            autoFocus
               name="fullname"
               type="text"
               value={formData.fullname}

@@ -201,39 +201,80 @@ export default function PropertyDetails() {
       </p>
 
       {open && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg">
-            <h2 className="text-lg font-semibold mb-4">Contact Owner</h2>
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden">
+            {/* Header */}
+            <div className="px-6 py-5 border-b bg-gradient-to-r from-blue-600 to-blue-500 text-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold">Contact Owner</h2>
 
-            {/* Subject */}
-            <input
-              type="text"
-              placeholder="Subject"
-              value={form.subject}
-              onChange={(e) => setForm({ ...form, subject: e.target.value })}
-              className="w-full border p-2 rounded mb-3"
-            />
+                  <p className="text-blue-100 text-sm mt-1">
+                    Send message directly to property owner
+                  </p>
+                </div>
 
-            {/* Message */}
-            <textarea
-              placeholder="Write your message..."
-              value={form.message}
-              onChange={(e) => setForm({ ...form, message: e.target.value })}
-              className="w-full border p-2 rounded mb-4"
-              rows={4}
-            />
+                <button
+                  onClick={() => setOpen(false)}
+                  className="text-white/80 hover:text-white text-xl"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
 
-            {/* Buttons */}
-            <div className="flex justify-end gap-2">
+            {/* Body */}
+            <div className="p-6 space-y-5">
+              {/* Subject */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                  Subject
+                </label>
+
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="Enter message subject"
+                  value={form.subject}
+                  onChange={(e) =>
+                    setForm({ ...form, subject: e.target.value })
+                  }
+                  className="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Message */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                  Message
+                </label>
+
+                <textarea
+                  rows={6}
+                  placeholder="Write your message..."
+                  value={form.message}
+                  onChange={(e) =>
+                    setForm({ ...form, message: e.target.value })
+                  }
+                  className="w-full border border-gray-200 rounded-xl p-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex justify-end gap-3 px-6 py-5 border-t bg-gray-50">
               <Button
                 onClick={() => setOpen(false)}
-                className="bg-gray-400 text-white"
+                className="border border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
               >
                 Cancel
               </Button>
 
-              <Button onClick={handleSend} className="bg-blue-600 text-white">
-                Send
+              <Button
+                onClick={handleSend}
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6"
+              >
+                Send Message
               </Button>
             </div>
           </div>

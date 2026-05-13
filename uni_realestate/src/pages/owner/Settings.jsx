@@ -318,6 +318,7 @@ export default function ProfileCard() {
             <div>
               {isEditing ? (
                 <input
+                  autoFocus
                   name="fullname"
                   value={formData.fullname}
                   onChange={handleChange}
@@ -401,6 +402,7 @@ export default function ProfileCard() {
         <div className="space-y-3">
           <div className="relative">
             <input
+              autoFocus
               type={showPassword.current ? "text" : "password"}
               name="currentPassword"
               placeholder="Current Password"

@@ -12,18 +12,20 @@ import {
   Dumbbell,
   Inbox,
   Calendar,
-  Bell
+  Bell,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "../components/ui/button";
-
+import API from "../utils/api";
 
 export function OwnerDashboardLayout() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [, setSidebarOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const navigation = [
     { path: "/owner/ownerdashboard", name: "Dashboard", icon: LayoutDashboard },
@@ -33,7 +35,7 @@ export function OwnerDashboardLayout() {
     { path: "/owner/staff", name: "Staff ", icon: User },
     { path: "/owner/maintenance", name: "Maintenance", icon: Wrench },
     { path: "/owner/tenants", name: "Tenants", icon: User },
-    { path: "/owner/settings", name: "Settings", icon: Settings },
+
     { path: "/owner/messages", name: "Messages", icon: Inbox },
   ];
 
@@ -50,17 +52,63 @@ export function OwnerDashboardLayout() {
     window.location.href = "/login";
   };
 
-   const dropdownRef = useRef();
-  
+  const dropdownRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await API.get("/profile-data", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        setUser(res.data.user);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
     useEffect(() => {
-      const handleClickOutside = (e) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-          setOpen(false);
+      const fetchUnreadCount = async () => {
+        try {
+          const res = await API.get("/notifications/unread-count", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+
+          setUnreadCount(res.data.count);
+        } catch (error) {
+          console.log(error);
         }
       };
-  
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+
+      fetchUnreadCount();
+
+      const handleStorage = () => {
+        fetchUnreadCount();
+      };
+
+      window.addEventListener("storage", handleStorage);
+
+      return () => {
+        window.removeEventListener("storage", handleStorage);
+      };
     }, []);
 
   return (
@@ -135,18 +183,36 @@ export function OwnerDashboardLayout() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon"
-              onClick={() => {
-                navigate(`/owner/notification`)
-                }}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  navigate(`/owner/notification`);
+                }}
+              >
                 <Bell size={20} />
+                {unreadCount > 0 && (
+                  <span className="absolute top-5 right-15 bg-red-500 text-white text-[10px] min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center font-medium">
+                    {unreadCount}
+                  </span>
+                )}
               </Button>
               <div className="relative" ref={dropdownRef}>
                 <div
                   onClick={() => setOpen(!open)}
-                  className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white"
+                  className="w-10 h-10 rounded-full overflow-hidden cursor-pointer border-2 border-blue-500"
                 >
-                  JD
+                  {user?.profileImage ? (
+                    <img
+                      src={`http://localhost:5000/${user.profileImage}`}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+                      {user?.fullname?.charAt(0)?.toUpperCase() || "U"}
+                    </div>
+                  )}
                 </div>
 
                 {open && (

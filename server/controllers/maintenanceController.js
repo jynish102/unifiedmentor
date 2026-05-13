@@ -3,7 +3,7 @@ const Property = require("../models/Property");
 const User = require("../models/User");
 const Amenity = require("../models/Amenity");
 const mongoose = require("mongoose");
-const Notification = require("../models/Notifications")
+const Notification = require("../models/Notifications");
 
 // CREATE MAINTENANCE REQUEST
 exports.createMaintenance = async (req, res) => {
@@ -12,18 +12,18 @@ exports.createMaintenance = async (req, res) => {
     const amenityId = req.body.amenity;
     const userId = req.user._id || req.user.id;
     const currentUser = await User.findById(req.user.id);
-    
+
     let ownerId = null;
 
-   // If maintenance for property
+    // If maintenance for property
     if (propertyId) {
       const propertyData = await Property.findById(propertyId);
       ownerId = propertyData.owner;
     }
 
     if (amenityId) {
-      const amenityData = await Amenity.findById(amenityId)
-      .populate("property");
+      const amenityData =
+        await Amenity.findById(amenityId).populate("property");
       ownerId = amenityData.property.owner;
     }
 
@@ -87,7 +87,7 @@ exports.createMaintenance = async (req, res) => {
 
     await maintenance.save();
 
-    if(ownerId){
+    if (ownerId) {
       await Notification.create({
         user: ownerId, // admin id
         title: "New Maintenance",
@@ -100,7 +100,6 @@ exports.createMaintenance = async (req, res) => {
         redirectUrl: `/owner/maintenance`,
       });
     }
-
 
     res.status(201).json({
       success: true,
@@ -309,7 +308,7 @@ exports.getMyAssignments = async (req, res) => {
       .populate("property", "title")
       .populate("amenity", "name")
       .populate("tenant", "fullname email");
-      
+
     // console.log("FETCH DATA:", JSON.stringify(maintenance, null, 2));
     // console.log(
     //   "FETCH ID:",
@@ -319,14 +318,11 @@ exports.getMyAssignments = async (req, res) => {
     //   "FETCH IMAGES:",
     //   maintenance.map((m) => m.proofImages),
     // );
-     
 
     res.json({
       success: true,
       data: maintenance,
-      
     });
-    
   } catch (err) {
     console.error(err);
     res.status(500).json({
@@ -340,13 +336,11 @@ exports.assignMaintenance = async (req, res) => {
   try {
     const { id } = req.params;
     const { assignedTo } = req.body;
-   
+
     const ownerId = req.user._id || req.user.id;
 
     // 1. Check maintenance exists
     const maintenance = await Maintenance.findById(id);
-    
-    
 
     if (!maintenance) {
       return res.status(404).json({
@@ -467,8 +461,6 @@ exports.updateMaintenanceStatus = async (req, res) => {
     const role = req.user.role;
 
     const maintenance = await Maintenance.findById(id);
-    
-   
 
     if (!maintenance) {
       return res.status(404).json({ message: "Maintenance not found" });
@@ -492,6 +484,12 @@ exports.updateMaintenanceStatus = async (req, res) => {
           isAuthorized = true;
         }
       }
+    }
+
+    if (!isAuthorized && role !== "staff") {
+      return res.status(403).json({
+        message: "Not authorized",
+      });
     }
 
     // VALID STATUS LIST
@@ -543,20 +541,20 @@ exports.updateMaintenanceStatus = async (req, res) => {
     }
 
     if (role === "staff") {
+      if (
+        !maintenance.assignedTo ||
+        maintenance.assignedTo.toString() !== userId.toString()
+      ) {
+        return res.status(403).json({
+          message: "Not assigned to this maintenance",
+        });
+      }
+
       if (!["in-progress", "completed"].includes(status)) {
         return res.status(403).json({
           message: "Staff can only update work status",
         });
       }
-    }
-
-    if (
-      !maintenance.assignedTo ||
-      maintenance.assignedTo.toString() !== userId.toString()
-    ) {
-      return res.status(403).json({
-        message: "Not assigned to this maintenance",
-      });
     }
 
     //  Prevent complete without proof images
@@ -568,14 +566,13 @@ exports.updateMaintenanceStatus = async (req, res) => {
       }
     }
 
-    if (status === "completed") {
-      if (!maintenance.proofImages || maintenance.proofImages.length === 0) {
-        return res.status(400).json({
-          message: "Upload proof images before marking as completed",
-        });
-      }
+    if (["completed", "rejected"].includes(current)) {
+      return res.status(400).json({
+        message: `Maintenance already ${current}`,
+      });
     }
 
+   
     // UPDATE
     maintenance.status = status;
 
@@ -587,27 +584,27 @@ exports.updateMaintenanceStatus = async (req, res) => {
 
     await maintenance.save();
 
-  await Notification.create({
-    user: maintenance.tenant,
+    await Notification.create({
+      user: maintenance.tenant,
 
-    title: "Maintenance Completed",
+      title: "Maintenance Completed",
 
-    message: `Your maintenance request "${maintenance.title}" has been completed`,
+      message: `Your maintenance request "${maintenance.title}" has been completed`,
 
-    type: "maintenance-completed",
+      type: "maintenance-completed",
 
-    relatedId: maintenance._id,
-    relatedModel: "Maintenance",
+      relatedId: maintenance._id,
+      relatedModel: "Maintenance",
 
-    redirectUrl: "/tenant/maintenance",
-  });
+      redirectUrl: "/tenant/maintenance",
+    });
 
     res.json({
       success: true,
       data: maintenance,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error", err.res?.data || err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -618,13 +615,12 @@ exports.uploadProof = async (req, res) => {
     const { id } = req.params;
     const userId = req.user._id || req.user.id;
 
-
     const maintenance = await Maintenance.findById(id);
     // console.log("UPLOAD ID:", maintenance._id);
 
     const uploadStatus = req.query.status || maintenance.status;
 
-      const allowedTypes = ["image/jpeg", "image/png", "image/webp" , "image/jpg"];
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
     // console.log("UPLOAD STATUS:", uploadStatus);
 
     if (!maintenance) {
@@ -674,17 +670,15 @@ exports.uploadProof = async (req, res) => {
     //  Save images
     const imagePaths = req.files.map((file) => ({
       url: file.path.replace(/\\/g, "/"),
-      status:  uploadStatus,
-      
+      status: uploadStatus,
     }));
     // console.log("IMAGE PATHS:", imagePaths)
-    
 
     maintenance.proofImages.push(...imagePaths);
     maintenance.proofImages = maintenance.proofImages.flat();
     // console.log("IMG PATH:", imagePaths);
-    
-    // console.log("Saved Images:", maintenance.proofImages); 
+
+    // console.log("Saved Images:", maintenance.proofImages);
 
     await maintenance.save();
 
@@ -698,7 +692,6 @@ exports.uploadProof = async (req, res) => {
     console.error(err);
     res.status(500).json({ message: err.message });
   }
- 
 };
 
 //delete proof
@@ -707,7 +700,7 @@ exports.deleteProofImage = async (req, res) => {
     const { id } = req.params;
     const { image } = req.body; // maintenanceId + image path
     const userId = req.user._id || req.user.id;
-   
+
     const maintenance = await Maintenance.findById(id);
 
     if (!maintenance) {

@@ -316,6 +316,7 @@ export default function AddAmenity() {
                 </label>
 
                 <Input
+                autoFocus
                   name="name"
                   type="text"
                   placeholder="Swimming Pool"

@@ -30,8 +30,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
 
-
-
 app.use("/api/property", propertyRoutes);
 
 app.use("/uploads", express.static("uploads"));

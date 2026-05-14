@@ -1,29 +1,32 @@
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./routes/ProtectedRoutes.jsx";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
+
 import { AdminDashboardLayout } from "./layouts/AdminDashboardLayout";
 import { OwnerDashboardLayout } from "./layouts/OwnerDashboardLayout";
-import {TenantsDashboardLayout} from "./layouts/TenantsDashboardLayout";
+import { TenantsDashboardLayout } from "./layouts/TenantsDashboardLayout";
 import { StaffDashboardLayout } from "./layouts/StaffDashboardLayout";
 
 import Home from "./pages/Home";
 import Features from "./pages/Features";
 import Contact from "./pages/Contact";
-import AllProperties  from "./pages/Properties";
-import  AllAmenities  from "./pages/Amenities";
+import AllProperties from "./pages/Properties";
+import AllAmenities from "./pages/Amenities";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
+
 //admin
-import AdminDashboard  from "./pages/admin/AdminDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import PropertyRequests from "./pages/admin/PropertyRequests";
 import { Properties } from "./pages/admin/Properties";
 import { Tenants } from "./pages/admin/Tenants";
 import { Amenities } from "./pages/admin/Amenities";
-import Maintenance  from "./pages/admin/Maintenance";
+import Maintenance from "./pages/admin/Maintenance";
 import PropertyDetails from "./pages/admin/PropertyDetails";
 import AdminProfile from "./pages/admin/AdminProfile";
 import AddAmenity from "./pages/admin/AdminProfile";
@@ -33,43 +36,40 @@ import AdminNotification from "./pages/admin/AdminNotifications";
 
 //owner
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
-import  OwnerProperties  from "./pages/owner/Properties";
-import OwnerAddProperty  from "./pages/owner/AddProperty";
-import OwnerPropertyDetails  from "./pages/owner/PropertyDetails";
-import OwnerAmenities  from "./pages/owner/Amenities";
+import OwnerProperties from "./pages/owner/Properties";
+import OwnerAddProperty from "./pages/owner/AddProperty";
+import OwnerPropertyDetails from "./pages/owner/PropertyDetails";
+import OwnerAmenities from "./pages/owner/Amenities";
 import OwnerAddAmenity from "./pages/owner/AddAmenity";
 import OwnerAmenityDetails from "./pages/owner/AmenityDetails";
 import BookingRequests from "./pages/owner/BookingRequests";
 import StaffList from "./pages/owner/StaffManagement";
 import OwnerMaintenance from "./pages/owner/Maintenance";
-import OwnerTenant from "./pages/owner/Tenants"
+import OwnerTenant from "./pages/owner/Tenants";
 import OwnerMessages from "./pages/owner/Messages";
 import Settings from "./pages/owner/Settings";
-import OwnerNotification from "./pages/owner/OwnerNotifications"; 
+import OwnerNotification from "./pages/owner/OwnerNotifications";
 
 //tenants
 import { Dashboard as TenantsDashboard } from "./pages/tenants/Dashboard";
-import Profile  from "./pages/tenants/Profile";
+import Profile from "./pages/tenants/Profile";
 import TenantProperty from "./pages/tenants/Property";
 import TenantPropertyDetails from "./pages/tenants/PropertyDetails";
 import PropertyBooking from "./pages/tenants/PropertyBooking";
-import TenantAmenities  from "./pages/tenants/TenantAmenities";
+import TenantAmenities from "./pages/tenants/TenantAmenities";
 import TenantAmenityDetails from "./pages/tenants/AmenityDetails";
 import AmenityBooking from "./pages/tenants/AmenityBooking";
 import AllBooking from "./pages/tenants/AllBookings";
 import TenantMessage from "./pages/tenants/Message";
-import CreateMaintenance   from "./pages/tenants/CreateMaintenance";
-import TenantMaintenance  from "./pages/tenants/TenantMaintenance";
-import TenantNotification from "./pages/tenants/TenantNotification"; 
+import CreateMaintenance from "./pages/tenants/CreateMaintenance";
+import TenantMaintenance from "./pages/tenants/TenantMaintenance";
+import TenantNotification from "./pages/tenants/TenantNotification";
 
 //staff
 import StaffDashboard from "./pages/staff/StaffDashboard";
 import StaffProfile from "./pages/staff/StaffProfile";
 import StaffMaintenance from "./pages/staff/AssignMaintenance";
 import StaffNotification from "./pages/staff/StaffNotification";
-
-
-
 
 function App() {
   return (
@@ -101,110 +101,143 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/ForgotPassword" element={<ForgotPassword />} />
-            <Route path="/ResetPassword/:token" element={<ResetPassword />} />
+            <Route path="/ResetPassword/:token" element={<ResetPassword/>} />
+            
           </Route>
-
           //admin routes
-          <Route path="/admin" element={<AdminDashboardLayout />} >
-            <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/properties-requests" element={<PropertyRequests />} />
-            <Route path="properties" element={<Properties />} />
-            <Route path="/admin/profile" element={<AdminProfile />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/admin" element={<AdminDashboardLayout />}>
+              <Route
+                path="/admin/admin-dashboard"
+                element={<AdminDashboard />}
+              />
+              <Route
+                path="/admin/properties-requests"
+                element={<PropertyRequests />}
+              />
+              <Route path="properties" element={<Properties />} />
+              <Route path="/admin/profile" element={<AdminProfile />} />
 
-            <Route path="/admin/properties/:id" element={<PropertyDetails />} />
-            <Route path="amenities" element={<Amenities />} />
-            <Route
-              path="/admin/amenities/add-amenity/:propertyId"
-              element={<AddAmenity />}
-            />
-            <Route path="/admin/amenities/edit/:id" element={<AddAmenity />} />
-            <Route path="/admin/amenities/:id" element={<AmenityDetails />} />
-            <Route path="tenants" element={<Tenants />} />
+              <Route
+                path="/admin/properties/:id"
+                element={<PropertyDetails />}
+              />
+              <Route path="amenities" element={<Amenities />} />
+              <Route
+                path="/admin/amenities/add-amenity/:propertyId"
+                element={<AddAmenity />}
+              />
+              <Route
+                path="/admin/amenities/edit/:id"
+                element={<AddAmenity />}
+              />
+              <Route path="/admin/amenities/:id" element={<AmenityDetails />} />
+              <Route path="tenants" element={<Tenants />} />
 
-            <Route path="maintenance" element={<Maintenance />} />
-            <Route
-              path="/admin/support-requests"
-              element={<SupportRequest />}
-            />
-            <Route path="/admin/notification" element={<AdminNotification />} />
+              <Route path="maintenance" element={<Maintenance />} />
+              <Route
+                path="/admin/support-requests"
+                element={<SupportRequest />}
+              />
+              <Route
+                path="/admin/notification"
+                element={<AdminNotification />}
+              />
+            </Route>
           </Route>
-
           //owner routes
-          <Route path="/owner" element={<OwnerDashboardLayout />}>
-            <Route path="ownerdashboard" element={<OwnerDashboard />} />
-            <Route path="properties" element={<OwnerProperties />} />
-            <Route
-              path="properties/add-property"
-              element={<OwnerAddProperty />}
-            />
-            <Route
-              path="/owner/properties/edit/:id"
-              element={<OwnerAddProperty />}
-            />
-            <Route
-              path="/owner/properties/:id"
-              element={<OwnerPropertyDetails />}
-            />
-            <Route path="amenities" element={<OwnerAmenities />} />
-            <Route
-              path="/owner/amenities/add-amenity/:propertyId"
-              element={<OwnerAddAmenity />}
-            />
-            <Route
-              path="/owner/amenities/edit/:id"
-              element={<OwnerAddAmenity />}
-            />
-            <Route
-              path="/owner/amenities/:id"
-              element={<OwnerAmenityDetails />}
-            />
-            <Route path="bookings-request" element={<BookingRequests />} />
-            <Route path="/owner/staff" element={<StaffList />} />
-            <Route path="/owner/maintenance" element={<OwnerMaintenance />} />
-            <Route path="/owner/tenants" element={<OwnerTenant />} />
-            <Route path="/owner/messages" element={<OwnerMessages />} />
-            <Route path="/owner/settings" element={<Settings />} />
-             <Route path="/owner/notification" element={<OwnerNotification />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/owner" element={<OwnerDashboardLayout />}>
+              <Route path="ownerdashboard" element={<OwnerDashboard />} />
+              <Route path="properties" element={<OwnerProperties />} />
+              <Route
+                path="properties/add-property"
+                element={<OwnerAddProperty />}
+              />
+              <Route
+                path="/owner/properties/edit/:id"
+                element={<OwnerAddProperty />}
+              />
+              <Route
+                path="/owner/properties/:id"
+                element={<OwnerPropertyDetails />}
+              />
+              <Route path="amenities" element={<OwnerAmenities />} />
+              <Route
+                path="/owner/amenities/add-amenity/:propertyId"
+                element={<OwnerAddAmenity />}
+              />
+              <Route
+                path="/owner/amenities/edit/:id"
+                element={<OwnerAddAmenity />}
+              />
+              <Route
+                path="/owner/amenities/:id"
+                element={<OwnerAmenityDetails />}
+              />
+              <Route path="bookings-request" element={<BookingRequests />} />
+              <Route path="/owner/staff" element={<StaffList />} />
+              <Route path="/owner/maintenance" element={<OwnerMaintenance />} />
+              <Route path="/owner/tenants" element={<OwnerTenant />} />
+              <Route path="/owner/messages" element={<OwnerMessages />} />
+              <Route path="/owner/settings" element={<Settings />} />
+              <Route
+                path="/owner/notification"
+                element={<OwnerNotification />}
+              />
+            </Route>
           </Route>
           //tenant routes
-          <Route path="/tenant" element={<TenantsDashboardLayout />}>
-            <Route path="dashboard" element={<TenantsDashboard />} />
-            <Route path="properties" element={<TenantProperty />} />
-            <Route
-              path="/tenant/properties/:id"
-              element={<TenantPropertyDetails />}
-            />
-            <Route
-              path="/tenant/properties/booking/:propertyId"
-              element={<PropertyBooking />}
-            />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/tenant" element={<TenantsDashboardLayout />}>
+              <Route path="dashboard" element={<TenantsDashboard />} />
+              <Route path="properties" element={<TenantProperty />} />
+              <Route
+                path="/tenant/properties/:id"
+                element={<TenantPropertyDetails />}
+              />
+              <Route
+                path="/tenant/properties/booking/:propertyId"
+                element={<PropertyBooking />}
+              />
 
-            <Route path="amenities" element={<TenantAmenities />} />
-            <Route
-              path="/tenant/amenities/:id"
-              element={<TenantAmenityDetails />}
-            />
-            <Route
-              path="/tenant/amenities/booking/:amenityId"
-              element={<AmenityBooking />}
-            />
-            <Route path="/tenant/bookings" element={<AllBooking />} />
-            <Route path="/tenant/message" element={<TenantMessage />} />
-            <Route
-              path="/tenant/maintenance/create/:type/:id"
-              element={<CreateMaintenance />}
-            />
-            <Route path="/tenant/maintenance" element={<TenantMaintenance />} />
-            <Route path="/tenant/profile" element={<Profile />} />
-            <Route path="/tenant/notification" element={<TenantNotification />} />
+              <Route path="amenities" element={<TenantAmenities />} />
+              <Route
+                path="/tenant/amenities/:id"
+                element={<TenantAmenityDetails />}
+              />
+              <Route
+                path="/tenant/amenities/booking/:amenityId"
+                element={<AmenityBooking />}
+              />
+              <Route path="/tenant/bookings" element={<AllBooking />} />
+              <Route path="/tenant/message" element={<TenantMessage />} />
+              <Route
+                path="/tenant/maintenance/create/:type/:id"
+                element={<CreateMaintenance />}
+              />
+              <Route
+                path="/tenant/maintenance"
+                element={<TenantMaintenance />}
+              />
+              <Route path="/tenant/profile" element={<Profile />} />
+              <Route
+                path="/tenant/notification"
+                element={<TenantNotification />}
+              />
+            </Route>
           </Route>
-
           //staff routes
-          <Route path="/staff" element={<StaffDashboardLayout />}>
-            <Route path="/staff/dashboard" element={<StaffDashboard />} />
-            <Route path="/staff/maintenance" element={<StaffMaintenance />} />
-            <Route path="/staff/profile" element={<StaffProfile />} />
-             <Route path="/staff/notification" element={<StaffNotification />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/staff" element={<StaffDashboardLayout />}>
+              <Route path="/staff/dashboard" element={<StaffDashboard />} />
+              <Route path="/staff/maintenance" element={<StaffMaintenance />} />
+              <Route path="/staff/profile" element={<StaffProfile />} />
+              <Route
+                path="/staff/notification"
+                element={<StaffNotification />}
+              />
+            </Route>
           </Route>
         </Routes>
       </Router>

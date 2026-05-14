@@ -13,6 +13,7 @@ import {
   Eye,
   AlertCircle,
   CheckCircle,
+  Wrench,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -53,18 +54,6 @@ export default function Amenities() {
     );
   };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-100 text-red-700";
-      case "medium":
-        return "bg-orange-100 text-orange-700";
-      case "low":
-        return "bg-blue-100 text-blue-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
 
   
   return (
@@ -196,6 +185,7 @@ export default function Amenities() {
                         )
                       }
                     >
+                      <Wrench size={16} /> {" "}
                       Report Issue
                     </Button>
                   </div>

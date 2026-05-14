@@ -24,7 +24,7 @@ const navigation = [
   { path: "/tenant/bookings", name: "Bookings", icon: Calendar },
   { path: "/tenant/message", name: "Message", icon: MailIcon },
   { path: "/tenant/maintenance", name: "Maintenance", icon: Wrench },
-  { path: "/tenant/profile", name: "Profile", icon: User },
+ 
 ];
 
 
@@ -195,13 +195,15 @@ export function TenantsDashboardLayout() {
               </button>
             </div>
 
-            <div
-              className="flex items-center gap-2"
-              onClick={() => {
-                navigate("/tenant/notification");
-              }}
-            >
-              <Button className="cursor-pointer" variant="ghost" size="icon">
+            <div className="flex items-center gap-2">
+              <Button
+                className="cursor-pointer"
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  navigate("/tenant/notification");
+                }}
+              >
                 <Bell size={20} />
                 {unreadCount > 0 && (
                   <span className="absolute top-5 right-15 bg-red-500 text-white text-[10px] min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center font-medium">

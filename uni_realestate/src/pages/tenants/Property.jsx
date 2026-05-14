@@ -18,6 +18,7 @@ import {
   Eye,
   Pencil,
   Trash2,
+  Wrench,
 } from "lucide-react";
 import { ImageWithFallback } from "../../components/ui/imageWithFallback";
 import { useState, useEffect } from "react";
@@ -199,6 +200,7 @@ export default function Properties() {
                     )
                   }
                 >
+                  <Wrench size={16} /> {" "}
                   Report Issue
                 </Button>
               </div>

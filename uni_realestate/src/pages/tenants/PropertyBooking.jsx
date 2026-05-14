@@ -237,13 +237,14 @@ export default function AddBooking() {
               type="button"
               variant="outline"
               onClick={() => navigate(-1)}
+              className="cursor-pointer"
             >
               Cancel
             </Button>
 
             <Button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+              className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-8"
               disabled={!!dateError}
             >
               Request Booking

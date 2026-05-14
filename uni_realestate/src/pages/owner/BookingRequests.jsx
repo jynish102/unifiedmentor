@@ -167,7 +167,7 @@ export default function BookingRequests() {
               variant={activeTab === tab ? "default" : "outline"}
               className={`capitalize ${
                 activeTab === tab
-                  ? "bg-orange-500 hover:bg-orange-600 text-white"
+                  ? "cursor-pointer bg-orange-500 hover:bg-orange-600 text-white"
                   : ""
               }`}
               onClick={() => setActiveTab(tab)}
@@ -258,7 +258,7 @@ export default function BookingRequests() {
                   <div className="flex gap-2 pt-2">
                     {b.status === "pending" && (
                       <Button
-                        className="flex-1 bg-green-600 hover:bg-green-700"
+                        className="cursor-pointer flex-1 bg-green-600 hover:bg-green-700"
                         onClick={() =>
                           handleStatusChange(b._id, b.type, "approved")
                         }
@@ -270,7 +270,7 @@ export default function BookingRequests() {
                     {b.status === "pending" && (
                       <Button
                         variant="outline"
-                        className="flex-1 text-red-600 border-red-200"
+                        className="cursor-pointer flex-1 text-red-600 border-red-200"
                         onClick={() =>
                           handleStatusChange(b._id, b.type, "rejected")
                         }

@@ -75,19 +75,19 @@ export default function PropertyDetails() {
         {" "}
         <Button
           onClick={() => navigate(`/tenant/properties/booking/${property._id}`)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
         >
           Book Property
         </Button>
         <Button
           onClick={() => setOpen(true)}
-          className="bg-blue-600 text-white"
+          className="bg-blue-600 text-white cursor-pointer"
         >
           Contact Owner
         </Button>
         <Button
           onClick={() => navigate("/tenant/properties")}
-          className="bg-gray-500 text-white px-3 py-1 rounded"
+          className="cursor-pointer bg-gray-500 text-white px-3 py-1 rounded"
         >
           Close
         </Button>
@@ -216,7 +216,7 @@ export default function PropertyDetails() {
 
                 <button
                   onClick={() => setOpen(false)}
-                  className="text-white/80 hover:text-white text-xl"
+                  className="cursor-pointer text-white/80 hover:text-white text-xl"
                 >
                   ✕
                 </button>
@@ -265,14 +265,14 @@ export default function PropertyDetails() {
             <div className="flex justify-end gap-3 px-6 py-5 border-t bg-gray-50">
               <Button
                 onClick={() => setOpen(false)}
-                className="border border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
+                className="cursor-pointer border border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
               >
                 Cancel
               </Button>
 
               <Button
                 onClick={handleSend}
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6"
+                className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6"
               >
                 Send Message
               </Button>

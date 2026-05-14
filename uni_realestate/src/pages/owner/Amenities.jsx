@@ -15,7 +15,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
 import API from "../../utils/api";
 
@@ -58,18 +58,18 @@ export default function Amenities() {
     );
   };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-100 text-red-700";
-      case "medium":
-        return "bg-orange-100 text-orange-700";
-      case "low":
-        return "bg-blue-100 text-blue-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
+  // const getPriorityColor = (priority) => {
+  //   switch (priority) {
+  //     case "high":
+  //       return "bg-red-100 text-red-700";
+  //     case "medium":
+  //       return "bg-orange-100 text-orange-700";
+  //     case "low":
+  //       return "bg-blue-100 text-blue-700";
+  //     default:
+  //       return "bg-gray-100 text-gray-700";
+  //   }
+  // };
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure?");
@@ -137,7 +137,7 @@ export default function Amenities() {
             {filteredAmenities.map((amenity) => (
               <Card
                 key={amenity._id}
-                className="hover:shadow-md transition-shadow"
+                className="hover:shadow-md transition-shadow cursor-pointer"
               >
                 <CardContent className="p-6">
                   {/* Top */}
@@ -214,7 +214,7 @@ export default function Amenities() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1"
+                      className="flex-1 cursor-pointer"
                       onClick={() =>
                         navigate(`/owner/amenities/${amenity._id}`)
                       }
@@ -227,7 +227,7 @@ export default function Amenities() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1"
+                      className="flex-1 cursor-pointer"
                       onClick={() =>
                         navigate(`/owner/amenities/edit/${amenity._id}`)
                       }
@@ -240,7 +240,7 @@ export default function Amenities() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1"
+                      className="flex-1 cursor-pointer"
                       onClick={() => handleDelete(amenity._id)}
                     >
                       <Trash2 size={14} />

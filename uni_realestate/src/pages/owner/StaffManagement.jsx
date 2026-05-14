@@ -107,7 +107,7 @@ export default function StaffList() {
             setOpen(true);
             generatePassword(); // auto password on open
           }}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded"
         >
           Add Staff
         </Button>
@@ -226,7 +226,7 @@ export default function StaffList() {
 
                   <Button
                     onClick={generatePassword}
-                    className="bg-gray-900 hover:bg-black text-white rounded-xl px-5"
+                    className="cursor-pointer bg-gray-900 hover:bg-black text-white rounded-xl px-5"
                   >
                     Generate
                   </Button>
@@ -238,14 +238,14 @@ export default function StaffList() {
             <div className="flex justify-end gap-3 px-6 py-5 border-t bg-gray-50">
               <Button
                 onClick={() => setOpen(false)}
-                className="border border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
+                className="border cursor-pointer border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
               >
                 Cancel
               </Button>
 
               <Button
                 onClick={handleSubmit}
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6"
+                className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6"
               >
                 Save Staff
               </Button>

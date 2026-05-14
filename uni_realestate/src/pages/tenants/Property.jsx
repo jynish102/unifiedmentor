@@ -182,7 +182,7 @@ export default function Properties() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex-1"
+                  className="flex-1 cursor-pointer"
                   onClick={() => navigate(`/tenant/properties/${property._id}`)}
                 >
                   <Eye size={14} />
@@ -192,7 +192,7 @@ export default function Properties() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex-1"
+                  className="flex-1 cursor-pointer"
                   onClick={() =>
                     navigate(
                       `/tenant/maintenance/create/property/${property._id}`,

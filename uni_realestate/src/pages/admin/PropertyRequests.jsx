@@ -31,7 +31,7 @@ export default function PropertiesRequest() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [properties, setProperties] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, ] = useState(null);
 
   const getImageUrl = (img) => {
     if (!img) return "/default-image.jpg";
@@ -257,7 +257,7 @@ export default function PropertiesRequest() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1"
+                    className="flex-1 cursor-pointer"
                     onClick={() =>
                       navigate(`/admin/properties/${property._id}`)
                     }
@@ -270,7 +270,7 @@ export default function PropertiesRequest() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 bg-green-600 hover:bg-green-700"
+                      className="cursor-pointer flex-1 bg-green-600 hover:bg-green-700"
                       onClick={() =>
                         handleApprovalStatus(property._id, "approved")
                       }
@@ -284,7 +284,7 @@ export default function PropertiesRequest() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 bg-red-600 hover:bg-red-700"
+                      className="cursor-pointer flex-1 bg-red-600 hover:bg-red-700"
                       onClick={() =>
                         handleApprovalStatus(property._id, "rejected")
                       }

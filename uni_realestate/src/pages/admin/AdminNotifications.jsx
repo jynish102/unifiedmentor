@@ -89,7 +89,6 @@ export default function AdminNotifications() {
         <div className="bg-white rounded-2xl shadow-md p-10 text-center">
           <Bell className="mx-auto text-gray-300 size-10 mb-3" />
 
-
           <p className="text-gray-500 font-medium">No notifications found</p>
         </div>
       ) : (
@@ -98,7 +97,7 @@ export default function AdminNotifications() {
           {notifications.map((notification) => (
             <div
               key={notification._id}
-              className={`bg-white rounded-2xl shadow-md p-5 border transition hover:shadow-lg ${
+              className={`cursor-pointer bg-white rounded-2xl shadow-md p-5 border transition hover:shadow-lg ${
                 !notification.isRead
                   ? "border-blue-500 bg-blue-50"
                   : "border-gray-100"

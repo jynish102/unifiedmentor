@@ -48,7 +48,7 @@ export default function AmenityDetails() {
     <div className="p-6 space-y-4">
       <Button
         onClick={() => navigate("/owner/amenities")}
-        className="bg-gray-500 text-white px-3 py-1 rounded"
+        className="cursor-pointer bg-gray-500 text-white px-3 py-1 rounded"
       >
         Close
       </Button>

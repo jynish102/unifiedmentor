@@ -866,13 +866,14 @@ export default function AddProperty() {
               type="button"
               onClick={() => navigate("/owner/properties")}
               variant="outline"
+              className="px-8 cursor-pointer"
             >
               Cancel
             </Button>
 
             <Button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 cursor-pointer"
               disabled={!zipcodeIsValid}
             >
               {id ? "Update Property" : "Request To Add Property"}

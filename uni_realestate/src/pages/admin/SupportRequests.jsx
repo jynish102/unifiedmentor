@@ -93,20 +93,21 @@ export default function SupportRequest(){
 
               <div className="flex flex-col gap-2">
                 {/* Reactivate button */}
-                {req.inquiryType === "reactivate account" &&  !req.reactivated &&  (
-                  <Button
-                    onClick={() => handleReactivate(req._id , req.email)}
-                    className="bg-green-600 text-white px-3 py-1 rounded"
-                  >
-                    Reactivate
-                  </Button>
-                )}
+                {req.inquiryType === "reactivate account" &&
+                  !req.reactivated && (
+                    <Button
+                      onClick={() => handleReactivate(req._id, req.email)}
+                      className="cursor-pointer bg-green-600 text-white px-3 py-1 rounded"
+                    >
+                      Reactivate
+                    </Button>
+                  )}
 
                 {/* Resolve button */}
                 {req.status !== "resolved" && (
                   <Button
-                    onClick={() => handleResolve(req._id , req.email)}
-                    className="bg-blue-600 text-white px-3 py-1 rounded"
+                    onClick={() => handleResolve(req._id, req.email)}
+                    className="cursor-pointer bg-blue-600 text-white px-3 py-1 rounded"
                   >
                     Mark Resolved
                   </Button>

@@ -23,9 +23,9 @@ import toast from "react-hot-toast";
 export default function StaffProfile() {
   const [user, setUser] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [counts, setCounts] = useState(null);
+  const [, setCounts] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [tasks, setTasks] = useState([]);
+  
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
@@ -95,6 +95,13 @@ export default function StaffProfile() {
 
         setUser(res.data.user);
         setCounts(res.data.counts);
+
+        setFormData({
+          fullname: res.data.user.fullname ?? "",
+          email: res.data.user.email ?? "",
+          phone: res.data.user.phone ?? "",
+        });
+
       } catch (error) {
         console.error(error);
       }
@@ -109,15 +116,6 @@ export default function StaffProfile() {
     };
   }, [preview]);
 
-  useEffect(() => {
-    if (!user) return;
-
-    setFormData({
-      fullname: user.fullname ?? "",
-      email: user.email ?? "",
-      phone: user.phone ?? "",
-    });
-  }, [user]);
 
 
 
@@ -170,6 +168,7 @@ export default function StaffProfile() {
     });
     setIsEditing(false);
   };
+
   const handleImageUpload = async (file) => {
     if (!file) return;
     const token = localStorage.getItem("token");
@@ -246,11 +245,6 @@ export default function StaffProfile() {
     }
   };
 
-  //handle logout
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  };
 
   //handle Notifications toggle
   const handleToggle = (key) => {
@@ -335,16 +329,6 @@ export default function StaffProfile() {
                     </h2>
                   )}
 
-                  <div className="absolute top-4 right-4">
-                    <button
-                      onClick={handleLogout}
-                      className="p-2 rounded-full hover:bg-red-100 transition"
-                      title="Logout"
-                    >
-                      <LogOut className="w-6 h-6 text-red-600" />
-                    </button>
-                  </div>
-
                   <p className="text-gray-500 capitalize">{user.role}</p>
 
                   {/* EMAIL */}
@@ -379,7 +363,7 @@ export default function StaffProfile() {
                     {!isEditing ? (
                       <Button
                         onClick={handleEdit}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                        className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-md"
                       >
                         Edit Profile
                       </Button>
@@ -387,13 +371,13 @@ export default function StaffProfile() {
                       <div className="flex gap-2">
                         <Button
                           onClick={handleSave}
-                          className="px-4 py-2 bg-green-600 text-white rounded-md"
+                          className="cursor-pointer px-4 py-2 bg-green-600 text-white rounded-md"
                         >
                           Save
                         </Button>
                         <Button
                           onClick={handleCancel}
-                          className="px-4 py-2 bg-gray-800 text-white rounded-md"
+                          className="cursor-pointer px-4 py-2 bg-gray-800 text-white rounded-md"
                         >
                           Cancel
                         </Button>
@@ -405,8 +389,6 @@ export default function StaffProfile() {
             </div>
           </div>
         </div>
-
-  
 
         {/* Change Password Section */}
         <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
@@ -422,6 +404,16 @@ export default function StaffProfile() {
                 onChange={handlePasswordChange}
                 className="w-full border p-2 rounded"
               />
+              <span
+                onClick={() => togglePassword("current")}
+                className="absolute right-3 top-2.5 cursor-pointer"
+              >
+                {showPassword.current ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
+              </span>
             </div>
 
             <div className="relative">
@@ -490,7 +482,7 @@ export default function StaffProfile() {
             <Button
               onClick={handleChangePassword}
               disabled={!isValidPassword}
-              className={`text-white ${
+              className={`cursor-pointer text-white ${
                 isValidPassword
                   ? "bg-blue-600 hover:bg-blue-700"
                   : "bg-gray-400 cursor-not-allowed opacity-60"
@@ -501,7 +493,7 @@ export default function StaffProfile() {
           </div>
         </div>
 
-        {/* Notification Settings */}
+        {/* Notification Settings
         <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
           <h2 className="text-xl font-semibold mb-4">Notification Settings</h2>
 
@@ -524,7 +516,7 @@ export default function StaffProfile() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

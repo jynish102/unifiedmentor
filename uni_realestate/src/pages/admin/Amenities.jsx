@@ -56,18 +56,18 @@ export function Amenities() {
       );
     };
   
-    const getPriorityColor = (priority) => {
-      switch (priority) {
-        case "high":
-          return "bg-red-100 text-red-700";
-        case "medium":
-          return "bg-orange-100 text-orange-700";
-        case "low":
-          return "bg-blue-100 text-blue-700";
-        default:
-          return "bg-gray-100 text-gray-700";
-      }
-    };
+    // const getPriorityColor = (priority) => {
+    //   switch (priority) {
+    //     case "high":
+    //       return "bg-red-100 text-red-700";
+    //     case "medium":
+    //       return "bg-orange-100 text-orange-700";
+    //     case "low":
+    //       return "bg-blue-100 text-blue-700";
+    //     default:
+    //       return "bg-gray-100 text-gray-700";
+    //   }
+    // };
   
 
   
@@ -183,7 +183,7 @@ export function Amenities() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1"
+                      className="flex-1 cursor-pointer"
                       onClick={() =>
                         navigate(`/admin/amenities/${amenity._id}`)
                       }

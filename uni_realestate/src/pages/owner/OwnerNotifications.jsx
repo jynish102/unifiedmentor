@@ -89,7 +89,7 @@ export default function OwnerNotifications() {
           {notifications.map((notification) => (
             <div
               key={notification._id}
-              className={`bg-white rounded-2xl shadow-md p-5 border transition hover:shadow-lg ${
+              className={`cursor-pointer bg-white rounded-2xl shadow-md p-5 border transition hover:shadow-lg ${
                 !notification.isRead
                   ? "border-blue-500 bg-blue-50"
                   : "border-gray-100"

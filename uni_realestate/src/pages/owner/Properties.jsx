@@ -143,7 +143,7 @@ export  default function Properties() {
           <p className="text-gray-600 mt-1">Manage your rental properties</p>
         </div>
         <Button
-          className="w-full sm:w-auto"
+          className="w-full sm:w-auto cursor-pointer"
           onClick={() => navigate("/owner/properties/add-property")}
         >
           <Plus className="size-4 mr-2" />
@@ -303,7 +303,7 @@ export  default function Properties() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1"
+                    className="flex-1 cursor-pointer"
                     onClick={() =>
                       navigate(`/owner/properties/${property._id}`)
                     }
@@ -316,7 +316,7 @@ export  default function Properties() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1"
+                    className="flex-1 cursor-pointer"
                     onClick={() =>
                       navigate(`/owner/properties/edit/${property._id}`)
                     }
@@ -329,7 +329,7 @@ export  default function Properties() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1"
+                    className="flex-1 cursor-pointer"
                     onClick={() => handleDelete(property._id)}
                   >
                     <Trash2 size={14} />

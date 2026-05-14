@@ -94,6 +94,12 @@ export default function StaffProfile() {
 
         setStaff(res.data.user);
         setCounts(res.data.counts);
+        setFormData({
+          fullname: res.data.user.fullname ?? "",
+          email: res.data.user.email ?? "",
+          phone: res.data.user.phone ?? "",
+        });
+
       } catch (error) {
         console.error(error);
       }
@@ -108,16 +114,7 @@ export default function StaffProfile() {
     };
   }, [preview]);
 
-  useEffect(() => {
-    if (!staff) return;
-
-    setFormData({
-      fullname: staff.fullname ?? "",
-      email: staff.email ?? "",
-      phone: staff.phone ?? "",
-    });
-  }, [staff]);
-
+  
  useEffect(() => {
   const fetchTasks = async () => {
     try {
@@ -263,19 +260,8 @@ export default function StaffProfile() {
     }
   };
 
-  //handle logout
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  };
 
-  //handle Notifications toggle
-  const handleToggle = (key) => {
-    setSettings((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
+
 
   //handle account deactivation
   const handleDeactivate = async () => {
@@ -381,15 +367,7 @@ const statusConfig = getStatusConfig(staff.isActive);
                     </h2>
                   )}
 
-                  <div className="absolute top-4 right-4">
-                    <button
-                      onClick={handleLogout}
-                      className="p-2 rounded-full hover:bg-red-100 transition"
-                      title="Logout"
-                    >
-                      <LogOut className="w-6 h-6 text-red-600" />
-                    </button>
-                  </div>
+                  
 
                   <p className="text-gray-500 capitalize">{staff.role}</p>
 
@@ -425,7 +403,7 @@ const statusConfig = getStatusConfig(staff.isActive);
                     {!isEditing ? (
                       <Button
                         onClick={handleEdit}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                        className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-md"
                       >
                         Edit Profile
                       </Button>
@@ -433,13 +411,13 @@ const statusConfig = getStatusConfig(staff.isActive);
                       <div className="flex gap-2">
                         <Button
                           onClick={handleSave}
-                          className="px-4 py-2 bg-green-600 text-white rounded-md"
+                          className="cursor-pointer px-4 py-2 bg-green-600 text-white rounded-md"
                         >
                           Save
                         </Button>
                         <Button
                           onClick={handleCancel}
-                          className="px-4 py-2 bg-gray-800 text-white rounded-md"
+                          className="cursor-pointer px-4 py-2 bg-gray-800 text-white rounded-md"
                         >
                           Cancel
                         </Button>
@@ -474,6 +452,16 @@ const statusConfig = getStatusConfig(staff.isActive);
                 onChange={handlePasswordChange}
                 className="w-full border p-2 rounded"
               />
+              <span
+                onClick={() => togglePassword("current")}
+                className="absolute right-3 top-2.5 cursor-pointer"
+              >
+                {showPassword.current ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
+              </span>
             </div>
 
             <div className="relative">
@@ -542,7 +530,7 @@ const statusConfig = getStatusConfig(staff.isActive);
             <Button
               onClick={handleChangePassword}
               disabled={!isValidPassword}
-              className={`text-white ${
+              className={`cursor-pointer text-white ${
                 isValidPassword
                   ? "bg-blue-600 hover:bg-blue-700"
                   : "bg-gray-400 cursor-not-allowed opacity-60"
@@ -553,30 +541,7 @@ const statusConfig = getStatusConfig(staff.isActive);
           </div>
         </div>
 
-        {/* Notification Settings */}
-        <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
-          <h2 className="text-xl font-semibold mb-4">Notification Settings</h2>
-
-          <div className="space-y-3">
-            {Object.keys(settings).map((key) => (
-              <div key={key} className="flex justify-between items-center">
-                <span className="capitalize">{key} Alerts</span>
-                <bdoutton
-                  onClick={() => handleToggle(key)}
-                  className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
-                    settings[key] ? "bg-blue-600" : "bg-gray-300"
-                  }`}
-                >
-                  <div
-                    className={`bg-white w-4 h-4 rounded-full shadow-md transform transition ${
-                      settings[key] ? "translate-x-6" : ""
-                    }`}
-                  />
-                </bdoutton>
-              </div>
-            ))}
-          </div>
-        </div>
+      
 
         {/* task section */}
         {currentTask && (
@@ -643,13 +608,11 @@ const statusConfig = getStatusConfig(staff.isActive);
 
           <Button
             onClick={handleDeactivate}
-            className="bg-yellow-500 text-white"
+            className="cursor-pointer bg-yellow-500 text-white"
           >
             Deactivate Account
           </Button>
         </div>
-
-       
       </div>
     </div>
   );

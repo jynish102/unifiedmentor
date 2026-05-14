@@ -72,10 +72,7 @@ export function Tenants() {
           </p>
         </div>
 
-        <Button className="gap-2">
-          <Plus size={18} />
-          Add Tenant
-        </Button>
+       
       </div>
 
       {/* Table */}
@@ -109,7 +106,7 @@ export function Tenants() {
                   <TableHead>Lease Period</TableHead>
                   <TableHead>Monthly Rent</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
+                  {/* <TableHead>Actions</TableHead> */}
                 </TableRow>
               </TableHeader>
 
@@ -193,11 +190,11 @@ export function Tenants() {
                     </TableCell>
 
                     {/* Action */}
-                    <TableCell>
+                    {/* <TableCell>
                       <Button variant="outline" size="sm">
                         View
                       </Button>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))}
 

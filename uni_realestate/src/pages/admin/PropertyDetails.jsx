@@ -37,7 +37,7 @@ export default function PropertyDetails() {
 
       <Button
         onClick={() => navigate("/admin/properties")}
-        className="bg-gray-500 text-white px-3 py-1 rounded"
+        className="cursor-pointer bg-gray-500 text-white px-3 py-1 rounded"
       >
         Close
       </Button>

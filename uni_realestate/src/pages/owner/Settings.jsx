@@ -59,12 +59,12 @@ export default function ProfileCard() {
     rules.special &&
     passwordData.newPassword === passwordData.confirmPassword;
 
-  //notification settings state
-  const [settings, setSettings] = useState({
-    booking: true,
-    maintenance: true,
-    amenity: true,
-  });
+  // //notification settings state
+  // const [settings, setSettings] = useState({
+  //   booking: true,
+  //   maintenance: true,
+  //   amenity: true,
+  // });
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -178,11 +178,7 @@ export default function ProfileCard() {
     }
   };
 
-  //handle logout
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  };
+
 
   if (!user) return <p>Loading...</p>;
 
@@ -219,13 +215,6 @@ export default function ProfileCard() {
     }
   };
 
-  //handle Notifications toggle
-  const handleToggle = (key) => {
-    setSettings((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
 
  
 
@@ -335,15 +324,7 @@ export default function ProfileCard() {
                   </span>
                 </h2>
               )}
-              <div className="absolute top-4 right-4">
-                <button
-                  onClick={handleLogout}
-                  className="p-2 rounded-full hover:bg-red-100 transition"
-                  title="Logout"
-                >
-                  <LogOutIcon className="w-6 h-6 text-red-600" />
-                </button>
-              </div>
+             
               <p className="text-lg text-gray-500">{user.role}</p>
 
               <div className="text-lg text-gray-600 mt-2 space-y-1">
@@ -371,20 +352,23 @@ export default function ProfileCard() {
               </div>
               {/* Right Section */}
               {!isEditing ? (
-                <Button onClick={handleEdit} className="bg-blue-600 text-white">
+                <Button
+                  onClick={handleEdit}
+                  className="cursor-pointer bg-blue-600 text-white"
+                >
                   Edit Profile
                 </Button>
               ) : (
                 <div className="flex gap-2">
                   <Button
                     onClick={handleSave}
-                    className="bg-green-600 text-white"
+                    className="cursor-pointer bg-green-600 text-white"
                   >
                     Save
                   </Button>
                   <Button
                     onClick={handleCancel}
-                    className="bg-gray-800 text-white"
+                    className="cursor-pointer bg-gray-800 text-white"
                   >
                     Cancel
                   </Button>
@@ -409,7 +393,13 @@ export default function ProfileCard() {
               value={passwordData.currentPassword}
               onChange={handlePasswordChange}
               className="w-full border p-2 rounded"
-            />
+            />{" "}
+            <span
+              onClick={() => togglePassword("current")}
+              className="absolute right-3 top-2.5 cursor-pointer"
+            >
+              {showPassword.current ? <EyeOff size={18} /> : <Eye size={18} />}
+            </span>
           </div>
 
           <div className="relative">
@@ -466,7 +456,7 @@ export default function ProfileCard() {
           <Button
             onClick={handleChangePassword}
             disabled={!isValidPassword}
-            className={`text-white ${
+            className={`cursor-pointer text-white ${
               isValidPassword
                 ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-gray-400 cursor-not-allowed opacity-60"
@@ -477,31 +467,7 @@ export default function ProfileCard() {
         </div>
       </div>
 
-
-      {/* Notification Settings */}
-      <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
-        <h2 className="text-xl font-semibold mb-4">Notification Settings</h2>
-
-        <div className="space-y-3">
-          {Object.keys(settings).map((key) => (
-            <div key={key} className="flex justify-between items-center">
-              <span className="capitalize">{key} Alerts</span>
-              <button
-                onClick={() => handleToggle(key)}
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
-                  settings[key] ? "bg-blue-600" : "bg-gray-300"
-                }`}
-              >
-                <div
-                  className={`bg-white w-4 h-4 rounded-full shadow-md transform transition ${
-                    settings[key] ? "translate-x-6" : ""
-                  }`}
-                />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+  
 
       {/* Deactivate Account */}
       <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6 border border-yellow-300">
@@ -526,13 +492,11 @@ export default function ProfileCard() {
 
         <Button
           onClick={handleDeactivateAccount}
-          className="bg-yellow-500 text-white"
+          className="cursor-pointer bg-yellow-500 text-white"
         >
           Deactivate Account
         </Button>
       </div>
-
-      
     </div>
   );
 }

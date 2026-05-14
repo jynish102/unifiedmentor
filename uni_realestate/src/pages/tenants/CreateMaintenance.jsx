@@ -165,6 +165,7 @@ export default function CreateMaintenance() {
               type="button"
               variant="outline"
               onClick={() => navigate(-1)}
+              className="cursor-pointer"
             >
               Cancel
             </Button>
@@ -172,7 +173,7 @@ export default function CreateMaintenance() {
             <Button
               type="submit"
               disabled={loading}
-              className="bg-orange-500 hover:bg-orange-600 text-white px-8"
+              className="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white px-8"
             >
               {loading ? "Submitting..." : "Submit Request"}
             </Button>

@@ -326,7 +326,7 @@ export default function StaffMaintenance() {
 
                     <Button
                       onClick={() => uploadProof(item._id)}
-                      className="px-3 py-1 bg-purple-600 text-white rounded"
+                      className="cursor-pointer px-3 py-1 bg-purple-600 text-white rounded"
                     >
                       Upload Proof
                     </Button>
@@ -344,7 +344,7 @@ export default function StaffMaintenance() {
                       className="max-w-[90%] max-h-[90%] rounded shadow-lg"
                     />
                     <Button
-                      className="absolute top-5 right-5 text-red-500 text-3xl"
+                      className="cursor-pointer absolute top-5 right-5 text-red-500 text-3xl"
                       onClick={() => setPreviewImg(null)}
                     >
                       ✕
@@ -383,7 +383,7 @@ export default function StaffMaintenance() {
                             {item.status === "in-progress" && (
                               <Button
                                 onClick={() => deleteImage(item._id, img.url)}
-                                className=" cursor-pointer absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded"
+                                className="cursor-pointer absolute top-0 right-0 bg-red-600 text-white text-xs px-1 rounded"
                               >
                                 ✕
                               </Button>
@@ -506,7 +506,7 @@ export default function StaffMaintenance() {
                       {/* CONFIRM BUTTON */}
                       <Button
                         onClick={() => handleComplete(completeModal.id)}
-                        className=" cursor-pointer w-full bg-green-600 text-white py-2 rounded"
+                        className="cursor-pointer w-full bg-green-600 text-white py-2 rounded"
                       >
                         Confirm Complete
                       </Button>

@@ -24,7 +24,7 @@ const navigation = [
   { path: "/tenant/bookings", name: "Bookings", icon: Calendar },
   { path: "/tenant/message", name: "Message", icon: MailIcon },
   { path: "/tenant/maintenance", name: "Maintenance", icon: Wrench },
-  
+  { path: "/tenant/profile", name: "Profile", icon: User },
 ];
 
 
@@ -201,7 +201,7 @@ export function TenantsDashboardLayout() {
                 navigate("/tenant/notification");
               }}
             >
-              <Button variant="ghost" size="icon">
+              <Button className="cursor-pointer" variant="ghost" size="icon">
                 <Bell size={20} />
                 {unreadCount > 0 && (
                   <span className="absolute top-5 right-15 bg-red-500 text-white text-[10px] min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center font-medium">
@@ -234,14 +234,14 @@ export function TenantsDashboardLayout() {
                         navigate("/tenant/profile");
                         setOpen(false);
                       }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-black"
+                      className="cursor-pointer w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-black"
                     >
                       Profile
                     </Button>
 
                     <Button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100  hover:text-red-500"
+                      className="cursor-pointer w-full text-left px-4 py-2 hover:bg-gray-100  hover:text-red-500"
                     >
                       Logout
                     </Button>

@@ -47,13 +47,13 @@ export default function PropertyDetails() {
           onClick={() =>
             navigate(`/owner/amenities/add-amenity/${property._id}`)
           }
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
         >
           Add Amenity
         </Button>
         <Button
           onClick={() => navigate("/owner/properties")}
-          className="bg-gray-500 text-white px-3 py-1 rounded"
+          className="cursor-pointer bg-gray-500 text-white px-3 py-1 rounded"
         >
           Close
         </Button>

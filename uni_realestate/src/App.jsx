@@ -163,7 +163,7 @@ function App() {
             <Route path="/owner/maintenance" element={<OwnerMaintenance />} />
             <Route path="/owner/tenants" element={<OwnerTenant />} />
             <Route path="/owner/messages" element={<OwnerMessages />} />
-            <Route path="settings" element={<Settings />} />
+            <Route path="/owner/settings" element={<Settings />} />
              <Route path="/owner/notification" element={<OwnerNotification />} />
           </Route>
           //tenant routes
@@ -195,7 +195,7 @@ function App() {
               element={<CreateMaintenance />}
             />
             <Route path="/tenant/maintenance" element={<TenantMaintenance />} />
-            <Route path="profile" element={<Profile />} />
+            <Route path="/tenant/profile" element={<Profile />} />
             <Route path="/tenant/notification" element={<TenantNotification />} />
           </Route>
 

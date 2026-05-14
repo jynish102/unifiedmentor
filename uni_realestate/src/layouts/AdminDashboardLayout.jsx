@@ -178,6 +178,7 @@ export function AdminDashboardLayout() {
 
             <div className="flex items-center gap-2">
               <Button
+                className="cursor-pointer"
                 variant="ghost"
                 size="icon"
                 onClick={() => {
@@ -218,14 +219,14 @@ export function AdminDashboardLayout() {
                         navigate("/admin/profile");
                         setOpen(false);
                       }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-black"
+                      className="cursor-pointer w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-black"
                     >
                       Profile
                     </Button>
 
                     <Button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100  hover:text-red-500"
+                      className="cursor-pointer w-full text-left px-4 py-2 hover:bg-gray-100  hover:text-red-500"
                     >
                       Logout
                     </Button>

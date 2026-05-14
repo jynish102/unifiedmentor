@@ -183,7 +183,7 @@ export default function OwnerMaintenance() {
                 {/* STATUS */}
                 <div className="mt-3">
                   <span
-                    className={`px-3 py-1 rounded-full text-sm ${
+                    className={`cursor-pointer px-3 py-1 rounded-full text-sm ${
                       item.status === "pending"
                         ? "bg-gray-200"
                         : item.status === "assigned"
@@ -234,7 +234,7 @@ export default function OwnerMaintenance() {
                     </select>
                     <Button
                       onClick={() => assignMaintenance(item._id)}
-                      className="px-3 py-1 bg-purple-600 text-white rounded"
+                      className="cursor-pointer px-3 py-1 bg-purple-600 text-white rounded"
                     >
                       Assign
                     </Button>
@@ -252,7 +252,7 @@ export default function OwnerMaintenance() {
                       className="max-w-[90%] max-h-[90%] rounded shadow-lg"
                     />
                     <Button
-                      className="absolute top-5 right-5 text-red-500 text-3xl"
+                      className="cursor-pointer absolute top-5 right-5 text-red-500 text-3xl"
                       onClick={() => setPreviewImg(null)}
                     >
                       ✕
@@ -341,7 +341,7 @@ export default function OwnerMaintenance() {
                           setSelectedRequest(item);
                           setRejectOpen(true);
                         }}
-                        className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-xl"
+                        className="cursor-pointer px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-xl"
                       >
                         Reject
                       </button>
@@ -489,7 +489,7 @@ export default function OwnerMaintenance() {
                   setRejectOpen(false);
                   setRejectReason("");
                 }}
-                className="border border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
+                className="cursor-pointer border border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
               >
                 Cancel
               </Button>
@@ -509,7 +509,7 @@ export default function OwnerMaintenance() {
                   setRejectOpen(false);
                   setRejectReason("");
                 }}
-                className="bg-red-600 hover:bg-red-700 text-white rounded-xl px-6"
+                className="cursor-pointer bg-red-600 hover:bg-red-700 text-white rounded-xl px-6"
               >
                 Reject Request
               </Button>

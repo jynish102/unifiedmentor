@@ -250,7 +250,7 @@ export default function Tenants() {
                       <div className="flex gap-2">
                         <Button
                           size="sm"
-                          className="bg-blue-600 text-white"
+                          className="cursor-pointer bg-blue-600 text-white"
                           onClick={() => handleOpenModal(tenant)}
                         >
                           <Mail size={14} className="mr-1" />
@@ -301,7 +301,7 @@ export default function Tenants() {
 
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="text-white/80 hover:text-white text-xl"
+                  className="cursor-pointer text-white/80 hover:text-white text-xl"
                 >
                   ✕
                 </button>
@@ -350,14 +350,14 @@ export default function Tenants() {
             <div className="flex justify-end gap-3 px-6 py-5 border-t bg-gray-50">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="border border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
+                className="cursor-pointer border border-gray-300 bg-red text-black hover:bg-red-500 hover:text-black rounded-xl px-5"
               >
                 Cancel
               </button>
 
               <button
                 onClick={handleSend}
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 py-2"
+                className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 py-2"
               >
                 Send Message
               </button>

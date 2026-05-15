@@ -5,6 +5,8 @@ const authMiddleware = require("../middleware/authMiddleware");
 const {
   registerUser,
   loginUser,
+  forgotPassword,
+  resetPassword,
   updateProfileImage,
   changePassword,
   deactivateAccount,
@@ -14,6 +16,8 @@ const {
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.post("/forgot-password", forgotPassword);
+router.put("/reset-password/:token", resetPassword);
 router.put("/profile-image", upload.single("image"), authMiddleware, updateProfileImage);
 router.put("/change-password", authMiddleware, changePassword);
 router.put("/deactivate-account", authMiddleware, deactivateAccount);

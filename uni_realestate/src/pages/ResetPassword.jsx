@@ -1,10 +1,15 @@
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Lock } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import logo from "../assets/logo2.png";
+import API from "../utils/api";
+import toast from "react-hot-toast";
 
 export default function ResetPassword() {
+  const { token } = useParams();
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     password: "",
     confirmPassword: "",
@@ -42,14 +47,25 @@ export default function ResetPassword() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!isValid) return;
+  if (!isValid) return;
 
-    alert("Password updated successfully");
-  };
+  try {
+    const res = await API.put(`/auth/reset-password/${token}`, {
+      password: form.password,
+    });
 
+    toast.success(res.data.message || "Password updated successfully");
+
+    navigate("/login");
+  } catch (err) {
+    console.log(err);
+
+    toast.error(err.response?.data?.message || "Failed to reset password");
+  }
+};
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center relative px-4"

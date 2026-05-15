@@ -39,16 +39,17 @@ const userSchema = new mongoose.Schema(
       ref: "User",
     },
 
-   
     isActive: {
       type: Boolean,
       default: true,
     },
 
-    
     specialization: {
       type: String,
     },
+
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
   { timestamps: true },
 );

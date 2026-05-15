@@ -1,14 +1,38 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo2.png";
 import { useState } from "react";
+import API from "../utils/api";
+import toast from "react-hot-toast";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Reset requested for:", email);
+
+    try {
+      setLoading(true);
+      const res = await API.post("/auth/forgot-password", {
+        email,
+      });
+
+      toast.success("Reset link generated");
+
+      // for testing without real email
+      //  window.location.href = res.data.resetUrl;
+
+      // OR:
+      navigate(`/resetpassword/${res.data.resetUrl.split("/").pop()}`);
+    } catch (err) {
+      console.log(err.response?.data || err.message);
+
+      toast.error(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,9 +81,15 @@ const ForgotPassword = () => {
 
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold hover:opacity-90 transition"
+            disabled={loading}
+            className={`w-full py-3 rounded-xl text-white font-semibold transition
+            ${
+              loading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90"
+            }`}
           >
-            Send Reset Link
+            {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
 

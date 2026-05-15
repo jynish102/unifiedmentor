@@ -2,8 +2,8 @@ const User = require("../models/User");
 
 exports.createStaff = async (req, res) => {
   try {
-     console.log("BODY:", req.body);
-     console.log("USER:", req.user);
+    //  console.log("BODY:", req.body);
+    //  console.log("USER:", req.user);
     const ownerId = req.user._id || req.user.id;
 
     const { fullname, email, phone, password, specialization } = req.body;

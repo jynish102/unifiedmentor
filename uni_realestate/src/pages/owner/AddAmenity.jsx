@@ -570,7 +570,7 @@ export default function AddAmenity() {
                   <button
                     type="button"
                     onClick={() => handleRemoveExistingImage(index)}
-                    className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                    className="cursor-pointer absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
                   >
                     ×
                   </button>
@@ -589,7 +589,7 @@ export default function AddAmenity() {
                   <button
                     type="button"
                     onClick={() => handleRemoveNewImage(index)}
-                    className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                    className="cursor-pointer absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
                   >
                     ×
                   </button>
@@ -604,13 +604,14 @@ export default function AddAmenity() {
               type="button"
               onClick={() => navigate("/owner/amenities")}
               variant="outline"
+              className="cursor-pointer"
             >
               Cancel
             </Button>
 
             <Button
               type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-8"
+              className="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white px-8"
              
             >
               {id ? "Update Amenity" : "Add Amenity"}

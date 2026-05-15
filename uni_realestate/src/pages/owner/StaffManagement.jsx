@@ -27,30 +27,24 @@ export default function StaffList() {
     setStaff(res.data.data);
   };
 
- useEffect(() => {
-   const loadData = async () => {
-     try {
-       await fetchStaff();
-     } catch (err) {
-       console.error(err);
-     }
-   };
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        await fetchStaff();
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-   loadData();
- }, []);
+    loadData();
+  }, []);
 
-  
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  
+  //Other Validation functions
   const generatePassword = () => {
     const pass = Math.random().toString(36).slice(-8);
     setForm({ ...form, password: pass });
   };
 
- 
   const validate = () => {
     if (!form.fullname || !form.email || !form.phone) {
       return "All fields required";
@@ -59,21 +53,91 @@ export default function StaffList() {
       return "Invalid email";
     }
 
-      if (form.password.length < 6) {
-        return "Password must be at least 6 characters";
-      }
+    if (form.password.length < 6) {
+      return "Password must be at least 6 characters";
+    }
     return null;
   };
 
+  {
+    /*-----------name validation--------------------- */
+  }
+  const validateName = (name) => {
+    const regex = /^[A-Za-z\s]+$/;
+    return regex.test(name);
+  };
+  const isValidName = validateName(form.fullname);
 
-  const handleSubmit = async () => {
-    const error = validate();
-    if (error) return toast.error(error);
+  {
+    /*======================email validation======================== */
+  }
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+    return emailRegex.test(email);
+  };
+  const emailIsValid = validateEmail(form.email);
+
+  const domain = form.email.split("@")[1];
+
+  const validDomains = [
+    "gmail.com",
+    "yahoo.com",
+    "outlook.com",
+    "hotmail.com",
+    "icloud.com",
+  ];
+
+  const isCorrectDomain = validDomains.includes(domain);
+
+  {
+    /*======================phone validation======================== */
+  }
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phone);
+  };
+  const phoneIsValid = validatePhone(form.phone);
+
+  //handle change for all inputs with validation for name, email, and phone
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // Validation for fullname
+    if (name === "fullname") {
+      const regex = /^[A-Za-z\s]*$/;
+      if (!regex.test(value)) return;
+    }
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Create updated form
+    const updatedForm = {
+      ...form,
+      [name]: value,
+    };
+
+    setForm(updatedForm);
+  };
+
+  //handle submit
+  const handleSubmit = async (e) => {
+     e.preventDefault();
 
     try {
       const token = localStorage.getItem("token");
 
-      await API.post("/staff/add", form, {
+      await API.post("/staff/add", form,{
+        
+        fullname: form.fullname,
+        email: form.email,
+        phone: form.phone,
+        role: form.role,
+        password: form.password,
+      
+      }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -82,7 +146,7 @@ export default function StaffList() {
       toast.success("Staff added");
 
       setOpen(false);
-      fetchStaff(); 
+      fetchStaff();
 
       setForm({
         fullname: "",
@@ -149,7 +213,7 @@ export default function StaffList() {
             </div>
 
             {/* Body */}
-            <div className="p-6 space-y-5">
+            <form  onSubmit={handleSubmit} className="p-6 space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-medium text-gray-700 mb-1 block">
@@ -158,12 +222,28 @@ export default function StaffList() {
 
                   <input
                     autoFocus
+                    required
                     name="fullname"
                     placeholder="Enter full name"
                     value={form.fullname}
                     onChange={handleChange}
-                    className="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className={`w-full px-4 py-3 rounded-xl bg-white/20 text-black border focus:outline-none focus:ring-2 ${
+                      form.fullname
+                        ? isValidName
+                          ? "border-green-400 focus:ring-green-400"
+                          : "border-red-500 focus:ring-red-400"
+                        : " border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    }`}
                   />
+                  {form.fullname && (
+                    <p
+                      className={`mt-2 text-sm ${isValidName ? "text-green-400" : "text-red-400"}`}
+                    >
+                      {isValidName
+                        ? "✓ Valid name"
+                        : "✗ Only letters and spaces allowed"}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -172,12 +252,35 @@ export default function StaffList() {
                   </label>
 
                   <input
+                    required
                     name="email"
                     placeholder="Enter email"
                     value={form.email}
                     onChange={handleChange}
-                    className="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className={`w-full px-4 py-3 rounded-xl bg-white/20 text-black border focus:outline-none focus:ring-2 transition ${
+                      form.email
+                        ? emailIsValid && isCorrectDomain
+                          ? "border-green-400 focus:ring-green-400"
+                          : "border-red-500 focus:ring-red-400"
+                        : "border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    }`}
                   />
+
+                  {form.email && (
+                    <p
+                      className={`mt-2 text-sm ${
+                        emailIsValid && isCorrectDomain
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {emailIsValid && isCorrectDomain
+                        ? "✓ Valid email address"
+                        : !emailIsValid
+                          ? "✗ Email must be lowercase and valid format"
+                          : "✗ Please check email domain spelling"}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -186,12 +289,37 @@ export default function StaffList() {
                   </label>
 
                   <input
+                    required
                     name="phone"
                     placeholder="Enter phone number"
                     value={form.phone}
-                    onChange={handleChange}
-                    className="w-full border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onChange={(e) => {
+                      const onlyNumbers = e.target.value.replace(/\D/g, "");
+                      handleChange({
+                        target: { name: "phone", value: onlyNumbers },
+                      });
+                    }}
+                    maxLength={10}
+                    className={`w-full px-4 py-3 rounded-xl bg-white/20 text-black placeholder-white/70 border focus:outline-none focus:ring-2 transition ${
+                      form.phone
+                        ? phoneIsValid
+                          ? "border-green-400 focus:ring-green-400"
+                          : "border-red-500 focus:ring-red-400"
+                        : "border border-gray-200 rounded-xl p-3 focus:outline-none  focus:ring-blue-500"
+                    }`}
                   />
+
+                  {form.phone && (
+                    <p
+                      className={`mt-2 text-sm ${
+                        phoneIsValid ? "text-green-400" : "text-red-400"
+                      }`}
+                    >
+                      {phoneIsValid
+                        ? "✓ Valid phone number"
+                        : "✗ Phone number must be exactly 10 digits"}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -200,6 +328,7 @@ export default function StaffList() {
                   </label>
 
                   <input
+                    required
                     name="specialization"
                     placeholder="Cleaner, Guard..."
                     value={form.specialization}
@@ -217,6 +346,7 @@ export default function StaffList() {
 
                 <div className="flex gap-3">
                   <input
+                      required
                     name="password"
                     placeholder="Password"
                     readOnly
@@ -232,7 +362,7 @@ export default function StaffList() {
                   </Button>
                 </div>
               </div>
-            </div>
+            </form>
 
             {/* Footer */}
             <div className="flex justify-end gap-3 px-6 py-5 border-t bg-gray-50">
@@ -244,7 +374,14 @@ export default function StaffList() {
               </Button>
 
               <Button
-                onClick={handleSubmit}
+              type="submit"
+                disabled={
+                  !isValidName ||
+                  !emailIsValid ||
+                  !phoneIsValid ||
+                  !isCorrectDomain
+                }
+                
                 className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6"
               >
                 Save Staff

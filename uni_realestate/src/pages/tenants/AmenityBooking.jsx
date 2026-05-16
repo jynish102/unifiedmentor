@@ -404,7 +404,7 @@ export default function BookAmenity() {
 
             <Button
               type="submit"
-              disabled={!!timeError}
+              // disabled={!timeError}
               className="bg-purple-600 hover:bg-purple-700 text-white px-8"
             >
               Request Booking

@@ -18,7 +18,7 @@ import { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 import API from "../../utils/api";
-import toast form  "react-hot-toast"
+import toast from  "react-hot-toast";
 
 export default function Amenities() {
   const [searchTerm, setSearchTerm] = useState("");

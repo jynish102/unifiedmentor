@@ -24,7 +24,7 @@ import toast  from "react-hot-toast";
 export default function TenantProfile() {
   const [tenant, setTenant] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [counts, setCounts] = useState(null);
+  const [, setCounts] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     fullname: "",
@@ -93,7 +93,7 @@ export default function TenantProfile() {
 
   const handleChangePassword = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -121,16 +121,12 @@ export default function TenantProfile() {
         confirmPassword: "",
       });
     } catch (err) {
-      console.error(err);
+      console.log("Upload failed",err.res?.data || err.message);
       toast.error(err.response?.data?.message || "Upload failed");
     }
   };
 
-  //handle logout
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  };
+  
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -147,8 +143,10 @@ export default function TenantProfile() {
         setTenant(res.data.user);
         setCounts(res.data.counts);
       } catch (error) {
-        console.error(error);
-        toast.error(error);
+          console.log("Failed to Fetch Profile Data", error.res?.data || error.message);
+          toast.error(
+            error.res?.data?.message || "Failed to Fetch Profile Data",
+          );
       }
     };
 
@@ -187,10 +185,10 @@ export default function TenantProfile() {
       setTenant(res.data.user || { ...tenant, ...formData });
 
       setIsEditing(false);
-      alert("Profile updated successfully ");
+      toast.success("Profile updated successfully ");
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to update profile", err.response?.data?.message || err.message);
+      console.log("Failed to update profile", err.res?.data || err.message);
+      toast.error(err.response?.data?.message || "Failed to update profile");
     }
   };
 
@@ -240,7 +238,10 @@ export default function TenantProfile() {
       // 4. Clear preview (optional)
       setPreview(null);
     } catch (err) {
-      console.error(err);
+        console.log("Profile Image Update Unsuccessful", err.res?.data || err.message);
+        toast.error(
+          err.res?.data?.message || "Profile Image Update Unsuccessful",
+        );
     }
   };
 
@@ -364,15 +365,7 @@ export default function TenantProfile() {
                     </h2>
                   )}
 
-                  <div className="absolute top-4 right-4">
-                    <button
-                      onClick={handleLogout}
-                      className="p-2 rounded-full hover:bg-red-100 transition"
-                      title="Logout"
-                    >
-                      <LogOut className="w-6 h-6 text-red-600" />
-                    </button>
-                  </div>
+                  
 
                   <p className="text-gray-500 capitalize">{tenant.role}</p>
 

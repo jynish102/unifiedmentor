@@ -24,6 +24,7 @@ import { ImageWithFallback } from "../../components/ui/imageWithFallback";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 
 export default function Properties() {
@@ -44,7 +45,8 @@ export default function Properties() {
         const res = await API.get("/property");
         setProperties(res.data);
       } catch (err) {
-        console.error("Error fetching properties", err);
+          console.log("Error Fetching Property Data", err.res?.data || err.message);
+          toast.error(err.res?.data?.message || "Fetching Property Data");
       }
     };
 

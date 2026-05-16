@@ -62,8 +62,7 @@ export default function PropertyDetails() {
           setSelectedImage(res.data.images[0]);
         }
       } catch (err) {
-        console.log(err);
-
+        console.log("Failed to fetch property",err.res?.data || err.message);
         toast.error(err.response?.data?.message || "Failed to fetch property");
       }
     };
@@ -102,8 +101,7 @@ export default function PropertyDetails() {
 
       setOpen(false);
     } catch (err) {
-      console.log(err);
-
+      console.log("Failed to send message", err.res?.data || err.message);
       toast.error(err.response?.data?.message || "Failed to send message");
     }
   };

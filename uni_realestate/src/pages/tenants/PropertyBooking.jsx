@@ -32,7 +32,8 @@ export default function AddBooking() {
           paymentFrequency: res.data.paymentFrequency,
         }));
       } catch (err) {
-        console.error(err);
+         console.log("Error Fetch Property Data", err.res?.data || err.message);
+         toast.error(err.res?.data?.message || "Error Fetching Property Data");
       }
     };
 
@@ -99,8 +100,7 @@ export default function AddBooking() {
       toast.success("Booking Requested");
       navigate("/tenant/properties");
     } catch (err) {
-      console.error(err);
-
+      console.log("Error creating booking",err.res?.data || err.message);
       toast.error(err.response?.data?.message || "Error creating booking");
     }
   };
@@ -138,6 +138,7 @@ export default function AddBooking() {
                   type="date"
                   value={formData.startDate}
                   onChange={handleChange}
+                  min={new Date().toISOString().split("T")[0]}
                   className={`h-11 ${dateError ? "border-red-500" : ""}`}
                   required
                 />
@@ -245,7 +246,7 @@ export default function AddBooking() {
             <Button
               type="submit"
               className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-8"
-              disabled={!!dateError}
+              // disabled={!dateError}
             >
               Request Booking
             </Button>

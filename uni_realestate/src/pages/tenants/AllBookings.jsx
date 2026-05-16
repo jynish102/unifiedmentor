@@ -215,7 +215,7 @@ export default function AllBooking() {
                         {b.startDate
                           ? new Date(b.startDate).toLocaleString("en-IN", {
                               dateStyle: "medium",
-                              timeStyle: "short",
+                             
                             })
                           : new Date(b.date).toLocaleString("en-IN", {
                               dateStyle: "medium",

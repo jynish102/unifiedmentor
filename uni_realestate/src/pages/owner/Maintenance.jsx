@@ -26,8 +26,8 @@ export default function OwnerMaintenance() {
 
       setData(res.data.data);
     } catch (err) {
-      console.error("Error",err.res?.data?.message);
-      toast.error(err.res.?.data?.message||"Failed to fetch maintenance");
+      console.log("Error",err.res?.data?.message);
+      toast.error(err.res?.data?.message||"Failed to fetch maintenance");
     } finally {
       setLoading(false);
     }

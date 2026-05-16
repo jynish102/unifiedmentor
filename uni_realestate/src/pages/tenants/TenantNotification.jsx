@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Bell, CheckCheck } from "lucide-react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function TenantNotifications() {
   const [notifications, setNotifications] = useState([]);
@@ -23,6 +24,7 @@ export default function TenantNotifications() {
       setNotifications(res.data.data || []);
     } catch (error) {
       console.log("Notification fetch error:", error.res?.data || error.message);
+      toast.error(error.res?.data?.message || "Notification fetch error");
     } finally {
       setLoading(false);
     }
@@ -50,7 +52,8 @@ export default function TenantNotifications() {
         navigate(notification.redirectUrl);
       }
     } catch (error) {
-      console.log(error.res?.data || error);
+        console.log("Error In Click Notification", error.res?.data || error.message);
+        toast.error(error.res?.data?.message || "Error In Click Notification");
     }
   };
 

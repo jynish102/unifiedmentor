@@ -23,6 +23,7 @@ const propertySchema = new mongoose.Schema(
 
     city: { type: String, required: true },
     state: { type: String, required: true },
+    country: { type: String, required: true },
     zipcode: { type: Number, required: true, min: 0 },
 
     price: { type: Number, required: true, min: 0 },

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
-
+import toast from "react-hot-toast";
 import { Card, CardContent } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 
 export default function TenantMaintenance() {
   const [maintenance, setMaintenance] = useState([]);
   const [loading, setLoading] = useState(true);
-  const steps = ["pending", "assigned", "in-progress", "completed"];
+  // const steps = ["pending", "assigned", "in-progress", "completed"];
   const [previewImg, setPreviewImg] = useState(null);
 
   useEffect(() => {
@@ -23,7 +23,8 @@ export default function TenantMaintenance() {
 
         setMaintenance(res.data.data || []);
       } catch (err) {
-        console.error("Error fetching maintenance:", err);
+        console.log("Error fetching maintenance:", err.res?.data ||err.message);
+        toast.error(err.res?.data?.message || "Error  fetching maintenance");
       } finally {
         setLoading(false);
       }

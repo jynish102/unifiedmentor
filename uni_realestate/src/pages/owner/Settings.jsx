@@ -82,7 +82,7 @@ export default function ProfileCard() {
         console.log("API RESPONSE:", res.data); //
         setUser(res.data.user);
       } catch (err) {
-        console.error(err);
+        console.log("Error",err.res?.data?.message);
         toast.error(err.response?.data?.message || "Failed to fetch profile data");
       }
     };
@@ -130,7 +130,7 @@ export default function ProfileCard() {
 
       toast.success("Profile updated successfully ");
     } catch (err) {
-      console.error(err);
+      console.log("Error",err.res?.data?.message);
       toast.error(err.response?.data?.message || "Upload failed");
     }
   };
@@ -173,7 +173,7 @@ export default function ProfileCard() {
         confirmPassword: "",
       });
     } catch (err) {
-      console.error(err);
+      console.log(err.res?.data?.message || "Error");
       toast.error(err.response?.data?.message || "Upload failed");
     }
   };

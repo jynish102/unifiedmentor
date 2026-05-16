@@ -34,7 +34,7 @@ export function Properties() {
         const res = await API.get("/property");
         setProperties(res.data);
       } catch (err) {
-        console.log(err);
+        console.log("Error",err.response?.data || err.message);
         toast.error(err.response?.data?.messages || "failed to fetch data")
       }
     };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
+import toast from "react-hot-toast";    
 
 import {
   Card,
@@ -35,6 +36,7 @@ export default function StaffDashboard() {
       setRecentTasks(res.data.recentTasks || []);
     } catch (err) {
       console.log(err.response?.data || err.message);
+      toast.error(err.res?.data?.message || "Error");
     } finally {
       setLoading(false);
     }

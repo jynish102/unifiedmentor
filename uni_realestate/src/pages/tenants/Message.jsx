@@ -18,8 +18,8 @@ export default function TenantMessages() {
 
         setMessages(res.data.messages || []);
       } catch (err) {
-        console.log("Error", err.res?.data || err.message);
-        toast.error(err.response?.data?.message || "failed fetch message")
+        console.log("failed fetch message", err.res?.data || err.message);
+        toast.error(err.response?.data?.message || "failed fetch message");
       }
     };
 

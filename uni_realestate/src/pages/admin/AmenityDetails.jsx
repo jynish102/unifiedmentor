@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
+import toast from "react-hot-toast"
 
 export default function AmenityDetails() {
   const { id } = useParams();
@@ -36,7 +37,8 @@ export default function AmenityDetails() {
         const res = await API.get(`/amenity/${id}`);
         setAmenity(res.data.data);
       } catch (err) {
-        console.error(err);
+        console.error("Error",err.res?.data || err.message);
+        toast.error(err.response?.data?.message || "Failed To fetch Amenity Data")
       }
     };
     fetchAmenity();

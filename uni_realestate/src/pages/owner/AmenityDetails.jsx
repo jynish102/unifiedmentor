@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
+import toast from "react-hot-toast";
 
 import {
   ArrowLeft,
@@ -50,7 +51,8 @@ export default function AmenityDetails() {
 
         setAmenity(res.data.data);
       } catch (err) {
-        console.error(err);
+        console.log("Error",err.res?.data || err.message);
+        toast.error(err.res?.data?.message || "Error");
       }
     };
 

@@ -58,7 +58,8 @@ export default function AdminNotifications() {
         navigate(notification.redirectUrl);
       }
     } catch (error) {
-      console.log(error.res?.data || error);
+      console.log(error.res?.data || error.message);
+      toast.error("Error", error.res?.data || error.message)
     }
   };
 

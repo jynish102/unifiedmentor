@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
 
 export default function OwnerMessages() {
   const [messages, setMessages] = useState([]);
@@ -19,7 +19,7 @@ export default function OwnerMessages() {
         setMessages(res.data.data);
       } catch (err) {
         console.log("Error", err.res?.data || err.message);
-        toast.error(err.response?.data?.message || "failed fetch message")
+        toast.error(err.response?.data?.message || "failed fetch message");
       }
     };
 

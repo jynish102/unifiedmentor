@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
+import toast from "react-hot-toast"
 
 import {
   BedDouble,
@@ -44,7 +45,8 @@ export default function PropertyDetails() {
 
         setProperty(res.data);
       } catch (err) {
-        console.error(err.response?.data || err.message);
+        console.error("Error",err.response?.data || err.message);
+        toast.error(err.response?.data?.message || "error");
       }
     };
 

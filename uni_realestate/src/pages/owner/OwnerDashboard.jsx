@@ -26,14 +26,7 @@ import {
 
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
-
-
-  
-  
-
-
-
-
+import toast from "react-hot-toast";
 
 export  function OwnerDashboard() {
   const [dashboard, setDashboard] = useState(null);
@@ -44,7 +37,8 @@ export  function OwnerDashboard() {
         const res = await API.get("/owner/dashboard");
         setDashboard(res.data);
       } catch (err) {
-        console.error(err);
+        console.log("Error",err.res?.data || err.message);
+        toast.error(err.res?.data?.message || "Error");
       }
     };
 

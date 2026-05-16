@@ -5,6 +5,7 @@ import { Calendar, Wrench, Bell, ArrowRight, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import  API from "../../utils/api";
+import toast from "react-hot-toast";
 
 
 
@@ -13,13 +14,27 @@ export function Dashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await API.get("/tenant/dashboard");
-      setDashboard(res.data);
+      try{
+        const token = localStorage.getItem("token");
+        const res = await API.get("/tenant/dashboard", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setDashboard(res.data);
+      }catch(err){
+        console.log(
+          "Error Fetching Dashboard Data",
+          err.res?.data || err.message,
+        );
+        toast.error(err.res?.data?.message || "Error Fetching Dashboard Data");
+        
+      };
     };
 
     fetchData();
   }, []);
-  console.log(dashboard);
+  
 
   return (
     <div className="p-6 space-y-6">

@@ -103,7 +103,9 @@ export default function StaffProfile() {
         });
 
       } catch (error) {
-        console.error(error);
+        
+console.log("Error:", err.response?.data || err.message);
+toast.error(err.response?.data?.message || "Failed to update password");
       }
     };
 
@@ -146,7 +148,7 @@ export default function StaffProfile() {
       setIsEditing(false);
       toast.success("Profile updated successfully ");
     } catch (err) {
-      console.log(err);
+      console.log("Error",err.response?.data?.message);
       toast.error(err.response?.data?.message || "updated Failed ");
     }
   };
@@ -244,19 +246,6 @@ export default function StaffProfile() {
       toast.error(err.response?.data?.message || "Failed to update password");
     }
   };
-
-
-  //handle Notifications toggle
-  const handleToggle = (key) => {
-    setSettings((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
-
-  
- 
-
 
   const getStatusConfig = (isActive) => {
     if (isActive) {

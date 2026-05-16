@@ -5,6 +5,7 @@ import { Input } from "../../components/ui/input";
 import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
+import toast from "react-hot-toast";
 
 export default function BookingRequests() {
   const [search, setSearch] = useState("");
@@ -56,6 +57,7 @@ export default function BookingRequests() {
         }
       } catch (err) {
         console.log("Error",err.res?.data || err.message);
+        toast.error(err.res?.data?.message || "Error");
       }
     };
     fetchBookings();
@@ -105,6 +107,7 @@ export default function BookingRequests() {
       );
     } catch (err) {
       console.log("Error",err.res?.data || err.message);
+      toast.error(err.res?.data?.message || "Error");
     }
   };
 

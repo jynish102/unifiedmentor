@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Bell, CheckCheck } from "lucide-react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"
 
 export default function StaffNotifications() {
   const [notifications, setNotifications] = useState([]);
@@ -24,6 +25,7 @@ export default function StaffNotifications() {
       setNotifications(res.data.data || []);
     } catch (error) {
       console.log("Notification fetch error:", error.res?.data || error.message);
+      toast.error(error.res?.data?.message || "Notification fetch error");
     } finally {
       setLoading(false);
     }
@@ -51,7 +53,8 @@ export default function StaffNotifications() {
         navigate(notification.redirectUrl);
       }
     } catch (error) {
-      console.log(error.res?.data || error);
+      console.log("Error",error.res?.data || error.message);
+      toast.error(error.res?.data?.message || "Error");
     }
   };
 

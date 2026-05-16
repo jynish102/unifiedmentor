@@ -16,6 +16,7 @@ import {
   ArrowLeft,
   Plus,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function PropertyDetails() {
   const { id } = useParams();
@@ -44,7 +45,8 @@ export default function PropertyDetails() {
 
         setProperty(res.data);
       } catch (err) {
-        console.error(err.response?.data || err.message);
+        console.log("Error",err.response?.data || err.message);
+        toast.error(err.res?.data?.message||"Error");
       }
     };
 

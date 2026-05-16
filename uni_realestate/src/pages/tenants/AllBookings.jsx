@@ -5,6 +5,7 @@ import { Input } from "../../components/ui/input";
 import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
+import toast from "react-hot-toast";
 
 export default function AllBooking() {
   const [search, setSearch] = useState("");
@@ -14,7 +15,7 @@ export default function AllBooking() {
   
   
 
-  console.log("Updated bookings:", bookings);
+  // console.log("Updated bookings:", bookings);
 
   useEffect(() => {
     const fetchMyBookings = async () => {
@@ -40,7 +41,8 @@ export default function AllBooking() {
 
         setBookings(data);
       } catch (err) {
-        console.error(err);
+          console.log("Error", err.res?.data || err.message);
+          toast.error(err.res?.data?.message || "Error");
       }
     };
 
@@ -95,7 +97,8 @@ export default function AllBooking() {
         prev.map((b) => (b._id.toString() === id.toString() ? { ...b, status } : b)),
       );
     } catch (err) {
-  console.error("ERROR:", err.response?.data || err.message);
+          console.log("Error", err.res?.data || err.message);
+          toast.error(err.res?.data?.message || "Error");
 
     }
   };

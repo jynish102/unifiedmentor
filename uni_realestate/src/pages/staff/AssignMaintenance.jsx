@@ -28,8 +28,8 @@ export default function StaffMaintenance() {
 
       setData(res.data.data);
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to fetch maintenance");
+      console.log("Error", err.res?.data || err.message);
+      toast.error(err.res?.data?.message || "Failed to fetch maintenance");
     } finally {
       setLoading(false);
     }
@@ -57,7 +57,7 @@ export default function StaffMaintenance() {
       toast.success("Status updated");
       fetchMaintenance();
     } catch (err) {
-      console.error(err);
+      console.log("Error", err.res?.data || err.message);
       toast.error(err.response?.data?.message || "Update failed");
     }
   };
@@ -87,7 +87,7 @@ export default function StaffMaintenance() {
       toast.success("Images uploaded");
       fetchMaintenance();
     } catch (err) {
-      console.error(err);
+      console.log("Error",err.res?.data || err.message);
       toast.error(err.response?.data?.message || "Upload failed");
     }
   };
@@ -140,8 +140,8 @@ export default function StaffMaintenance() {
 
       fetchMaintenance();
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to complete");
+      console.log("Failed to complete", err.res?.data || err.message);
+      toast.error(err.res?.data?.message || "Failed to complete");
     }
   };
 
@@ -165,10 +165,12 @@ export default function StaffMaintenance() {
       toast.success("Image removed");
       fetchMaintenance();
     } catch (err) {
-      console.error(err);
+      console.log(
+        "You cannot delete images after completion",
+        err.res?.data || err.message,
+      );
       toast.error(
         err.response?.data?.message ||
-        
           "You cannot delete images after completion",
       );
     }

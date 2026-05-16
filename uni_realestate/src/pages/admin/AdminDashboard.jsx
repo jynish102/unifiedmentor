@@ -59,7 +59,8 @@ export default function AdminDashboard() {
         setPropertyTypeData(data.propertyTypeData || []);
         setRecentActivity(data.recentActivity || []);
       } catch (error) {
-        console.error("Dashboard API error:", error);
+        console.log("Dashboard API error:", error.res?.data || error.message);
+        toast.error(error.res?.data?.message ||"Dashboard API error");
       } finally {
         setLoading(false);
       }

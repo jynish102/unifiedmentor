@@ -22,7 +22,7 @@ import toast from "react-hot-toast"
 export default function StaffProfile() {
   const [staff, setStaff] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [counts, setCounts] = useState(null);
+  const [, setCounts] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [formData, setFormData] = useState({
@@ -32,11 +32,11 @@ export default function StaffProfile() {
   });
 
   //notification settings state
-  const [settings, setSettings] = useState({
-    booking: true,
-    maintenance: true,
-    amenity: true,
-  });
+  // const [settings, setSettings] = useState({
+  //   booking: true,
+  //   maintenance: true,
+  //   amenity: true,
+  // });
 
   //change password state
   const [passwordData, setPasswordData] = useState({
@@ -101,7 +101,8 @@ export default function StaffProfile() {
         });
 
       } catch (error) {
-        console.error(error);
+        console.log("Error",error.res?.data || error.message);
+        toast.error(error.res?.data?.message || "Error");
       }
     };
 
@@ -128,7 +129,8 @@ export default function StaffProfile() {
 
       setTasks(res.data.data); // make sure this matches your API response
     } catch (err) {
-      console.error(err);
+        console.log("Error", err.res?.data || err.message);
+        toast.error(err.res?.data?.message || "Error");
     }
   };
 
@@ -162,7 +164,7 @@ export default function StaffProfile() {
       setIsEditing(false);
       toast.success("Profile updated successfully ");
     } catch (err) {
-      console.log(err);
+      console.log("Error", err.res?.data || err.message);
       toast.error(err.response?.data?.message || "updated Failed ");
     }
   };
@@ -213,7 +215,8 @@ export default function StaffProfile() {
       // 4. Clear preview (optional)
       setPreview(null);
     } catch (err) {
-      console.error(err);
+        console.log("Error", err.res?.data || err.message);
+        toast.error(err.res?.data?.message || "Error");
     }
   };
 
@@ -287,8 +290,8 @@ export default function StaffProfile() {
       localStorage.removeItem("token");
       window.location.href = "/login";
     } catch (err) {
-      console.error(err);
-      alert("Failed to deactivate account");
+      console.log("Error",err.res?.data || err.message);
+      toast.error(err.res?.data?.message || "Failed to deactivate account");
     }
   };
 

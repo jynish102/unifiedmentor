@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Bell, CheckCheck } from "lucide-react";
 import API from "../../utils/api";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function OwnerNotifications() {
   const [notifications, setNotifications] = useState([]);
@@ -23,6 +24,7 @@ export default function OwnerNotifications() {
       setNotifications(res.data.data || []);
     } catch (error) {
       console.log("Notification fetch error:", error.res?.data || error.message);
+      toast.error(error.res?.data?.message || "Error");
     } finally {
       setLoading(false);
     }
@@ -51,6 +53,7 @@ export default function OwnerNotifications() {
         }
       } catch (error) {
         console.log(error.res?.data || error);
+        toast.error("Error" || error.res?.data?.message);
       }
     };
 

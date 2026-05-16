@@ -29,7 +29,8 @@ export default function BookAmenity() {
         const res = await API.get(`/amenity/${amenityId}`);
         setAmenity(res.data.data);
       } catch (err) {
-        console.error(err);
+         console.log("Error", err.res?.data || err.message);
+         toast.error(err.res?.data?.message || "Error");
       }
     };
 
@@ -198,7 +199,7 @@ export default function BookAmenity() {
       toast.success("Booking Requested");
       navigate("/tenant/amenities");
     } catch (err) {
-      console.error(err);
+      console.log("Booking failed", err.res?.data || err.message);
       toast.error(err.response?.data?.message || "Booking failed");
     }
   };

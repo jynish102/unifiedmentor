@@ -263,8 +263,8 @@ export default function AddProperty() {
     } catch (err) {
       console.error(err);
       const message =
-        err.response?.data?.message || // backend message
-        err.message || // axios error
+        err.response?.data?.message || 
+        err.message || 
         "Something went wrong ";
 
       toast.error(message);

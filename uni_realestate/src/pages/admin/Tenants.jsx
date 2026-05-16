@@ -13,6 +13,7 @@ import {
 import { Plus, Search, Mail, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
+import toast from "react-hot-toast";
 
 export function Tenants() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,7 +33,9 @@ export function Tenants() {
         setTenants(res.data.tenants || []);
         setCounts(res.data.counts || {});
       } catch (err) {
-        console.error("Error fetching tenants", err);
+        console.log("Error fetching tenants", err.res?.data?.message);
+        toast.error(err.res?.data?.message||"Error");
+
       }
     };
 

@@ -18,6 +18,7 @@ import { useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 import API from "../utils/api";
+import toast from "react-hot-toast";
 
 
 export default function Amenities() {
@@ -32,7 +33,8 @@ export default function Amenities() {
         const res = await API.get("/amenity");
         setAmenities(res.data.data || []);
       } catch (err) {
-        console.error("Error fetching amenities", err);
+        console.log("Error fetching amenities", err.res?.data || err.message);
+        toast.error(err.res?.data?.message || "Error fetching amenities");
       }
     };
 
@@ -56,22 +58,18 @@ export default function Amenities() {
       );
     };
   
-    const getPriorityColor = (priority) => {
-      switch (priority) {
-        case "high":
-          return "bg-red-100 text-red-700";
-        case "medium":
-          return "bg-orange-100 text-orange-700";
-        case "low":
-          return "bg-blue-100 text-blue-700";
-        default:
-          return "bg-gray-100 text-gray-700";
-      }
-    };
-  
-
-   
-  
+    // const getPriorityColor = (priority) => {
+    //   switch (priority) {
+    //     case "high":
+    //       return "bg-red-100 text-red-700";
+    //     case "medium":
+    //       return "bg-orange-100 text-orange-700";
+    //     case "low":
+    //       return "bg-blue-100 text-blue-700";
+    //     default:
+    //       return "bg-gray-100 text-gray-700";
+    //   }
+    // };
 
   return (
     <div className="space-y-6">

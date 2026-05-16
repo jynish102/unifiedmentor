@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import API from "../../utils/api"
-import toast from "react-hot-toast"
+import API from "../../utils/api";
+import toast from "react-hot-toast";
 import { Button } from "../../components/ui/button";
 
 export default function SupportRequest(){
@@ -19,7 +19,8 @@ export default function SupportRequest(){
           console.log("API RESPONSE:", res.data); //
           setRequests(res.data.data);
         } catch (err) {
-          console.error(err);
+          console.log("Error",err.res?.data || err.message);
+          toast.error("Error", err.res?.data?.message);
         }
       };
 
@@ -42,7 +43,8 @@ export default function SupportRequest(){
         );
         toast.success("Reactivation Successfully")
       } catch (err) {
-        console.error(err.response?.data?.message);
+        console.error("Error",err.response?.data?.message);
+        toast.error(err.res?.data?.message||"Error");
       }
     };
 
@@ -60,7 +62,8 @@ export default function SupportRequest(){
 
         toast.success("User reactivated");
       } catch (err) {
-        console.error(err.response?.data?.message);
+        console.log("Error",err.response?.data?.message);
+        toast.error(err.res?.data?.message || "Error");
       }
     };
     return (

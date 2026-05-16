@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../utils/api";
 import toast from "react-hot-toast";
-
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 
@@ -75,8 +74,7 @@ export default function CreateMaintenance() {
 
       navigate("/tenant/maintenance");
     } catch (err) {
-      console.error(err);
-
+      console.error("Failed to create request", err.res?.data || err.message);
       toast.error(err.response?.data?.message || "Failed to create request");
     } finally {
       setLoading(false);

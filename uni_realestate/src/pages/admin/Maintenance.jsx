@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
+import toast from "react-hot-toast"
 
 export default function Maintenance() {
   const [requests, setRequests] = useState([]);
@@ -40,7 +41,8 @@ export default function Maintenance() {
         const res = await API.get("/maintenance"); 
         setRequests(res.data.data);
       } catch (err) {
-        console.error("Error fetching maintenance data:", err);
+        console.error("Error fetching maintenance data:", err.res?.data || err.message);
+        toast.error(err.res?.data?.message || "Error fetching maintenance data.")
       }
     };
 

@@ -32,7 +32,8 @@ export default function StaffList() {
       try {
         await fetchStaff();
       } catch (err) {
-        console.error(err);
+        console.log("Error",err.res?.data||err.message);
+        toast.error(err.res?.data?.message || "Error");
       }
     };
 
@@ -156,6 +157,7 @@ export default function StaffList() {
         password: "",
       });
     } catch (err) {
+      console.log("Error",err.res?.data||err.message);
       toast.error(err?.response?.data?.message || "Failed to add staff");
     }
   };

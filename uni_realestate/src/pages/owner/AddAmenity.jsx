@@ -273,7 +273,7 @@ export default function AddAmenity() {
 
       navigate("/owner/amenities");
     } catch (err) {
-      console.error(err);
+      console.log(err.res?.data?.message || "Error");
       const message =
         err.response?.data?.message || // backend message
         err.message || // axios error

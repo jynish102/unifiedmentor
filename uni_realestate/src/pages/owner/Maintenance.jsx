@@ -26,8 +26,8 @@ export default function OwnerMaintenance() {
 
       setData(res.data.data);
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to fetch maintenance");
+      console.error("Error",err.res?.data?.message);
+      toast.error(err.res.?.data?.message||"Failed to fetch maintenance");
     } finally {
       setLoading(false);
     }
@@ -45,8 +45,8 @@ export default function OwnerMaintenance() {
 
       setStaffList(res.data.data);
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to fetch staff");
+      console.log("Error",err.res?.data?.message);
+      toast.error(err.res?.data?.message||"Failed to fetch staff");
     }
   };
 
@@ -104,8 +104,8 @@ export default function OwnerMaintenance() {
       toast.success("Assigned successfully");
       fetchMaintenance();
     } catch (err) {
-      console.error(err);
-      toast.error("Assignment failed");
+      console.log("Error",err.res?.data?.message);
+      toast.error(err.res?.data?.message||"Assignment failed");
     }
   };
 

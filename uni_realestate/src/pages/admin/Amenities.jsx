@@ -15,9 +15,10 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
 import API from "../../utils/api";
+import toast form "react-hot-toast"
 
 
 export function Amenities() {
@@ -29,10 +30,11 @@ export function Amenities() {
   useEffect(() => {
     const fetchAmenities = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/amenity");
+        const res = await API.get("/amenity");
         setAmenities(res.data.data || []);
       } catch (err) {
-        console.error("Error fetching amenities", err);
+        console.error("Error fetching amenities", err.res?.data || err.message);
+        toast.error(err.response?.data?.message || "Error fetching amenities");
       }
     };
 

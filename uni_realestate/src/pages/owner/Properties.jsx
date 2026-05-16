@@ -28,6 +28,7 @@ import { ImageWithFallback } from "../../components/ui/imageWithFallback";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"
 
 export  default function Properties() {
   const navigate = useNavigate();
@@ -51,7 +52,8 @@ export  default function Properties() {
         });
         setProperties(res.data.data);
       } catch (err) {
-        console.error("Error fetching properties", err);
+        console.log("Error fetching properties", err.res?.data || err.message);
+        toast.error(err.res?.data?.message || "Error");
       }
     };
 

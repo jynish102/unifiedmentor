@@ -121,16 +121,17 @@ exports.getTenants = async (req, res) => {
 
 exports.getOwnerTenants = async (req, res) => {
   try {
-  const ownerId = new mongoose.Types.ObjectId(req.user.id);
+    const ownerId = new mongoose.Types.ObjectId(req.user.id);
+   
 
     // const bookings = await Booking.find()
     //   .populate({
     //     path: "property",
-    //     match: { owner: ownerId }, 
+    //     match: { owner: ownerId },
     //     select: "title",
     //   })
     //   .populate("user", "fullname email phone");
-    // console.log(bookings);  
+    // console.log(bookings);
 
     const bookings = await Booking.find()
       .populate("property", "title owner")
@@ -143,13 +144,9 @@ exports.getOwnerTenants = async (req, res) => {
         b.property.owner &&
         b.property.title &&
         b.property.owner.toString() === req.user.id,
-        
     );
 
     // console.log(filtered);
-
-    
-
     // // remove bookings where property is null (not owner's)
     // const filtered = bookings.filter((b) => b.property !== null);
 
@@ -158,15 +155,15 @@ exports.getOwnerTenants = async (req, res) => {
     const today = new Date();
 
     filtered.forEach((b) => {
-       if (!b.property) return;
+      if (!b.property) return;
 
-       let status = "expired";
+      let status = "expired";
 
-       if (today < b.startDate) {
-         status = "upcoming";
-       } else if (today >= b.startDate && today <= b.endDate) {
-         status = "active";
-       }
+      if (today < b.startDate) {
+        status = "upcoming";
+      } else if (today >= b.startDate && today <= b.endDate) {
+        status = "active";
+      }
 
       if (b.user) {
         tenantsMap.set(b.user._id.toString(), {
@@ -184,11 +181,20 @@ exports.getOwnerTenants = async (req, res) => {
       }
     });
 
+
     const tenants = Array.from(tenantsMap.values());
+
+    const counts = {
+      total: tenants.length,
+      active: tenants.filter((t) => t.status === "active").length,
+      upcoming: tenants.filter((t) => t.status === "upcoming").length,
+      expired: tenants.filter((t) => t.status === "expired").length,
+    };
 
     res.json({
       success: true,
       tenants,
+      counts
     });
   } catch (err) {
     console.log("Error",err.res?.data || err.message);

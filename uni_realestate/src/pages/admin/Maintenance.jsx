@@ -128,10 +128,7 @@ export default function Maintenance() {
       label: "Completed",
       value: requests.filter((r) => r.status === "completed").length,
     },
-    {
-      label: "Cancelled",
-      value: requests.filter((r) => r.status === "cancelled").length,
-    },  
+     
     {
       label: "Rejected",
       value: requests.filter((r) => r.status === "rejected").length,

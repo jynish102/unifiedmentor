@@ -113,7 +113,7 @@ export default function AmenityDetails() {
               Book Amenity
             </Button>
             <Button
-              onClick={() => navigate("/owner/amenities")}
+              onClick={() => navigate("/tenant/amenities")}
               className="bg-slate-700 hover:bg-slate-800 rounded-xl cursor-pointer"
             >
               <ArrowLeft size={18} className="mr-2" />

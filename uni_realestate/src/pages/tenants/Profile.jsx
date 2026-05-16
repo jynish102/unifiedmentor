@@ -365,8 +365,6 @@ export default function TenantProfile() {
                     </h2>
                   )}
 
-                  
-
                   <p className="text-gray-500 capitalize">{tenant.role}</p>
 
                   {/* EMAIL */}
@@ -450,7 +448,12 @@ export default function TenantProfile() {
                     <p className="text-muted-foreground">Move-in Date</p>
                     <p className="text-foreground">
                       {tenant.leaseStart
-                        ? new Date(tenant.leaseStart).toLocaleDateString()
+                        ? new Date(tenant.leaseStart).toLocaleDateString(
+                            "en-IN",
+                            {
+                              dateStyle: "medium",
+                            },
+                          )
                         : "N/A"}
                     </p>
                   </div>
@@ -458,7 +461,12 @@ export default function TenantProfile() {
                     <p className="text-muted-foreground">Lease End</p>
                     <p className="text-foreground">
                       {tenant.leaseEnd
-                        ? new Date(tenant.leaseEnd).toLocaleDateString()
+                        ? new Date(tenant.leaseEnd).toLocaleDateString(
+                            "en-IN",
+                            {
+                              dateStyle: "medium",
+                            },
+                          )
                         : "N/A"}
                     </p>
                   </div>
@@ -495,6 +503,12 @@ export default function TenantProfile() {
                 onChange={handlePasswordChange}
                 className="w-full border p-2 rounded"
               />
+              <span
+                onClick={() => togglePassword("current")}
+                className="absolute right-3 top-2.5 cursor-pointer"
+              >
+                {showPassword.current ? <EyeOff size={18} /> : <Eye size={18} />}
+              </span>
             </div>
 
             <div className="relative">

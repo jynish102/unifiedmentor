@@ -44,6 +44,12 @@ exports.createAmenityBooking = async (req, res) => {
       });
     }
 
+    if (guests > amenityData.capacity) {
+      return res.status(400).json({
+        message: `Maximum allowed guests is ${amenityData.capacity}`,
+      });
+    }
+
     // Conflict check
     const existing = await AmenityBooking.findOne({
       amenity,

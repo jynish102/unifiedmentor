@@ -124,6 +124,13 @@ export default function BookAmenity() {
     return `${formattedHour}:${minute} ${ampm}`;
   };
 
+// Guest Capacity Validation  
+  const isGuestCapacityValid = () => {
+    if (!amenity?.capacity) return true;
+
+    return Number(formData.guests) <= amenity.capacity;
+  };
+
   // Handle Change
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -160,6 +167,11 @@ export default function BookAmenity() {
       toast.error("Please fix time errors");
       return;
     }
+
+     if (!isGuestCapacityValid()) {
+       toast.error(`Maximum allowed guests is ${amenity.capacity}`);
+       return;
+     }
 
     try {
       const token = localStorage.getItem("token");
@@ -405,7 +417,7 @@ export default function BookAmenity() {
             <Button
               type="submit"
               // disabled={!timeError}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-8"
+              className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white px-8"
             >
               Request Booking
             </Button>

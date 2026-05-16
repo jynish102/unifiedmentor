@@ -45,13 +45,15 @@ export default function PropertyDetails() {
 
         setProperty(res.data);
       } catch (err) {
-        console.error("Error",err.response?.data || err.message);
+        console.log("Error",err.response?.data || err.message);
         toast.error(err.response?.data?.message || "error");
       }
     };
 
     fetchProperty();
   }, [id]);
+
+  
 
   if (!property) {
     return (
@@ -74,7 +76,7 @@ export default function PropertyDetails() {
             <div className="flex items-center gap-2 text-slate-500 mt-2">
               <MapPin size={18} />
               <p>
-                {property.address}, {property.city}, {property.state}
+                {property.address}, {property.city}, {property.state}, {property.country}
               </p>
             </div>
           </div>

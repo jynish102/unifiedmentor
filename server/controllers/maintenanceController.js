@@ -4,6 +4,8 @@ const User = require("../models/User");
 const Amenity = require("../models/Amenity");
 const mongoose = require("mongoose");
 const Notification = require("../models/Notifications");
+const Booking = require("../models/Booking");
+const AmenityBooking = require("../models/AmenityBooking");
 
 // CREATE MAINTENANCE REQUEST
 exports.createMaintenance = async (req, res) => {
@@ -62,6 +64,34 @@ exports.createMaintenance = async (req, res) => {
       const amenity = await Amenity.findById(amenityId);
       if (!amenity) {
         return res.status(404).json({ message: "Amenity not found" });
+      }
+    }
+
+    if (propertyId) {
+      const booking = await Booking.findOne({
+        property: propertyId,
+        user: userId,
+        status: "approved",
+      });
+
+      if (!booking) {
+        return res.status(403).json({
+          message: "You can only raise maintenance for booked properties",
+        });
+      }
+    }
+
+    if (amenityId) {
+      const amenityBooking = await AmenityBooking.findOne({
+        amenity: amenityId,
+        user: userId,
+        status: "approved",
+      });
+
+      if (!amenityBooking) {
+        return res.status(403).json({
+          message: "You can only raise maintenance for booked amenities",
+        });
       }
     }
 
@@ -600,7 +630,6 @@ exports.updateMaintenanceStatus = async (req, res) => {
       });
     }
 
-   
     // UPDATE
     maintenance.status = status;
     maintenance.rejectReason = rejectReason;
@@ -608,7 +637,7 @@ exports.updateMaintenanceStatus = async (req, res) => {
     maintenance.updates.push({
       message: statusMessages[status],
       status: status,
-     
+
       updatedBy: userId,
     });
 

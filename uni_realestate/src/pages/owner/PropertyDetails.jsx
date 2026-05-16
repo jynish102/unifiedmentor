@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
 
+
+
 import {
   BedDouble,
   Bath,
@@ -74,7 +76,7 @@ export default function PropertyDetails() {
             <div className="flex items-center gap-2 text-slate-500 mt-2">
               <MapPin size={18} />
               <p>
-                {property.address}, {property.city}, {property.state}
+                {property.address}, {property.city}, {property.state}, {property.country}
               </p>
             </div>
           </div>

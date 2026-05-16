@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import toast from "react-hot-toast";
+import { Badge } from "../../components/ui/badge";
 
 import {
   BedDouble,
@@ -106,6 +107,19 @@ export default function PropertyDetails() {
     }
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "occupied":
+        return "bg-green-100 text-green-700";
+      case "vacant":
+        return "bg-yellow-100 text-yellow-700";
+      case "maintenance":
+        return "bg-orange-100 text-orange-700";
+      default:
+        return "bg-gray-100 text-gray-700";
+    }
+  };
+
   if (!property) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -161,14 +175,17 @@ export default function PropertyDetails() {
                   <MapPin size={18} />
 
                   <p>
-                    {property.address}, {property.city}, {property.state}
+                    {property.address}, {property.city}, {property.state} ,{" "}
+                    {property.country}
                   </p>
                 </div>
               </div>
 
-              <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold">
+              <Badge
+                className={`absolute top-36 right-65 px-3 py-3 !text-base ${getStatusColor(property.status)}`}
+              >
                 {property.status}
-              </span>
+              </Badge>
             </div>
 
             {/* QUICK INFO */}
@@ -354,6 +371,7 @@ export default function PropertyDetails() {
                   {property?.availableFrom
                     ? new Date(property.availableFrom).toLocaleDateString(
                         "en-IN",
+                        {dateStyle: "medium"},
                       )
                     : "N/A"}
                 </h3>

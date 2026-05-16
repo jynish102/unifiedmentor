@@ -46,10 +46,10 @@ export default function AddBooking() {
 
   // status And availability Validation
   const isPropertyAvailable = () => {
-    return property.status === "available";
+    return property?.status === "available";
   };
 
-  const isAvailableFromValid = (startDate, property) => {
+  const isAvailableFromValid = (startDate) => {
     if (!property?.availableFrom) return true;
 
     return new Date(startDate) >= new Date(property.availableFrom);
@@ -106,8 +106,8 @@ export default function AddBooking() {
       return;
     }
 
-    if (!isPropertyAvailable(formData.property)) {
-      toast.error(`Property is currently ${formData.property?.status}`);
+    if (!isPropertyAvailable(property)) {
+      toast.error(`Property is currently ${property?.status}`);
       return;
     }
     try {

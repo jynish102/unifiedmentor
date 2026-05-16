@@ -52,14 +52,6 @@ export default function StaffDashboard() {
     },
 
     {
-      title: "Pending",
-      value: stats.pending || 0,
-      icon: Clock,
-      color: "text-yellow-600",
-      bg: "bg-yellow-100",
-    },
-
-    {
       title: "In Progress",
       value: stats.inProgress || 0,
       icon: Wrench,

@@ -18,16 +18,18 @@ exports.createBooking = async (req, res) => {
     // console.log("USER:", req.user);
     // const { unitsRequested } = req.body;
     // const available = property.units - property.occupied;
+    
      const propertyStatus = property.status;
-     console.log("Property Status:", propertyStatus);
+    //  console.log("PROPERTY:", property);
+    //  console.log("STATUS:", property.status);
+    //  console.log("Property Status:", propertyStatus);
 
     if (!property) {
       return res.status(404).json({
         message: "Property not found",
       });
     }
-        console.log("PROPERTY:", property);
-        console.log("STATUS:", property.status);
+        
 
     if (!req.body.property) {
       return res.status(400).json({
@@ -124,9 +126,10 @@ exports.createBooking = async (req, res) => {
       data: booking,
     });
   } catch (error) {
+     console.log("BACKEND ERROR:", error);
     res.status(500).json({
       success: false,
-      message: (error.response?.data ||error.message),
+      message: error.message,
     });
   }
 };

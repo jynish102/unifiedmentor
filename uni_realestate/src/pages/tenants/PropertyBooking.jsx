@@ -10,6 +10,7 @@ export default function AddBooking() {
   const { propertyId } = useParams();
 
   const [dateError, setDateError] = useState("");
+  const [property, setProperty] = useState(null);
 
   const [formData, setFormData] = useState({
     startDate: "",
@@ -26,6 +27,8 @@ export default function AddBooking() {
       try {
         const res = await API.get(`/property/${propertyId}`);
 
+        setProperty(res.data);
+
         setFormData((prev) => ({
           ...prev,
           rentAmount: res.data.price,
@@ -40,6 +43,18 @@ export default function AddBooking() {
     fetchProperty();
   }, [propertyId]);
 
+
+  // status And availability Validation
+  const isPropertyAvailable = () => {
+    return property.status === "available";
+  };
+
+  const isAvailableFromValid = (startDate, property) => {
+    if (!property?.availableFrom) return true;
+
+    return new Date(startDate) >= new Date(property.availableFrom);
+  };
+
   // Validate Dates
   const validateDates = (start, end) => {
     if (!start || !end) {
@@ -52,6 +67,14 @@ export default function AddBooking() {
       return;
     }
 
+    if (!isAvailableFromValid(start)) {
+      setDateError(
+        `Property available after ${new Date(
+          property.availableFrom,
+        ).toLocaleDateString()}`,
+      );
+      return;
+    }
     setDateError("");
   };
 
@@ -83,6 +106,10 @@ export default function AddBooking() {
       return;
     }
 
+    if (!isPropertyAvailable(formData.property)) {
+      toast.error(`Property is currently ${formData.property?.status}`);
+      return;
+    }
     try {
       const token = localStorage.getItem("token");
 

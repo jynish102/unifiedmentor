@@ -9,6 +9,8 @@ const Notification = require("../models/Notifications")
 // CREATE BOOKING
 exports.createBooking = async (req, res) => {
   try {
+   
+    
     const currentUser = await User.findById(req.user.id);
     // console.log("PROPERTY ID:", req.body.property);
     const property = await Property.findById(req.body.property);
@@ -16,12 +18,16 @@ exports.createBooking = async (req, res) => {
     // console.log("USER:", req.user);
     // const { unitsRequested } = req.body;
     // const available = property.units - property.occupied;
+     const propertyStatus = property.status;
+     console.log("Property Status:", propertyStatus);
 
     if (!property) {
       return res.status(404).json({
         message: "Property not found",
       });
     }
+        console.log("PROPERTY:", property);
+        console.log("STATUS:", property.status);
 
     if (!req.body.property) {
       return res.status(400).json({
@@ -41,8 +47,17 @@ exports.createBooking = async (req, res) => {
       });
     }
 
-    const {  startDate, endDate, rentAmount } = req.body;
-    
+    // Property must be available
+    if (propertyStatus !== "available") {
+      
+      return res.status(400).json({
+       
+        message: `Property is currently ${propertyStatus || "unavailable"}`,
+      });
+    }
+
+    const { startDate, endDate, rentAmount } = req.body;
+
     // Check if property already booked for these dates
     const existingBooking = await Booking.findOne({
       property: property._id,
@@ -50,7 +65,6 @@ exports.createBooking = async (req, res) => {
         {
           startDate: { $lte: endDate },
           endDate: { $gte: startDate },
-          
         },
       ],
     });
@@ -73,6 +87,16 @@ exports.createBooking = async (req, res) => {
       });
     }
 
+    //  Check availableFrom date
+    if (
+      property.availableFrom &&
+      new Date(startDate) < new Date(property.availableFrom)
+    ) {
+      return res.status(400).json({
+        message: `Property is available only after ${property.availableFrom.toDateString()}`,
+      });
+    }
+
     const booking = new Booking({
       property: property._id,
       user: req.user.id,
@@ -82,7 +106,7 @@ exports.createBooking = async (req, res) => {
     });
 
     await booking.save();
-    
+
     await Notification.create({
       user: property.owner, // admin id
       title: "New Property Booking Request",
@@ -95,14 +119,14 @@ exports.createBooking = async (req, res) => {
       redirectUrl: `/owner/bookings-request`,
     });
 
-
     res.status(201).json({
       success: true,
       data: booking,
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      success: false,
+      message: (error.response?.data ||error.message),
     });
   }
 };

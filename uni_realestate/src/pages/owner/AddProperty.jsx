@@ -24,6 +24,7 @@ export default function AddProperty() {
     address: "",
     city: "",
     state: "",
+    country: "",
     zipcode: "",
     price: "",
     deposit: "",
@@ -81,6 +82,7 @@ export default function AddProperty() {
           address: data.address || "",
           city: data.city || "",
           state: data.state || "",
+          country: data.country || "",
           zipcode: data.zipcode || "",
           price: data.price || "",
           deposit: data.deposit || "",
@@ -256,7 +258,7 @@ export default function AddProperty() {
         await API.post("/property/add", data, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        toast.success("Property Request Added Succesfully");
+        toast.success("Property Request Added Successfully");
       }
 
       navigate("/owner/properties");
@@ -418,6 +420,22 @@ export default function AddProperty() {
                   type="text"
                   placeholder="State"
                   value={formData.state}
+                  onChange={handleChange}
+                  className="h-11  px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mx-1 mb-1 mt-2">
+                  Country*
+                </label>
+
+                <Input
+                  name="country"
+                  type="text"
+                  placeholder="Country"
+                  value={formData.country}
                   onChange={handleChange}
                   className="h-11  px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                   required

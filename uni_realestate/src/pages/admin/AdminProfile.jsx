@@ -25,7 +25,7 @@ export default function StaffProfile() {
   const [preview, setPreview] = useState(null);
   const [, setCounts] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
@@ -33,11 +33,11 @@ export default function StaffProfile() {
   });
 
   //notification settings state
-  const [settings, setSettings] = useState({
-    booking: true,
-    maintenance: true,
-    amenity: true,
-  });
+  // const [settings, setSettings] = useState({
+  //   booking: true,
+  //   maintenance: true,
+  //   amenity: true,
+  // });
 
   //change password state
   const [passwordData, setPasswordData] = useState({
@@ -51,6 +51,46 @@ export default function StaffProfile() {
     new: false,
     confirm: false,
   });
+
+  {
+    /*-----------name validation--------------------- */
+  }
+  const validateName = (name) => {
+    const regex = /^[A-Za-z\s]+$/;
+    return regex.test(name);
+  };
+
+  const isValidName = validateName(formData.fullname);
+
+  {
+    /*======================email validation======================== */
+  }
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+    return emailRegex.test(email);
+  };
+  const emailIsValid = validateEmail(formData.email);
+
+  const domain = formData.email.split("@")[1];
+
+  const validDomains = [
+    "gmail.com",
+    "yahoo.com",
+    "outlook.com",
+    "hotmail.com",
+    "icloud.com",
+  ];
+
+  const isCorrectDomain = validDomains.includes(domain);
+
+  {
+    /*======================phone validation======================== */
+  }
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phone);
+  };
+  const phoneIsValid = validatePhone(formData.phone);
 
   const togglePassword = (field) => {
     setShowPassword((prev) => ({
@@ -101,11 +141,11 @@ export default function StaffProfile() {
           email: res.data.user.email ?? "",
           phone: res.data.user.phone ?? "",
         });
-
       } catch (error) {
-        
-console.log("Error:", err.response?.data || err.message);
-toast.error(err.response?.data?.message || "Failed to update password");
+        console.log("Error:", error.response?.data || error.message);
+        toast.error(
+          error.response?.data?.message || "Failed to update password",
+        );
       }
     };
 
@@ -118,21 +158,49 @@ toast.error(err.response?.data?.message || "Failed to update password");
     };
   }, [preview]);
 
-
-
-
   if (!user) {
     return <div className="min-h-screen bg-muted/30">Loading...</div>;
   }
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+     const { name, value } = e.target;
+
+     // Validation for fullname
+     if (name === "fullname") {
+       const regex = /^[A-Za-z\s]*$/;
+       if (!regex.test(value)) return;
+     }
+
+     setFormData((prev) => ({
+       ...prev,
+       [name]: value,
+     }));
+
+     // Create updated form
+     const updatedForm = {
+       ...formData,
+       [name]: value,
+     };
+
+     setFormData(updatedForm);
+
   };
 
   const handleSave = async () => {
+    if (!isValidName) {
+           toast.error(`Please Fix Name Error!!!`);
+           return;
+         }
+    
+         if (!emailIsValid || !isCorrectDomain) {
+           toast.error(`Please Fix Email Error!!!`);
+           return;
+         }
+    
+         if (!phoneIsValid) {
+           toast.error(`Please Fix PhoneNumber Error!!!`);
+           return;
+         }
     try {
       const token = localStorage.getItem("token");
 
@@ -148,7 +216,7 @@ toast.error(err.response?.data?.message || "Failed to update password");
       setIsEditing(false);
       toast.success("Profile updated successfully ");
     } catch (err) {
-      console.log("Error",err.response?.data?.message);
+      console.log("Error", err.response?.data?.message);
       toast.error(err.response?.data?.message || "updated Failed ");
     }
   };
@@ -300,12 +368,31 @@ toast.error(err.response?.data?.message || "Failed to update password");
                 <div>
                   {/* NAME */}
                   {isEditing ? (
-                    <input
-                      name="fullname"
-                      value={formData.fullname || ""}
-                      onChange={handleChange}
-                      className="text-xl font-bold border px-2 py-1 rounded"
-                    />
+                    <>
+                      <input
+                        autoFocus
+                        type="text"
+                        name="fullname"
+                        value={formData.fullname || ""}
+                        onChange={handleChange}
+                        className={`text-xl font-bold border px-2 py-1 rounded ${
+                          formData.fullname
+                            ? isValidName
+                              ? "border-green-400 focus:ring-green-400"
+                              : "border-red-500 focus:ring-red-400"
+                            : "border-white/30 focus:ring-purple-400"
+                        }`}
+                      />
+                      {formData.fullname && (
+                        <p
+                          className={`mt-2 text-sm ${isValidName ? "text-green-400" : "text-red-400"}`}
+                        >
+                          {isValidName
+                            ? "✓ Valid name"
+                            : "✗ Only letters and spaces allowed"}
+                        </p>
+                      )}
+                    </>
                   ) : (
                     <h2 className="text-2xl font-bold flex items-center gap-3">
                       {user.fullname}
@@ -323,12 +410,36 @@ toast.error(err.response?.data?.message || "Failed to update password");
                   {/* EMAIL */}
                   <div className="mt-2">
                     {isEditing ? (
-                      <input
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="border px-2 py-1 rounded w-full"
-                      />
+                      <>
+                        <input
+                          type="text"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className={`border px-2 py-1 rounded w-full ${
+                            formData.email
+                              ? emailIsValid
+                                ? "border-green-400 focus:ring-green-400"
+                                : "border-red-500 focus:ring-red-400"
+                              : "border-white/30 focus:ring-purple-400"
+                          }`}
+                        />
+                        {formData.email && (
+                          <p
+                            className={`mt-2 text-sm ${
+                              emailIsValid && isCorrectDomain
+                                ? "text-green-400"
+                                : "text-red-400"
+                            }`}
+                          >
+                            {emailIsValid && isCorrectDomain
+                              ? "✓ Valid email address"
+                              : !emailIsValid
+                                ? "✗ Email must be lowercase and valid format"
+                                : "✗ Please check email domain spelling"}
+                          </p>
+                        )}
+                      </>
                     ) : (
                       <p className="text-gray-700">📧 {user.email}</p>
                     )}
@@ -337,12 +448,40 @@ toast.error(err.response?.data?.message || "Failed to update password");
                   {/* PHONE */}
                   <div>
                     {isEditing ? (
-                      <input
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="border px-2 py-1 rounded w-full"
-                      />
+                      <>
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={(e) => {
+                            const onlyNumbers = e.target.value.replace(
+                              /\D/g,
+                              "",
+                            );
+                            handleChange({
+                              target: { name: "phone", value: onlyNumbers },
+                            });
+                          }}
+                          className={`border px-2 py-1 rounded w-full ${
+                            formData.phone
+                              ? phoneIsValid
+                                ? "border-green-400 focus:ring-green-400"
+                                : "border-red-500 focus:ring-red-400"
+                              : "border-white/30 focus:ring-purple-400"
+                          }`}
+                        />
+                        {formData.phone && (
+                          <p
+                            className={`mt-2 text-sm ${
+                              phoneIsValid ? "text-green-400" : "text-red-400"
+                            }`}
+                          >
+                            {phoneIsValid
+                              ? "✓ Valid phone number"
+                              : "✗ Phone number must be exactly 10 digits"}
+                          </p>
+                        )}
+                      </>
                     ) : (
                       <p className="text-gray-700">📞 {user.phone}</p>
                     )}
@@ -359,6 +498,8 @@ toast.error(err.response?.data?.message || "Failed to update password");
                     ) : (
                       <div className="flex gap-2">
                         <Button
+                          type="submit"
+                         
                           onClick={handleSave}
                           className="cursor-pointer px-4 py-2 bg-green-600 text-white rounded-md"
                         >

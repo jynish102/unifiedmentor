@@ -95,10 +95,7 @@ export default function Properties() {
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            <Button variant="outline" className="w-full sm:w-auto">
-              <Filter className="size-4 mr-2" />
-              Filter
-            </Button>
+            
           </div>
         </CardContent>
       </Card>

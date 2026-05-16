@@ -20,42 +20,6 @@ const Register = () => {
   // const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    // Validation for fullname
-    if (name === "fullname") {
-      const regex = /^[A-Za-z\s]*$/;
-      if (!regex.test(value)) return;
-    }
-
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-
-    // Create updated form
-    const updatedForm = {
-      ...formData,
-      [name]: value,
-    };
-
-    setFormData(updatedForm);
-
-    // Password match shake effect
-    if (
-      name === "confirmPassword" &&
-      updatedForm.password !== value &&
-      value !== ""
-    ) {
-      setShake(true);
-
-      setTimeout(() => {
-        setShake(false);
-      }, 400);
-    }
-  };
-
   {/*-----------name validation--------------------- */}
   const validateName = (name) => {
     const regex = /^[A-Za-z\s]+$/;
@@ -85,10 +49,39 @@ const Register = () => {
     return { strength, rules, passedRules };
   };
 
+  {
+    /*======================email validation======================== */
+  }
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+    return emailRegex.test(email);
+  };
+  const emailIsValid = validateEmail(formData.email);
+
+  const domain = formData.email.split("@")[1];
+
+  const validDomains = [
+    "gmail.com",
+    "yahoo.com",
+    "outlook.com",
+    "hotmail.com",
+    "icloud.com",
+  ];
+
+  const isCorrectDomain = validDomains.includes(domain);
+
+  {
+    /*======================phone validation======================== */
+  }
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phone);
+  };
+  const phoneIsValid = validatePhone(formData.phone);
+
   {/*======================checkpassword======================== */}
   const passwordsMatch =
     formData.confirmPassword && formData.password === formData.confirmPassword;
-
   {/*======================shake if passwords do not match======================== */}
   const [shake, setShake] = useState(false);
 
@@ -107,36 +100,43 @@ const Register = () => {
     }
   }, [formData.confirmPassword, formData.password]);
 
-  {
-    /*======================email validation======================== */
-  }
-  const validateEmail = (email) => {
-    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
-    return emailRegex.test(email);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // Validation for fullname
+    if (name === "fullname") {
+      const regex = /^[A-Za-z\s]*$/;
+      if (!regex.test(value)) return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Create updated form
+    const updatedForm = {
+      ...formData,
+      [name]: value,
+    };
+
+    setFormData(updatedForm);
+
+    // Password match shake effect
+    if (
+      name === "confirmPassword" &&
+      updatedForm.password !== value &&
+      value !== ""
+    ) {
+      setShake(true);
+
+      setTimeout(() => {
+        setShake(false);
+      }, 400);
+    }
   };
-  const emailIsValid = validateEmail(formData.email);
 
-const domain = formData.email.split("@")[1];
-
-const validDomains = [
-  "gmail.com",
-  "yahoo.com",
-  "outlook.com",
-  "hotmail.com",
-  "icloud.com",
-];
-
-const isCorrectDomain = validDomains.includes(domain);
-
-  {
-    /*======================phone validation======================== */
-  }
-  const validatePhone = (phone) => {
-    const phoneRegex = /^[0-9]{10}$/;
-    return phoneRegex.test(phone);
-  };
-  const phoneIsValid = validatePhone(formData.phone);
-
+  
   //------------------------------form submission
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -18,8 +18,7 @@ import {
 import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { Button } from "../../components/ui/button";
-import toast  from "react-hot-toast";
-
+import toast from "react-hot-toast";
 
 export default function TenantProfile() {
   const [tenant, setTenant] = useState(null);
@@ -32,6 +31,45 @@ export default function TenantProfile() {
     phone: "",
   });
 
+  {
+    /*-----------name validation--------------------- */
+  }
+  const validateName = (name) => {
+    const regex = /^[A-Za-z\s]+$/;
+    return regex.test(name);
+  };
+
+  const isValidName = validateName(formData.fullname);
+
+  {
+    /*======================email validation======================== */
+  }
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+    return emailRegex.test(email);
+  };
+  const emailIsValid = validateEmail(formData.email);
+
+  const domain = formData.email.split("@")[1];
+
+  const validDomains = [
+    "gmail.com",
+    "yahoo.com",
+    "outlook.com",
+    "hotmail.com",
+    "icloud.com",
+  ];
+
+  const isCorrectDomain = validDomains.includes(domain);
+
+  {
+    /*======================phone validation======================== */
+  }
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phone);
+  };
+  const phoneIsValid = validatePhone(formData.phone);
   //change password state
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -76,12 +114,7 @@ export default function TenantProfile() {
     rules.special &&
     passwordData.newPassword === passwordData.confirmPassword;
 
-  //notification settings state
-  const [settings, setSettings] = useState({
-    booking: true,
-    maintenance: true,
-    amenity: true,
-  });
+ 
 
   //handle password change
   const handlePasswordChange = (e) => {
@@ -121,12 +154,10 @@ export default function TenantProfile() {
         confirmPassword: "",
       });
     } catch (err) {
-      console.log("Upload failed",err.res?.data || err.message);
+      console.log("Upload failed", err.res?.data || err.message);
       toast.error(err.response?.data?.message || "Upload failed");
     }
   };
-
-  
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -143,10 +174,11 @@ export default function TenantProfile() {
         setTenant(res.data.user);
         setCounts(res.data.counts);
       } catch (error) {
-          console.log("Failed to Fetch Profile Data", error.res?.data || error.message);
-          toast.error(
-            error.res?.data?.message || "Failed to Fetch Profile Data",
-          );
+        console.log(
+          "Failed to Fetch Profile Data",
+          error.res?.data || error.message,
+        );
+        toast.error(error.res?.data?.message || "Failed to Fetch Profile Data");
       }
     };
 
@@ -159,19 +191,50 @@ export default function TenantProfile() {
     };
   }, [preview]);
 
-  
   if (!tenant) {
     return <div className="min-h-screen bg-muted/30">Loading...</div>;
   }
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+     const { name, value } = e.target;
+
+     // Validation for fullname
+     if (name === "fullname") {
+       const regex = /^[A-Za-z\s]*$/;
+       if (!regex.test(value)) return;
+     }
+
+     setFormData((prev) => ({
+       ...prev,
+       [name]: value,
+     }));
+
+     // Create updated form
+     const updatedForm = {
+       ...formData,
+       [name]: value,
+     };
+
+     setFormData(updatedForm);
+
   };
 
+  //handle save
   const handleSave = async () => {
+     if (!isValidName) {
+       toast.error(`Please Fix Name Error!!!`);
+       return;
+     }
+
+     if (!emailIsValid || !isCorrectDomain) {
+       toast.error(`Please Fix Email Error!!!`);
+       return;
+     }
+
+     if (!phoneIsValid) {
+       toast.error(`Please Fix PhoneNumber Error!!!`);
+       return;
+     }
     try {
       const token = localStorage.getItem("token");
 
@@ -238,20 +301,17 @@ export default function TenantProfile() {
       // 4. Clear preview (optional)
       setPreview(null);
     } catch (err) {
-        console.log("Profile Image Update Unsuccessful", err.res?.data || err.message);
-        toast.error(
-          err.res?.data?.message || "Profile Image Update Unsuccessful",
-        );
+      console.log(
+        "Profile Image Update Unsuccessful",
+        err.res?.data || err.message,
+      );
+      toast.error(
+        err.res?.data?.message || "Profile Image Update Unsuccessful",
+      );
     }
   };
 
-  //handle Notifications toggle
-  const handleToggle = (key) => {
-    setSettings((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
+ 
 
   //handle account deactivation
   const handleDeactivateAccount = async () => {
@@ -271,7 +331,7 @@ export default function TenantProfile() {
 
       await API.put(
         "/auth/deactivate-account",
-          { password: deactivatePassword },
+        { password: deactivatePassword },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -347,12 +407,30 @@ export default function TenantProfile() {
                 <div>
                   {/* NAME */}
                   {isEditing ? (
-                    <input
-                      name="fullname"
-                      value={formData.fullname || ""}
-                      onChange={handleChange}
-                      className="text-xl font-bold border px-2 py-1 rounded"
-                    />
+                    <>
+                      <input
+                        type="text"
+                        name="fullname"
+                        value={formData.fullname || ""}
+                        onChange={handleChange}
+                        className={`text-xl font-bold border px-2 py-1 rounded ${
+                          formData.fullname
+                            ? isValidName
+                              ? "border-green-400 focus:ring-green-400"
+                              : "border-red-500 focus:ring-red-400"
+                            : "border-white/30 focus:ring-purple-400"
+                        }`}
+                      />
+                      {formData.fullname && (
+                        <p
+                          className={`mt-2 text-sm ${isValidName ? "text-green-400" : "text-red-400"}`}
+                        >
+                          {isValidName
+                            ? "✓ Valid name"
+                            : "✗ Only letters and spaces allowed"}
+                        </p>
+                      )}
+                    </>
                   ) : (
                     <h2 className="text-2xl font-bold flex items-center gap-3">
                       {tenant.fullname}
@@ -370,12 +448,36 @@ export default function TenantProfile() {
                   {/* EMAIL */}
                   <div className="mt-2">
                     {isEditing ? (
-                      <input
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="border px-2 py-1 rounded w-full"
-                      />
+                      <>
+                        <input
+                          type="text"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className={`border px-2 py-1 rounded w-full ${
+                            formData.email
+                              ? emailIsValid
+                                ? "border-green-400 focus:ring-green-400"
+                                : "border-red-500 focus:ring-red-400"
+                              : "border-white/30 focus:ring-purple-400"
+                          }`}
+                        />
+                        {formData.email && (
+                          <p
+                            className={`mt-2 text-sm ${
+                              emailIsValid && isCorrectDomain
+                                ? "text-green-400"
+                                : "text-red-400"
+                            }`}
+                          >
+                            {emailIsValid && isCorrectDomain
+                              ? "✓ Valid email address"
+                              : !emailIsValid
+                                ? "✗ Email must be lowercase and valid format"
+                                : "✗ Please check email domain spelling"}
+                          </p>
+                        )}
+                      </>
                     ) : (
                       <p className="text-gray-700">📧 {tenant.email}</p>
                     )}
@@ -384,12 +486,40 @@ export default function TenantProfile() {
                   {/* PHONE */}
                   <div>
                     {isEditing ? (
-                      <input
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="border px-2 py-1 rounded w-full"
-                      />
+                      <>
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={(e) => {
+                            const onlyNumbers = e.target.value.replace(
+                              /\D/g,
+                              "",
+                            );
+                            handleChange({
+                              target: { name: "phone", value: onlyNumbers },
+                            });
+                          }}
+                          className={`border px-2 py-1 rounded w-full ${
+                            formData.phone
+                              ? phoneIsValid
+                                ? "border-green-400 focus:ring-green-400"
+                                : "border-red-500 focus:ring-red-400"
+                              : "border-white/30 focus:ring-purple-400"
+                          }`}
+                        />
+                        {formData.phone && (
+                          <p
+                            className={`mt-2 text-sm ${
+                              phoneIsValid ? "text-green-400" : "text-red-400"
+                            }`}
+                          >
+                            {phoneIsValid
+                              ? "✓ Valid phone number"
+                              : "✗ Phone number must be exactly 10 digits"}
+                          </p>
+                        )}
+                      </>
                     ) : (
                       <p className="text-gray-700">📞 {tenant.phone}</p>
                     )}
@@ -406,6 +536,8 @@ export default function TenantProfile() {
                     ) : (
                       <div className="flex gap-2">
                         <Button
+                          type="submit"
+                          
                           onClick={handleSave}
                           className="px-4 py-2 bg-green-600 text-white rounded-md"
                         >
@@ -507,7 +639,11 @@ export default function TenantProfile() {
                 onClick={() => togglePassword("current")}
                 className="absolute right-3 top-2.5 cursor-pointer"
               >
-                {showPassword.current ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showPassword.current ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
               </span>
             </div>
 
@@ -588,30 +724,7 @@ export default function TenantProfile() {
           </div>
         </div>
 
-        {/* Notification Settings */}
-        <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6">
-          <h2 className="text-xl font-semibold mb-4">Notification Settings</h2>
-
-          <div className="space-y-3">
-            {Object.keys(settings).map((key) => (
-              <div key={key} className="flex justify-between items-center">
-                <span className="capitalize">{key} Alerts</span>
-                <button
-                  onClick={() => handleToggle(key)}
-                  className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
-                    settings[key] ? "bg-blue-600" : "bg-gray-300"
-                  }`}
-                >
-                  <div
-                    className={`bg-white w-4 h-4 rounded-full shadow-md transform transition ${
-                      settings[key] ? "translate-x-6" : ""
-                    }`}
-                  />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
+        
 
         {/* Deactivate Account */}
         <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6 border border-yellow-300">

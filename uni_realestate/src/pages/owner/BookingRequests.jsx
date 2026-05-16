@@ -85,6 +85,13 @@ export default function BookingRequests() {
   const calculateDays = (start, end) => {
     return Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24));
   };
+
+  const filteredBookings = bookings.filter(
+    (booking) =>
+      booking.property?.title?.toLowerCase().includes(search.toLowerCase()) ||
+      booking.user?.fullname?.toLowerCase().includes(search.toLowerCase()) ||
+      booking.status?.toLowerCase().includes(search.toLowerCase()),
+  );
    
   const handleStatusChange = async (id, type, status) => {
     try {
@@ -187,7 +194,7 @@ export default function BookingRequests() {
         {/* Cards */}
         <CardContent>
           <div className="grid md:grid-cols-2 gap-4">
-            {bookings.map((b) => (
+            {filteredBookings.map((b) => (
               <Card key={b._id} className="bg-white border mt-3">
                 <CardContent className="p-6 space-y-4 ">
                   {/* Top badges */}

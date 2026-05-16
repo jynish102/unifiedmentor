@@ -243,8 +243,6 @@ exports.updateBookingStatus = async (req, res) => {
       role === "tenant" &&
       status === "cancelled" &&
       booking.user.toString() === req.user.id.toString()
-      
-
     ) 
     {
       booking.status = status;
@@ -253,9 +251,6 @@ exports.updateBookingStatus = async (req, res) => {
         message: "Not allowed to perform this action",
       });
     }
-   
-    
-
     await booking.save();
     await Notification.create({
       user: booking.user,

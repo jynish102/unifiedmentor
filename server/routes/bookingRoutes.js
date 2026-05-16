@@ -21,7 +21,7 @@ router.get("/owner-booking-requests", authMiddleware, getOwnerBookingRequests);
 
 router.get("/my-property-bookings", authMiddleware, getUserBookings);
 
-router.put("/:id/status", authMiddleware,authorizeRoles("owner"), updateBookingStatus);
+router.put("/:id/status", authMiddleware,authorizeRoles("owner","tenant"), updateBookingStatus);
 
 router.delete("/:id", authMiddleware, authorizeRoles(["admin"]), deleteBooking);
 

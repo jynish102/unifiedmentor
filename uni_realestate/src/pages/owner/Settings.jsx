@@ -37,6 +37,47 @@ export default function ProfileCard() {
     }));
   };
 
+  {
+    /*-----------name validation--------------------- */
+  }
+  const validateName = (name) => {
+    const regex = /^[A-Za-z\s]+$/;
+    return regex.test(name);
+  };
+
+  const isValidName = validateName(formData.fullname);
+
+  {
+    /*======================email validation======================== */
+  }
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+    return emailRegex.test(email);
+  };
+  const emailIsValid = validateEmail(formData.email);
+
+  const domain = formData.email.split("@")[1];
+
+  const validDomains = [
+    "gmail.com",
+    "yahoo.com",
+    "outlook.com",
+    "hotmail.com",
+    "icloud.com",
+  ];
+
+  const isCorrectDomain = validDomains.includes(domain);
+
+  {
+    /*======================phone validation======================== */
+  }
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[0-9]{10}$/;
+    return phoneRegex.test(phone);
+  };
+  const phoneIsValid = validatePhone(formData.phone);
+
+  //validation for password
   const validatePassword = (password) => {
     const rules = {
       length: password.length >= 6,
@@ -82,8 +123,10 @@ export default function ProfileCard() {
         console.log("API RESPONSE:", res.data); //
         setUser(res.data.user);
       } catch (err) {
-        console.log("Error",err.res?.data?.message);
-        toast.error(err.response?.data?.message || "Failed to fetch profile data");
+        console.log("Error", err.res?.data?.message);
+        toast.error(
+          err.response?.data?.message || "Failed to fetch profile data",
+        );
       }
     };
 
@@ -91,10 +134,26 @@ export default function ProfileCard() {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({
+    const { name, value } = e.target;
+
+    // Validation for fullname
+    if (name === "fullname") {
+      const regex = /^[A-Za-z\s]*$/;
+      if (!regex.test(value)) return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Create updated form
+    const updatedForm = {
       ...formData,
-      [e.target.name]: e.target.value,
-    });
+      [name]: value,
+    };
+
+    setFormData(updatedForm);
   };
 
   const handleEdit = () => {
@@ -116,6 +175,20 @@ export default function ProfileCard() {
   };
 
   const handleSave = async () => {
+    if (!isValidName) {
+      toast.error(`Please Fix Name Error!!!`);
+      return;
+    }
+
+    if (!emailIsValid || !isCorrectDomain) {
+      toast.error(`Please Fix Email Error!!!`);
+      return;
+    }
+
+    if (!phoneIsValid) {
+      toast.error(`Please Fix PhoneNumber Error!!!`);
+      return;
+    }
     try {
       const token = localStorage.getItem("token");
 
@@ -130,7 +203,7 @@ export default function ProfileCard() {
 
       toast.success("Profile updated successfully ");
     } catch (err) {
-      console.log("Error",err.res?.data?.message);
+      console.log("Error", err.res?.data?.message);
       toast.error(err.response?.data?.message || "Upload failed");
     }
   };
@@ -178,8 +251,6 @@ export default function ProfileCard() {
     }
   };
 
-
-
   if (!user) return <p>Loading...</p>;
 
   const handleImageUpload = async (file) => {
@@ -215,9 +286,6 @@ export default function ProfileCard() {
     }
   };
 
-
- 
-
   const getStatusConfig = (isActive) => {
     if (isActive) {
       return {
@@ -236,29 +304,32 @@ export default function ProfileCard() {
 
   const statusConfig = getStatusConfig(user.isActive);
 
-  {/* deactivate account */}
+  {
+    /* deactivate account */
+  }
   const handleDeactivateAccount = async () => {
     if (!deactivatePassword) {
       toast.error("Please enter your password");
       return;
     }
-     const confirmAction = window.confirm(
-       "Are you sure you want to deactivate your account?",
-     );
+    const confirmAction = window.confirm(
+      "Are you sure you want to deactivate your account?",
+    );
 
-     if (!confirmAction) return;
+    if (!confirmAction) return;
 
-  
     try {
       const token = localStorage.getItem("token");
 
-      await API.put("/auth/deactivate-account",
-        {password: deactivatePassword}, 
+      await API.put(
+        "/auth/deactivate-account",
+        { password: deactivatePassword },
         {
-        headers: {
-          Authorization: `Bearer ${token}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       toast.success("Account deactivated");
 
@@ -266,7 +337,10 @@ export default function ProfileCard() {
       window.location.href = "/register";
     } catch (err) {
       console.error(err);
-      toast.error("Failed to deactivate account", err.response?.data?.message || "");
+      toast.error(
+        "Failed to deactivate account",
+        err.response?.data?.message || "",
+      );
     }
   };
 
@@ -306,13 +380,31 @@ export default function ProfileCard() {
             {/* User Info */}
             <div>
               {isEditing ? (
-                <input
-                  autoFocus
-                  name="fullname"
-                  value={formData.fullname}
-                  onChange={handleChange}
-                  className="text-2xl font-semibold border px-2 py-1 rounded"
-                />
+                <>
+                  <input
+                    autoFocus
+                    type="text"
+                    name="fullname"
+                    value={formData.fullname}
+                    onChange={handleChange}
+                    className={`text-2xl font-semibold border px-2 py-1 rounded ${
+                      formData.fullname
+                        ? isValidName
+                          ? "border-green-400 focus:ring-green-400"
+                          : "border-red-500 focus:ring-red-400"
+                        : "border-white/30 focus:ring-purple-400"
+                    }`}
+                  />
+                  {formData.fullname && (
+                    <p
+                      className={`mt-2 text-sm ${isValidName ? "text-green-400" : "text-red-400"}`}
+                    >
+                      {isValidName
+                        ? "✓ Valid name"
+                        : "✗ Only letters and spaces allowed"}
+                    </p>
+                  )}
+                </>
               ) : (
                 <h2 className="text-2xl font-bold flex items-center gap-3">
                   {user.fullname}
@@ -324,28 +416,77 @@ export default function ProfileCard() {
                   </span>
                 </h2>
               )}
-             
+
               <p className="text-lg text-gray-500">{user.role}</p>
 
               <div className="text-lg text-gray-600 mt-2 space-y-1">
                 {isEditing ? (
-                  <input
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="border px-2 py-1 rounded"
-                  />
+                  <>
+                    <input
+                      type="text"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className={`border px-2 py-1 rounded ${
+                        formData.email
+                          ? emailIsValid
+                            ? "border-green-400 focus:ring-green-400"
+                            : "border-red-500 focus:ring-red-400"
+                          : "border-white/30 focus:ring-purple-400"
+                      }`}
+                    />
+                    {formData.email && (
+                      <p
+                        className={`mt-2 text-sm ${
+                          emailIsValid && isCorrectDomain
+                            ? "text-green-400"
+                            : "text-red-400"
+                        }`}
+                      >
+                        {emailIsValid && isCorrectDomain
+                          ? "✓ Valid email address"
+                          : !emailIsValid
+                            ? "✗ Email must be lowercase and valid format"
+                            : "✗ Please check email domain spelling"}
+                      </p>
+                    )}
+                  </>
                 ) : (
                   <p>📧 {user.email}</p>
                 )}
 
                 {isEditing ? (
-                  <input
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="border px-2 py-1 rounded"
-                  />
+                  <>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={(e) => {
+                        const onlyNumbers = e.target.value.replace(/\D/g, "");
+                        handleChange({
+                          target: { name: "phone", value: onlyNumbers },
+                        });
+                      }}
+                      className={`border px-2 py-1 rounded ${
+                        formData.phone
+                          ? phoneIsValid
+                            ? "border-green-400 focus:ring-green-400"
+                            : "border-red-500 focus:ring-red-400"
+                          : "border-white/30 focus:ring-purple-400"
+                      }`}
+                    />
+                    {formData.phone && (
+                      <p
+                        className={`mt-2 text-sm ${
+                          phoneIsValid ? "text-green-400" : "text-red-400"
+                        }`}
+                      >
+                        {phoneIsValid
+                          ? "✓ Valid phone number"
+                          : "✗ Phone number must be exactly 10 digits"}
+                      </p>
+                    )}
+                  </>
                 ) : (
                   <p>📞 {user.phone}</p>
                 )}
@@ -361,6 +502,7 @@ export default function ProfileCard() {
               ) : (
                 <div className="flex gap-2">
                   <Button
+                    type="submit"
                     onClick={handleSave}
                     className="cursor-pointer bg-green-600 text-white"
                   >
@@ -466,8 +608,6 @@ export default function ProfileCard() {
           </Button>
         </div>
       </div>
-
-  
 
       {/* Deactivate Account */}
       <div className="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto mt-6 border border-yellow-300">

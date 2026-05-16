@@ -23,6 +23,7 @@ router.get("/my-amenity-bookings", authMiddleware, getUserBookings);
 router.put(
   "/:id/status",
   authMiddleware,
+  authorizeRoles("owner","tenant"),
   updateBookingStatus,
 );
 

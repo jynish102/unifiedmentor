@@ -49,7 +49,7 @@ export default function PropertiesRequest() {
         });
         setProperties(res.data.data);
       } catch (err) {
-        console.error("Error fetching properties", err.res?.data || err.message);
+        console.log("Error fetching properties", err.res?.data || err.message);
         toast.error(err.res?.data?.message || "error")
       }
     };

@@ -62,6 +62,13 @@ export default function AllBooking() {
     }
   };
 
+  const filteredBookings = bookings.filter(
+    (booking) =>
+      booking.property?.title?.toLowerCase().includes(search.toLowerCase()) ||
+      booking.user?.fullname?.toLowerCase().includes(search.toLowerCase()) ||
+      booking.status?.toLowerCase().includes(search.toLowerCase()),
+  );
+
   
 
   const pendingCount = bookings.filter((b) => b.status === "pending").length;
@@ -97,8 +104,8 @@ export default function AllBooking() {
         prev.map((b) => (b._id.toString() === id.toString() ? { ...b, status } : b)),
       );
     } catch (err) {
-          console.log("Error", err.res?.data || err.message);
-          toast.error(err.res?.data?.message || "Error");
+        console.log("Error", err.response?.data || err.message);
+        toast.error(err.response?.data?.message || "Error");
 
     }
   };
@@ -175,7 +182,7 @@ export default function AllBooking() {
         {/* Cards */}
         <CardContent>
           <div className="grid md:grid-cols-2 gap-4">
-            {bookings.map((b) => (
+            {filteredBookings.map((b) => (
               <Card key={b._id} className="bg-white border mt-3">
                 <CardContent className="p-6 space-y-4">
                   {/* Top badges */}

@@ -3,14 +3,11 @@ const Property = require("../models/Property");
 const User = require("../models/User");
 const AmenityBooking = require("../models/AmenityBooking");
 const Amenity = require("../models/Amenity");
-const Notification = require("../models/Notifications")
-
+const Notification = require("../models/Notifications");
 
 // CREATE BOOKING
 exports.createBooking = async (req, res) => {
   try {
-   
-    
     const currentUser = await User.findById(req.user.id);
     // console.log("PROPERTY ID:", req.body.property);
     const property = await Property.findById(req.body.property);
@@ -18,8 +15,8 @@ exports.createBooking = async (req, res) => {
     // console.log("USER:", req.user);
     // const { unitsRequested } = req.body;
     // const available = property.units - property.occupied;
-    
-     const propertyStatus = property.status;
+
+    const propertyStatus = property.status;
     //  console.log("PROPERTY:", property);
     //  console.log("STATUS:", property.status);
     //  console.log("Property Status:", propertyStatus);
@@ -29,7 +26,6 @@ exports.createBooking = async (req, res) => {
         message: "Property not found",
       });
     }
-        
 
     if (!req.body.property) {
       return res.status(400).json({
@@ -51,9 +47,7 @@ exports.createBooking = async (req, res) => {
 
     // Property must be available
     if (propertyStatus !== "available") {
-      
       return res.status(400).json({
-       
         message: `Property is currently ${propertyStatus || "unavailable"}`,
       });
     }
@@ -126,7 +120,7 @@ exports.createBooking = async (req, res) => {
       data: booking,
     });
   } catch (error) {
-     console.log("BACKEND ERROR:", error);
+    console.log("BACKEND ERROR:", error);
     res.status(500).json({
       success: false,
       message: error.message,
@@ -157,7 +151,6 @@ exports.getOwnerBookingRequests = async (req, res) => {
 
     const propertyIds = properties.map((p) => p._id);
 
-
     /* -------------------------------- PROPERTY BOOKINGS ------------------------------- */
 
     const propertyBookings = await Booking.find({
@@ -170,8 +163,6 @@ exports.getOwnerBookingRequests = async (req, res) => {
       success: true,
 
       propertyBookings,
-
-   
     });
   } catch (error) {
     console.log(error.res?.data || error.message);
@@ -184,19 +175,19 @@ exports.getOwnerBookingRequests = async (req, res) => {
 
 // GET BOOKING BY USER
 exports.getUserBookings = async (req, res) => {
-  try{
+  try {
     const bookings = await Booking.find({
       user: req.user.id,
     })
-      .populate("property", "title address price") 
-      .populate("user", "fullname email"); 
+      .populate("property", "title address price")
+      .populate("user", "fullname email");
 
     res.json({
       success: true,
       count: bookings.length,
       data: bookings,
     });
-  }catch (err) {
+  } catch (err) {
     res.status(500).json({
       success: false,
       message: err.message,
@@ -209,6 +200,7 @@ exports.updateBookingStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const { id } = req.params;
+    
 
     const role = req.user.role.toLowerCase();
     // console.log("ROLE:", role);
@@ -222,9 +214,13 @@ exports.updateBookingStatus = async (req, res) => {
     }
 
     const booking = await Booking.findById(id);
+    const property = await Property.findById(booking.property);
+    //for notification
+    const notificationUser = ["cancelled", "completed"].includes(status)
+      ? property.owner
+      : booking.user;
     //  console.log("BOOKING USER:", booking.user.toString());
     //  console.log("LOGGED USER:", req.user.id.toString());
-    
 
     if (!booking) {
       return res.status(404).json({
@@ -241,10 +237,9 @@ exports.updateBookingStatus = async (req, res) => {
     // Tenant (FIXED HERE)
     else if (
       role === "tenant" &&
-      status === "cancelled" &&
+      ["cancelled", "completed"].includes(status) &&
       booking.user.toString() === req.user.id.toString()
-    ) 
-    {
+    ) {
       booking.status = status;
     } else {
       return res.status(403).json({
@@ -252,22 +247,22 @@ exports.updateBookingStatus = async (req, res) => {
       });
     }
     await booking.save();
+
     await Notification.create({
-      user: booking.user,
+      user: notificationUser,
 
-      title: status === "approved" ? "Booking Approved" : "Booking Rejected",
+      title: `Booking ${status}`,
 
-      message:
-        status === "approved"
-          ? "Your property booking request has been approved"
-          : "Your property booking request has been rejected",
+      message: `Booking has been ${status}`,
 
-      type: status === "approved" ? "booking-approved" : "booking-rejected",
+      type: `booking-${status}`,
 
       relatedId: booking._id,
       relatedModel: "Booking",
 
-      redirectUrl: "/tenant/bookings",
+      redirectUrl: ["cancelled", "completed"].includes(status)
+        ? "/owner/bookings-request"
+        : "/tenant/bookings",
     });
 
     res.json({
@@ -275,6 +270,7 @@ exports.updateBookingStatus = async (req, res) => {
       data: booking,
     });
   } catch (err) {
+    console.log("Error", err.res?.data || err.message);
     res.status(500).json({
       success: false,
       message: err.message,

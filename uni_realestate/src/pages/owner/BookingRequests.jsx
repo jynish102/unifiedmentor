@@ -87,11 +87,22 @@ export default function BookingRequests() {
   };
 
   const filteredBookings = bookings.filter(
-    (booking) =>
-      booking.property?.title?.toLowerCase().includes(search.toLowerCase()) ||
-      booking.user?.fullname?.toLowerCase().includes(search.toLowerCase()) ||
-      booking.status?.toLowerCase().includes(search.toLowerCase()),
-  );
+    (booking) => {
+      const matchesSearch =
+        booking.property?.title?.toLowerCase().includes(search.toLowerCase()) ||
+        booking.user?.fullname?.toLowerCase().includes(search.toLowerCase()) ||
+        booking.status?.toLowerCase().includes(search.toLowerCase());
+
+      // History tab filter
+  if (activeTab === "history") {
+    return (
+      ["cancelled", "completed"].includes(booking.status) &&
+      matchesSearch
+    );
+  }
+
+  return matchesSearch;
+});
    
   const handleStatusChange = async (id, type, status) => {
     try {
@@ -171,7 +182,7 @@ export default function BookingRequests() {
 
         {/* Tabs */}
         <div className="flex gap-2 ml-2">
-          {["all", "property", "amenity"].map((tab) => (
+          {["all", "property", "amenity", "history"].map((tab) => (
             <Button
               key={tab}
               variant={activeTab === tab ? "default" : "outline"}
@@ -186,7 +197,11 @@ export default function BookingRequests() {
                 ? "All Bookings"
                 : tab === "property"
                   ? "Properties"
-                  : "Amenities"}
+                  : tab === "amenity"
+                    ? "Amenities"
+                    : tab === "history"
+                      ? "Cancelled/Completed"
+                      : ""}
             </Button>
           ))}
         </div>
@@ -231,11 +246,11 @@ export default function BookingRequests() {
                     <div>
                       <p className="text-slate-400">DATE & TIME</p>
                       {b.startDate
-                        ? new Date(b.startDate).toLocaleString("en-IN", {
+                        ? new Date(b.createdAt).toLocaleString("en-IN", {
                             dateStyle: "medium",
                             timeStyle: "short",
                           })
-                        : new Date(b.date).toLocaleString("en-IN", {
+                        : new Date(b.createdAt).toLocaleString("en-IN", {
                             dateStyle: "medium",
                             timeStyle: "short",
                           })}
@@ -287,6 +302,18 @@ export default function BookingRequests() {
                       >
                         Reject
                       </Button>
+                    )}
+
+                    {b.status === "completed" && (
+                      <p className="text-sm text-green-600">
+                        Booking completed by tenant
+                      </p>
+                    )}
+
+                    {b.status === "cancelled" && (
+                      <p className="text-sm text-red-600">
+                        Booking cancelled by tenant
+                      </p>
                     )}
                   </div>
                 </CardContent>

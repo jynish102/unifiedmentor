@@ -98,6 +98,7 @@ exports.createAmenityBooking = async (req, res) => {
       data: booking,
     });
   } catch (error) {
+    console.log("Error", err.res?.data || err.message);
     res.status(500).json({
       message: error.message,
     });
@@ -196,7 +197,7 @@ exports.updateBookingStatus = async (req, res) => {
     const { id } = req.params;
 
     const role = req.user.role.toLowerCase();
-    console.log("ROLE:", role);
+    // console.log("ROLE:", role);
 
     const validStatus = ["pending", "approved", "rejected", "cancelled"];
     if (!validStatus.includes(status)) {
@@ -207,8 +208,20 @@ exports.updateBookingStatus = async (req, res) => {
     }
 
     const booking = await AmenityBooking.findById(id);
-    console.log("BOOKING USER:", booking.user.toString());
-    console.log("LOGGED USER:", req.user.id.toString());
+    if (booking.amenity) {
+      const amenity = await Amenity.findById(booking.amenity).populate(
+        "property",
+      );
+
+      ownerId = amenity.property.owner;
+    }
+
+    const notificationUser = ["cancelled", "completed"].includes(status)
+      ? ownerId
+      : booking.user;
+
+    // console.log("BOOKING USER:", booking.user.toString());
+    // console.log("LOGGED USER:", req.user.id.toString());
 
     if (!booking) {
       return res.status(404).json({
@@ -236,21 +249,17 @@ exports.updateBookingStatus = async (req, res) => {
     }
     await booking.save();
     await Notification.create({
-      user: booking.user,
-
-      title: status === "approved" ? "Booking Approved" : "Booking Rejected",
-
-      message:
-        status === "approved"
-          ? "Your property booking request has been approved"
-          : "Your property booking request has been rejected",
-
-      type: status === "approved" ? "amenityBooking-approved" : "amenityBooking-rejected",
+      user: notificationUser,
+      title: `Amenity Booking ${status}`,
+      message: `Amenity Booking has been ${status}`,
+      type: `amenityBooking-${status}`,
 
       relatedId: booking._id,
       relatedModel: "AmenityBooking",
 
-      redirectUrl: "/tenant/bookings",
+      redirectUrl: ["cancelled", "completed"].includes(status)
+        ? "/owner/bookings-request"
+        : "/tenant/bookings",
     });
 
     res.json({

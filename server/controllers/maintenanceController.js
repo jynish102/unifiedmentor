@@ -136,7 +136,7 @@ exports.createMaintenance = async (req, res) => {
       data: maintenance,
     });
   } catch (error) {
-    console.error("ERROR:", error);
+    console.log("ERROR:", error.response?.data?.error || error.message);
     res.status(500).json({
       message: error.message,
     });
@@ -663,7 +663,7 @@ exports.updateMaintenanceStatus = async (req, res) => {
       data: maintenance,
     });
   } catch (err) {
-    console.error("Error", err.res?.data || err.message);
+    console.log("Error", err.res?.data || err.message);
     res.status(500).json({ message: err.message });
   }
 };

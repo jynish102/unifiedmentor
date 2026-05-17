@@ -220,11 +220,11 @@ export default function AllBooking() {
                       <p className="text-slate-400">DATE & TIME</p>
                       <p>
                         {b.startDate
-                          ? new Date(b.startDate).toLocaleString("en-IN", {
+                          ? new Date(b.createdAt).toLocaleString("en-IN", {
                               dateStyle: "medium",
-                             
+                              timeStyle: "short",
                             })
-                          : new Date(b.date).toLocaleString("en-IN", {
+                          : new Date(b.createdAt).toLocaleString("en-IN", {
                               dateStyle: "medium",
                               timeStyle: "short",
                             })}
@@ -255,24 +255,49 @@ export default function AllBooking() {
                   )}
 
                   {/* Buttons (Always visible as you requested) */}
-                  <div className="flex gap-2 pt-2">
-                    {b.status === "approved" && (
-                      <Button
-                        className="w-full bg-red-600 hover:bg-red-700"
-                        disabled={loadingId === b._id}
-                        onClick={() =>
-                          handleStatusChange(b._id, b.type, "cancelled")
-                        }
-                      >
-                        {loadingId === b._id
-                          ? "Cancelling..."
-                          : "Cancel Booking"}
-                      </Button>
-                    )}
 
+                  <div className="flex gap-2 pt-2">
+                    {/* APPROVED → Cancel OR Complete */}
+                    {b.status === "approved" &&
+                      (new Date() >= new Date(b.endDate || b.endTime) ? (
+                        // COMPLETE BUTTON
+                        <Button
+                          className="cursor-pointer w-full bg-green-600 hover:bg-green-700"
+                          disabled={loadingId === b._id}
+                          onClick={() =>
+                            handleStatusChange(b._id, b.type, "completed")
+                          }
+                        >
+                          {loadingId === b._id
+                            ? "Completing..."
+                            : "Mark as Completed"}
+                        </Button>
+                      ) : (
+                        // CANCEL BUTTON
+                        <Button
+                          className="cursor-pointer w-full bg-red-600 hover:bg-red-700"
+                          disabled={loadingId === b._id}
+                          onClick={() =>
+                            handleStatusChange(b._id, b.type, "cancelled")
+                          }
+                        >
+                          {loadingId === b._id
+                            ? "Cancelling..."
+                            : "Cancel Booking"}
+                        </Button>
+                      ))}
+
+                    {/* CANCELLED MESSAGE */}
                     {b.status === "cancelled" && (
                       <div className="w-full text-center py-2 rounded-md bg-gray-100 text-gray-600 font-medium">
                         Booking Cancelled
+                      </div>
+                    )}
+
+                    {/* COMPLETED MESSAGE */}
+                    {b.status === "completed" && (
+                      <div className="w-full text-center py-2 rounded-md bg-green-100 text-green-700 font-medium">
+                        Booking Completed
                       </div>
                     )}
                   </div>

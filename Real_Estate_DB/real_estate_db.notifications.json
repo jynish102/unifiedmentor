@@ -1,0 +1,720 @@
+[{
+  "_id": {
+    "$oid": "6a06c57feb9d7ff63bc78c0f"
+  },
+  "user": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "title": "Property Approved",
+  "message": " Luxury Lakeview Villa has been approved by admin",
+  "type": "property-approved",
+  "isRead": true,
+  "relatedId": {
+    "$oid": "69fc8950ad8138d12d446ef1"
+  },
+  "relatedModel": "Property",
+  "redirectUrl": "/owner/properties",
+  "createdAt": {
+    "$date": "2026-05-15T07:04:31.737Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-15T11:53:10.049Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0808ac3d2751b7c5bfaafe"
+  },
+  "user": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "title": "New Property Booking Request",
+  "message": "Aaliya Shaikh added a new Property Booking Request",
+  "type": "booking",
+  "isRead": true,
+  "relatedId": {
+    "$oid": "6a0808ac3d2751b7c5bfaafc"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-16T06:03:24.747Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:34:20.780Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0809453d2751b7c5bfab0d"
+  },
+  "user": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "title": "New Property Booking Request",
+  "message": "Aaliya Shaikh added a new Property Booking Request",
+  "type": "booking",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a0809453d2751b7c5bfab0b"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-16T06:05:57.849Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T06:05:57.849Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a080a943d2751b7c5bfab22"
+  },
+  "user": {
+    "$oid": "69eafab7d06a2e245a9d56e7"
+  },
+  "title": "New Property Booking Request",
+  "message": "Aaliya Shaikh added a new Property Booking Request",
+  "type": "booking",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a080a943d2751b7c5bfab20"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-16T06:11:32.834Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T06:11:32.834Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a080b0c3d2751b7c5bfab37"
+  },
+  "user": {
+    "$oid": "69eafab7d06a2e245a9d56e7"
+  },
+  "title": "New Property Booking Request",
+  "message": "Aaliya Shaikh added a new Property Booking Request",
+  "type": "booking",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a080b0c3d2751b7c5bfab35"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-16T06:13:32.794Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T06:13:32.794Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a080c453d2751b7c5bfab7b"
+  },
+  "user": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "title": "New Amenity Booking Request",
+  "message": "Aaliya Shaikh added a new amenity booking request",
+  "type": "amenity-booking",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a080c453d2751b7c5bfab79"
+  },
+  "relatedModel": "AmenityBooking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-16T06:18:45.279Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T06:18:45.279Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a08629e1a225b2eb47b00be"
+  },
+  "user": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "title": "New Amenity Booking Request",
+  "message": "Aaliya Shaikh added a new amenity booking request",
+  "type": "amenity-booking",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a08629e1a225b2eb47b00bc"
+  },
+  "relatedModel": "AmenityBooking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-16T12:27:10.296Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:27:10.296Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0863231a225b2eb47b00d2"
+  },
+  "user": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "title": "New Amenity Booking Request",
+  "message": "Aaliya Shaikh added a new amenity booking request",
+  "type": "amenity-booking",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a0863231a225b2eb47b00d0"
+  },
+  "relatedModel": "AmenityBooking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-16T12:29:23.437Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:29:23.437Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0864b51a225b2eb47b0125"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "title": "Booking Approved",
+  "message": "Your property booking request has been approved",
+  "type": "booking-approved",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a0809453d2751b7c5bfab0b"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/tenant/bookings",
+  "createdAt": {
+    "$date": "2026-05-16T12:36:05.260Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:36:05.260Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0864b81a225b2eb47b0129"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "title": "Booking Approved",
+  "message": "Your property booking request has been approved",
+  "type": "booking-approved",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a0808ac3d2751b7c5bfaafc"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/tenant/bookings",
+  "createdAt": {
+    "$date": "2026-05-16T12:36:08.657Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:36:08.657Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0864c41a225b2eb47b0132"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "title": "Booking Approved",
+  "message": "Your property booking request has been approved",
+  "type": "amenityBooking-approved",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a0863231a225b2eb47b00d0"
+  },
+  "relatedModel": "AmenityBooking",
+  "redirectUrl": "/tenant/bookings",
+  "createdAt": {
+    "$date": "2026-05-16T12:36:20.652Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:36:20.652Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0864c61a225b2eb47b0136"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "title": "Booking Approved",
+  "message": "Your property booking request has been approved",
+  "type": "amenityBooking-approved",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a08629e1a225b2eb47b00bc"
+  },
+  "relatedModel": "AmenityBooking",
+  "redirectUrl": "/tenant/bookings",
+  "createdAt": {
+    "$date": "2026-05-16T12:36:22.387Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:36:22.387Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0864f41a225b2eb47b0158"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "title": "Booking Approved",
+  "message": "Your property booking request has been approved",
+  "type": "booking-approved",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a080b0c3d2751b7c5bfab35"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/tenant/bookings",
+  "createdAt": {
+    "$date": "2026-05-16T12:37:08.199Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:37:08.199Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0864f51a225b2eb47b015c"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "title": "Booking Approved",
+  "message": "Your property booking request has been approved",
+  "type": "booking-approved",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a080a943d2751b7c5bfab20"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/tenant/bookings",
+  "createdAt": {
+    "$date": "2026-05-16T12:37:09.793Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:37:09.793Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0865601a225b2eb47b0180"
+  },
+  "user": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "title": "New Maintenance",
+  "message": "Aaliya Shaikh added a new maintenance",
+  "type": "maintenance",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a0865601a225b2eb47b017d"
+  },
+  "relatedModel": "Maintenance",
+  "redirectUrl": "/owner/maintenance",
+  "createdAt": {
+    "$date": "2026-05-16T12:38:56.690Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:38:56.690Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0866c31a225b2eb47b01b9"
+  },
+  "user": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "title": "New Property Booking Request",
+  "message": "Hetal Shah added a new Property Booking Request",
+  "type": "booking",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a0866c31a225b2eb47b01b7"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-16T12:44:51.895Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:44:51.895Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0867791a225b2eb47b0216"
+  },
+  "user": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "title": "New Amenity Booking Request",
+  "message": "Hetal Shah added a new amenity booking request",
+  "type": "amenity-booking",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a0867791a225b2eb47b0214"
+  },
+  "relatedModel": "AmenityBooking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-16T12:47:53.547Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:47:53.547Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a086e904b521dbbc02eb4a3"
+  },
+  "user": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "title": "New Maintenance",
+  "message": "Aaliya Shaikh added a new maintenance",
+  "type": "maintenance",
+  "isRead": true,
+  "relatedId": {
+    "$oid": "6a086e904b521dbbc02eb4a0"
+  },
+  "relatedModel": "Maintenance",
+  "redirectUrl": "/owner/maintenance",
+  "createdAt": {
+    "$date": "2026-05-16T13:18:08.409Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T17:42:38.617Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0870194b521dbbc02eb54f"
+  },
+  "user": {
+    "$oid": "69e25f46e6555130cc7c3616"
+  },
+  "title": "Booking Approved",
+  "message": "Your property booking request has been approved",
+  "type": "booking-approved",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a0866c31a225b2eb47b01b7"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/tenant/bookings",
+  "createdAt": {
+    "$date": "2026-05-16T13:24:41.401Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T13:24:41.401Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a08701a4b521dbbc02eb553"
+  },
+  "user": {
+    "$oid": "69e25f46e6555130cc7c3616"
+  },
+  "title": "Booking Approved",
+  "message": "Your property booking request has been approved",
+  "type": "amenityBooking-approved",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a0867791a225b2eb47b0214"
+  },
+  "relatedModel": "AmenityBooking",
+  "redirectUrl": "/tenant/bookings",
+  "createdAt": {
+    "$date": "2026-05-16T13:24:42.808Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T13:24:42.808Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a08703f4b521dbbc02eb572"
+  },
+  "user": {
+    "$oid": "69efb27e31bee22b4eb491fa"
+  },
+  "title": "New Maintenance Assigned",
+  "message": "You have been assigned a maintenance task: Cleaner",
+  "type": "maintenance-assigned",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a086e904b521dbbc02eb4a0"
+  },
+  "relatedModel": "Maintenance",
+  "redirectUrl": "/staff/maintenance",
+  "createdAt": {
+    "$date": "2026-05-16T13:25:19.439Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T13:25:19.439Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a08703f4b521dbbc02eb574"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "title": "Maintenance Assigned",
+  "message": "Your maintenance request \"Cleaner\" has been assigned",
+  "type": "maintenance-update",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a086e904b521dbbc02eb4a0"
+  },
+  "relatedModel": "Maintenance",
+  "redirectUrl": "/tenant/maintenance",
+  "createdAt": {
+    "$date": "2026-05-16T13:25:19.441Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T13:25:19.441Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a08717f4b521dbbc02eb635"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "title": "Maintenance Completed",
+  "message": "Your maintenance request \"Cleaner\" has been completed",
+  "type": "maintenance-completed",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a086e904b521dbbc02eb4a0"
+  },
+  "relatedModel": "Maintenance",
+  "redirectUrl": "/tenant/maintenance",
+  "createdAt": {
+    "$date": "2026-05-16T13:30:39.346Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T13:30:39.346Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0871a54b521dbbc02eb65a"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "title": "Maintenance Completed",
+  "message": "Your maintenance request \"Cleaner\" has been completed",
+  "type": "maintenance-completed",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a086e904b521dbbc02eb4a0"
+  },
+  "relatedModel": "Maintenance",
+  "redirectUrl": "/tenant/maintenance",
+  "createdAt": {
+    "$date": "2026-05-16T13:31:17.901Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T13:31:17.901Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a08c3c82e2d12d3db2cf789"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "title": "Booking Rejected",
+  "message": "Your property booking request has been rejected",
+  "type": "booking-rejected",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a0808ac3d2751b7c5bfaafc"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/tenant/bookings",
+  "createdAt": {
+    "$date": "2026-05-16T19:21:44.256Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T19:21:44.256Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0966456949494d6bf27f4e"
+  },
+  "user": {
+    "$oid": "69eafab7d06a2e245a9d56e7"
+  },
+  "title": "Booking cancelled",
+  "message": "Booking has been cancelled",
+  "type": "booking-cancelled",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a080a943d2751b7c5bfab20"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-17T06:55:01.970Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T06:55:01.970Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a09672c6949494d6bf27fd4"
+  },
+  "user": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "title": "Amenity Booking cancelled",
+  "message": "Booking has been cancelled",
+  "type": "amenityBooking-cancelled",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a08629e1a225b2eb47b00bc"
+  },
+  "relatedModel": "AmenityBooking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-17T06:58:52.126Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T06:58:52.126Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a096c0ed68c4a68ef6a9c2e"
+  },
+  "user": {
+    "$oid": "69eafab7d06a2e245a9d56e7"
+  },
+  "title": "New Property Booking Request",
+  "message": "Aaliya Shaikh added a new Property Booking Request",
+  "type": "booking",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a096c0ed68c4a68ef6a9c2c"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/owner/bookings-request",
+  "createdAt": {
+    "$date": "2026-05-17T07:19:42.106Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T07:19:42.106Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a096c3dd68c4a68ef6a9c7d"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "title": "Booking approved",
+  "message": "Booking has been approved",
+  "type": "booking-approved",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a096c0ed68c4a68ef6a9c2c"
+  },
+  "relatedModel": "Booking",
+  "redirectUrl": "/tenant/bookings",
+  "createdAt": {
+    "$date": "2026-05-17T07:20:29.892Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T07:20:29.892Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a09b2dbb4ec13ae0b6ffd2b"
+  },
+  "user": {
+    "$oid": "69a3116bebe68000ecb2642e"
+  },
+  "title": "New Property Request",
+  "message": "Krupa Patel  added a new property",
+  "type": "property-request",
+  "isRead": false,
+  "relatedId": {
+    "$oid": "6a09b2dbb4ec13ae0b6ffd29"
+  },
+  "relatedModel": "Property",
+  "redirectUrl": "/admin/properties-requests",
+  "createdAt": {
+    "$date": "2026-05-17T12:21:47.718Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T12:21:47.718Z"
+  },
+  "__v": 0
+}]

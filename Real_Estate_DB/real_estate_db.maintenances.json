@@ -1,0 +1,102 @@
+[{
+  "_id": {
+    "$oid": "6a086e904b521dbbc02eb4a0"
+  },
+  "property": {
+    "$oid": "69eaf30aaaef008138085c0c"
+  },
+  "amenity": null,
+  "tenant": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "assignedTo": {
+    "$oid": "69efb27e31bee22b4eb491fa"
+  },
+  "title": "Cleaner",
+  "description": "Cleanner",
+  "status": "completed",
+  "priority": "medium",
+  "updates": [
+    {
+      "message": "Maintenance request created",
+      "status": "pending",
+      "updatedBy": {
+        "$oid": "69da17151a2d6fd4f8bf0901"
+      },
+      "_id": {
+        "$oid": "6a086e904b521dbbc02eb4a1"
+      },
+      "createdAt": {
+        "$date": "2026-05-16T13:18:08.393Z"
+      }
+    },
+    {
+      "message": "Assigned to staff",
+      "status": "assigned",
+      "updatedBy": {
+        "$oid": "69d92e5614471dabc64fb7ff"
+      },
+      "_id": {
+        "$oid": "6a08703f4b521dbbc02eb570"
+      },
+      "createdAt": {
+        "$date": "2026-05-16T13:25:19.427Z"
+      }
+    },
+    {
+      "message": "Work started",
+      "status": "in-progress",
+      "updatedBy": {
+        "$oid": "69efb27e31bee22b4eb491fa"
+      },
+      "_id": {
+        "$oid": "6a08717f4b521dbbc02eb633"
+      },
+      "createdAt": {
+        "$date": "2026-05-16T13:30:39.341Z"
+      }
+    },
+    {
+      "message": "Work completed",
+      "status": "completed",
+      "updatedBy": {
+        "$oid": "69efb27e31bee22b4eb491fa"
+      },
+      "_id": {
+        "$oid": "6a0871a54b521dbbc02eb658"
+      },
+      "createdAt": {
+        "$date": "2026-05-16T13:31:17.898Z"
+      }
+    }
+  ],
+  "proofImages": [
+    {
+      "url": "uploads/properties/1778938263803-vilaa3.jpg",
+      "status": "in-progress",
+      "_id": {
+        "$oid": "6a0871974b521dbbc02eb641"
+      },
+      "uploadedAt": {
+        "$date": "2026-05-16T13:31:03.869Z"
+      }
+    },
+    {
+      "url": "uploads/properties/1778938277877-Villa_security.webp",
+      "status": "completed",
+      "_id": {
+        "$oid": "6a0871a54b521dbbc02eb64f"
+      },
+      "uploadedAt": {
+        "$date": "2026-05-16T13:31:17.882Z"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-05-16T13:18:08.400Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T13:31:17.899Z"
+  },
+  "__v": 5
+}]

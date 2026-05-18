@@ -1,0 +1,539 @@
+[{
+  "_id": {
+    "$oid": "69eaf30aaaef008138085c0c"
+  },
+  "title": "2BHK Fully Furnished Apartment in City Center",
+  "address": "MG Road",
+  "price": 12000,
+  "paymentFrequency": "monthly",
+  "category": "residential",
+  "listingType": "rent",
+  "bedrooms": 2,
+  "bathrooms": 1,
+  "furnishing": "Furnished",
+  "floor": 3,
+  "totalFloors": 10,
+  "units": 10,
+  "occupied": 5,
+  "images": [
+    "uploads\\properties\\1777011469231-Apartment.jpeg",
+    "uploads\\properties\\1777011469232-apartment_inner2.jpeg",
+    "uploads\\properties\\1777011469233-Aprt_inner.jpeg",
+    "uploads\\properties\\1777011469233-aprt_parking.jpeg",
+    "uploads\\properties\\1777011469233-lift.jpeg"
+  ],
+  "status": "available",
+  "owner": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "createdAt": {
+    "$date": "2026-04-24T04:35:22.031Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T12:22:09.831Z"
+  },
+  "__v": 0,
+  "amenities": {
+    "lift": true,
+    "gym": false,
+    "security": false,
+    "wifi": false
+  },
+  "area": 1200,
+  "availableFrom": {
+    "$date": "2026-04-13T00:00:00.000Z"
+  },
+  "city": " Ahnemdabad",
+  "deposit": 36000,
+  "description": "best for",
+  "parking": true,
+  "propertyType": "Apartment",
+  "state": "Gujarat",
+  "zipcode": 123455,
+  "approvalStatus": "approved",
+  "country": "India"
+},
+{
+  "_id": {
+    "$oid": "69eafcf7d06a2e245a9d5708"
+  },
+  "title": "3BHK Family Apartment Near SG Highway",
+  "description": "Spacious 3BHK apartment ideal for families, close to schools and malls",
+  "address": "123 Main Street, Los Angeles, CA",
+  "city": " Ahnemdabad",
+  "price": 25000,
+  "deposit": 75000,
+  "paymentFrequency": "monthly",
+  "category": "residential",
+  "propertyType": "Apartment",
+  "listingType": "rent",
+  "bedrooms": 3,
+  "bathrooms": 2,
+  "area": 1200,
+  "furnishing": "Semi-Furnished",
+  "floor": 5,
+  "totalFloors": 10,
+  "parking": true,
+  "units": 8,
+  "occupied": 5,
+  "images": [
+    "uploads\\properties\\1777030383040-Apartment.jpeg",
+    "uploads\\properties\\1777030383040-apartment_inner2.jpeg",
+    "uploads\\properties\\1777030383040-Aprt_inner.jpeg",
+    "uploads\\properties\\1777030383040-aprt_parking.jpeg",
+    "uploads\\properties\\1777030383040-lift.jpeg"
+  ],
+  "status": "maintenance",
+  "availableFrom": {
+    "$date": "2026-04-30T00:00:00.000Z"
+  },
+  "owner": {
+    "$oid": "69eafab7d06a2e245a9d56e7"
+  },
+  "createdAt": {
+    "$date": "2026-04-24T05:17:43.970Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-08T18:38:28.477Z"
+  },
+  "__v": 0,
+  "amenities": {
+    "lift": true,
+    "gym": false,
+    "security": false,
+    "wifi": false
+  },
+  "approvalStatus": "approved",
+  "state": "Gujarat",
+  "zipcode": 124578
+},
+{
+  "_id": {
+    "$oid": "69eb538a31a2d00c9f2cabc0"
+  },
+  "title": "Luxury 4BHK Villa with Garden",
+  "description": "Premium villa with private garden and parking",
+  "address": "Bopal, Near Club Area",
+  "city": " Ahnemdabad",
+  "price": 75000,
+  "deposit": 200000,
+  "paymentFrequency": "monthly",
+  "category": "residential",
+  "propertyType": "Villa",
+  "listingType": "rent",
+  "bedrooms": 4,
+  "bathrooms": 4,
+  "area": 3000,
+  "furnishing": "Furnished",
+  "floor": 2,
+  "totalFloors": 2,
+  "parking": true,
+  "units": 2,
+  "occupied": 1,
+  "images": [
+    "uploads\\properties\\1777030026873-villa2.jpeg",
+    "uploads\\properties\\1777030026875-Villa_security.webp",
+    "uploads\\properties\\1777030026877-villa-parking.jpg"
+  ],
+  "status": "available",
+  "availableFrom": {
+    "$date": "2026-04-13T00:00:00.000Z"
+  },
+  "owner": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "createdAt": {
+    "$date": "2026-04-24T11:27:06.896Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T12:23:05.802Z"
+  },
+  "__v": 0,
+  "approvalStatus": "approved",
+  "amenities": {
+    "lift": false,
+    "gym": false,
+    "security": false,
+    "wifi": false
+  },
+  "country": "India",
+  "state": "Gujarat",
+  "zipcode": 457880
+},
+{
+  "_id": {
+    "$oid": "69eb562c31a2d00c9f2cabda"
+  },
+  "title": "City Center Shop",
+  "description": "Prime location shop for business",
+  "address": "MG Road",
+  "city": "Junagadh",
+  "price": 30000,
+  "deposit": 60000,
+  "paymentFrequency": "monthly",
+  "category": "commercial",
+  "propertyType": "Shop",
+  "listingType": "rent",
+  "bedrooms": 0,
+  "bathrooms": 0,
+  "area": 1000,
+  "furnishing": "Unfurnished",
+  "floor": 1,
+  "totalFloors": 4,
+  "parking": true,
+  "units": 20,
+  "occupied": 10,
+  "images": [
+    "uploads\\properties\\1777030700111-lift.jpeg",
+    "uploads\\properties\\1777030700111-aprt_parking.jpeg"
+  ],
+  "status": "maintenance",
+  "availableFrom": {
+    "$date": "2026-04-30T00:00:00.000Z"
+  },
+  "owner": {
+    "$oid": "69eafab7d06a2e245a9d56e7"
+  },
+  "createdAt": {
+    "$date": "2026-04-24T11:38:20.119Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-15T12:07:15.126Z"
+  },
+  "__v": 0,
+  "amenities": {
+    "lift": true,
+    "gym": false,
+    "security": false,
+    "wifi": false
+  },
+  "approvalStatus": "approved",
+  "state": "Gujarat",
+  "zipcode": 234577
+},
+{
+  "_id": {
+    "$oid": "69ee5c3a935b89bda055c67f"
+  },
+  "title": "Satyam Party Plot",
+  "description": "Spacious party plot for weddings & events",
+  "address": "Mangnath Road, Zanzarda Chokdi",
+  "city": "Junagadh",
+  "price": 10000,
+  "deposit": 5000,
+  "paymentFrequency": "daily",
+  "category": "commercial",
+  "propertyType": "others",
+  "listingType": "rent",
+  "bedrooms": 7,
+  "bathrooms": 5,
+  "area": 5000,
+  "furnishing": "Furnished",
+  "floor": 2,
+  "totalFloors": 5,
+  "parking": true,
+  "units": 1,
+  "occupied": 0,
+  "images": [
+    "uploads\\properties\\1777228858122-party_plot.jpeg",
+    "uploads\\properties\\1777228858124-partyplot.jpeg",
+    "uploads\\properties\\1777228858124-party-plot.jpg"
+  ],
+  "status": "available",
+  "availableFrom": {
+    "$date": "2026-04-27T00:00:00.000Z"
+  },
+  "owner": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "createdAt": {
+    "$date": "2026-04-26T18:40:58.148Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T12:23:16.779Z"
+  },
+  "__v": 0,
+  "amenities": {
+    "lift": false,
+    "gym": false,
+    "security": false,
+    "wifi": false
+  },
+  "approvalStatus": "approved",
+  "state": "Gujarat",
+  "zipcode": 362259,
+  "country": "India"
+},
+{
+  "_id": {
+    "$oid": "69fc8950ad8138d12d446ef1"
+  },
+  "title": " Luxury Lakeview Villa",
+  "description": " Spacious 4BHK luxury villa with private garden, swimming pool, modern interiors, modular kitchen, parking space, and beautiful lake-facing balcony. Located in a peaceful gated community with 24/7 security and nearby shopping facilities.",
+  "address": "Palm Greens Residency, Near SG Highway",
+  "city": " Ahnemdabad",
+  "price": 85000,
+  "deposit": 70000,
+  "paymentFrequency": "monthly",
+  "category": "residential",
+  "propertyType": "Villa",
+  "listingType": "rent",
+  "bedrooms": 4,
+  "bathrooms": 4,
+  "area": 3200,
+  "furnishing": "Furnished",
+  "floor": 2,
+  "totalFloors": 3,
+  "parking": true,
+  "units": 5,
+  "occupied": 2,
+  "images": [
+    "uploads\\properties\\1778828550727-vilaa4.jpeg",
+    "uploads\\properties\\1778828550728-villa2.jpeg",
+    "uploads\\properties\\1778828550728-Villa_security.webp",
+    "uploads\\properties\\1778828550731-villa-parking.jpg"
+  ],
+  "status": "available",
+  "availableFrom": {
+    "$date": "2026-05-01T00:00:00.000Z"
+  },
+  "owner": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "createdAt": {
+    "$date": "2026-05-07T12:45:04.902Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T12:23:32.096Z"
+  },
+  "__v": 0,
+  "approvalStatus": "approved",
+  "amenities": {
+    "lift": false,
+    "gym": true,
+    "security": true,
+    "wifi": false
+  },
+  "state": "Gujarat",
+  "zipcode": 380054,
+  "approvedAt": {
+    "$date": "2026-05-15T07:04:31.722Z"
+  },
+  "country": "India"
+},
+{
+  "_id": {
+    "$oid": "69fc9768aa6e147de23b564a"
+  },
+  "title": "Royal Palm Family House",
+  "description": " Spacious 3BHK independent house with parking, security, and modern interiors",
+  "propertyType": "House",
+  "address": "12 Green Avenue, Near City Mall",
+  "city": "Surat",
+  "price": 25000,
+  "deposit": 50000,
+  "paymentFrequency": "monthly",
+  "category": "residential",
+  "listingType": "rent",
+  "bedrooms": 3,
+  "bathrooms": 2,
+  "area": 1800,
+  "furnishing": "Semi-Furnished",
+  "floor": 1,
+  "totalFloors": 2,
+  "parking": true,
+  "units": 1,
+  "occupied": 0,
+  "images": [
+    "uploads\\properties\\1778242354772-vilaa_swiming.jpg",
+    "uploads\\properties\\1778242354797-villa-parking.jpg"
+  ],
+  "status": "available",
+  "availableFrom": {
+    "$date": "2026-05-10T00:00:00.000Z"
+  },
+  "owner": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "createdAt": {
+    "$date": "2026-05-07T13:45:12.507Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T12:23:48.374Z"
+  },
+  "__v": 0,
+  "amenities": {
+    "lift": false,
+    "gym": false,
+    "security": false,
+    "wifi": false
+  },
+  "state": "hgghg",
+  "zipcode": 395007,
+  "approvalStatus": "approved",
+  "country": "India"
+},
+{
+  "_id": {
+    "$oid": "69fe29671edbc059a2dd5037"
+  },
+  "title": "Royal Heritage Villa",
+  "description": "Elegant 5BHK villa located in the premium area of Surat with luxurious interiors, spacious living room, home theater, landscaped garden, private terrace, and smart home features. Perfect for families looking for comfort and modern lifestyle.",
+  "propertyType": "Villa",
+  "address": "Green Valley Estate, Vesu",
+  "city": "Surat",
+  "state": "Gujarat",
+  "zipcode": 395007,
+  "price": 120000,
+  "deposit": 90000,
+  "paymentFrequency": "monthly",
+  "category": "residential",
+  "listingType": "rent",
+  "bedrooms": 5,
+  "bathrooms": 5,
+  "area": 4500,
+  "furnishing": "Semi-Furnished",
+  "floor": 1,
+  "totalFloors": 2,
+  "parking": true,
+  "units": 7,
+  "occupied": 4,
+  "images": [
+    "uploads\\properties\\1778828979420-vilaa5.avif",
+    "uploads\\properties\\1778828979420-villa-parking.jpg"
+  ],
+  "status": "available",
+  "availableFrom": {
+    "$date": "2026-05-10T00:00:00.000Z"
+  },
+  "approvalStatus": "approved",
+  "owner": {
+    "$oid": "69eafab7d06a2e245a9d56e7"
+  },
+  "createdAt": {
+    "$date": "2026-05-08T18:20:23.603Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-15T07:09:39.426Z"
+  },
+  "__v": 0,
+  "approvedAt": {
+    "$date": "2026-05-11T06:37:46.835Z"
+  },
+  "amenities": {
+    "lift": false,
+    "gym": true,
+    "security": true,
+    "wifi": false
+  }
+},
+{
+  "_id": {
+    "$oid": "69fe2c0cf55a252b44a37146"
+  },
+  "title": "Modern Family House",
+  "description": "Beautiful 3BHK independent house located in a peaceful residential area with spacious rooms, modular kitchen, private parking, garden space, and excellent connectivity to schools, hospitals, and shopping centers.",
+  "propertyType": "House",
+  "address": "Shiv Residency, Vaishnodevi Circle",
+  "city": "Rajkot",
+  "state": "Gujarat",
+  "zipcode": 360005,
+  "price": 45000,
+  "deposit": 75000,
+  "paymentFrequency": "monthly",
+  "category": "residential",
+  "listingType": "rent",
+  "bedrooms": 3,
+  "bathrooms": 2,
+  "area": null,
+  "furnishing": "Semi-Furnished",
+  "floor": null,
+  "totalFloors": null,
+  "parking": true,
+  "units": 13,
+  "occupied": 3,
+  "images": [
+    "uploads\\properties\\1778829427247-house.jpeg",
+    "uploads\\properties\\1778829427248-inhous.avif"
+  ],
+  "status": "available",
+  "availableFrom": {
+    "$date": "2026-05-10T00:00:00.000Z"
+  },
+  "approvalStatus": "approved",
+  "owner": {
+    "$oid": "69eafab7d06a2e245a9d56e7"
+  },
+  "createdAt": {
+    "$date": "2026-05-08T18:31:40.209Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-15T07:17:07.255Z"
+  },
+  "__v": 0,
+  "approvedAt": {
+    "$date": "2026-05-09T18:24:19.841Z"
+  },
+  "amenities": {
+    "lift": false,
+    "gym": false,
+    "security": false,
+    "wifi": false
+  }
+},
+{
+  "_id": {
+    "$oid": "69ff7d28437795e9ab6c399d"
+  },
+  "title": "Skyline Heights Apartment",
+  "description": "Modern 2BHK apartment with stylish interiors, spacious bedrooms, modular kitchen, attached balcony, and excellent ventilation. Located in a premium residential tower with lift, security, gym, and nearby metro connectivity.",
+  "propertyType": "Apartment",
+  "address": "Riverfront Residency, Paldi",
+  "city": "Vadodara",
+  "state": "Gujarat",
+  "zipcode": 390007,
+  "price": 32000,
+  "deposit": 50000,
+  "paymentFrequency": "monthly",
+  "category": "residential",
+  "listingType": "rent",
+  "bedrooms": 2,
+  "bathrooms": 2,
+  "area": 1350,
+  "furnishing": "Furnished",
+  "floor": 5,
+  "totalFloors": 10,
+  "parking": true,
+  "units": 10,
+  "occupied": 3,
+  "images": [
+    "uploads\\properties\\1778829680916-Apartment.jpeg",
+    "uploads\\properties\\1778829680916-apartment_inner2.jpeg",
+    "uploads\\properties\\1778829680917-Aprt_inner.jpeg",
+    "uploads\\properties\\1778829680917-aprt_parking.jpeg"
+  ],
+  "status": "available",
+  "availableFrom": {
+    "$date": "2026-05-10T00:00:00.000Z"
+  },
+  "approvalStatus": "approved",
+  "owner": {
+    "$oid": "69eafab7d06a2e245a9d56e7"
+  },
+  "createdAt": {
+    "$date": "2026-05-09T18:30:00.336Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-15T07:21:20.923Z"
+  },
+  "__v": 0,
+  "approvedAt": {
+    "$date": "2026-05-09T18:35:30.467Z"
+  },
+  "amenities": {
+    "lift": true,
+    "gym": false,
+    "security": true,
+    "wifi": false
+  }
+}]

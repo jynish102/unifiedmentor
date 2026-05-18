@@ -1,0 +1,162 @@
+[{
+  "_id": {
+    "$oid": "6a0808ac3d2751b7c5bfaafc"
+  },
+  "property": {
+    "$oid": "69eaf30aaaef008138085c0c"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "startDate": {
+    "$date": "2026-05-16T00:00:00.000Z"
+  },
+  "endDate": {
+    "$date": "2026-06-15T00:00:00.000Z"
+  },
+  "rentAmount": 12000,
+  "status": "cancelled",
+  "paymentStatus": "pending",
+  "createdAt": {
+    "$date": "2026-05-16T06:03:24.625Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T19:21:44.230Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0809453d2751b7c5bfab0b"
+  },
+  "property": {
+    "$oid": "69eb538a31a2d00c9f2cabc0"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "startDate": {
+    "$date": "2026-06-01T00:00:00.000Z"
+  },
+  "endDate": {
+    "$date": "2026-09-01T00:00:00.000Z"
+  },
+  "rentAmount": 75000,
+  "status": "cancelled",
+  "paymentStatus": "pending",
+  "createdAt": {
+    "$date": "2026-05-16T06:05:57.847Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T06:48:31.790Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a080a943d2751b7c5bfab20"
+  },
+  "property": {
+    "$oid": "69ff7d28437795e9ab6c399d"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "startDate": {
+    "$date": "2026-09-15T00:00:00.000Z"
+  },
+  "endDate": {
+    "$date": "2026-11-28T00:00:00.000Z"
+  },
+  "rentAmount": 32000,
+  "status": "cancelled",
+  "paymentStatus": "pending",
+  "createdAt": {
+    "$date": "2026-05-16T06:11:32.832Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T06:55:01.951Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a080b0c3d2751b7c5bfab35"
+  },
+  "property": {
+    "$oid": "69fe2c0cf55a252b44a37146"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "startDate": {
+    "$date": "2026-12-21T00:00:00.000Z"
+  },
+  "endDate": {
+    "$date": "2027-02-10T00:00:00.000Z"
+  },
+  "rentAmount": 45000,
+  "status": "approved",
+  "paymentStatus": "pending",
+  "createdAt": {
+    "$date": "2026-05-16T06:13:32.793Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:37:08.196Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0866c31a225b2eb47b01b7"
+  },
+  "property": {
+    "$oid": "69fc9768aa6e147de23b564a"
+  },
+  "user": {
+    "$oid": "69e25f46e6555130cc7c3616"
+  },
+  "startDate": {
+    "$date": "2026-12-12T00:00:00.000Z"
+  },
+  "endDate": {
+    "$date": "2027-04-22T00:00:00.000Z"
+  },
+  "rentAmount": 25000,
+  "status": "approved",
+  "paymentStatus": "pending",
+  "createdAt": {
+    "$date": "2026-05-16T12:44:51.890Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T13:24:41.376Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a096c0ed68c4a68ef6a9c2c"
+  },
+  "property": {
+    "$oid": "69ff7d28437795e9ab6c399d"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "startDate": {
+    "$date": "2027-02-17T00:00:00.000Z"
+  },
+  "endDate": {
+    "$date": "2027-08-23T00:00:00.000Z"
+  },
+  "rentAmount": 32000,
+  "status": "approved",
+  "paymentStatus": "pending",
+  "createdAt": {
+    "$date": "2026-05-17T07:19:42.097Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T07:20:29.885Z"
+  },
+  "__v": 0
+}]

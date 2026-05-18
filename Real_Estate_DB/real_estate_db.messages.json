@@ -1,0 +1,50 @@
+[{
+  "_id": {
+    "$oid": "6a086f274b521dbbc02eb4d7"
+  },
+  "sender": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "receiver": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "property": {
+    "$oid": "69eaf30aaaef008138085c0c"
+  },
+  "subject": "Can we Meet?",
+  "message": "For Some Property Issue Can we meet? where Are u Free?",
+  "type": "tenant-to-owner",
+  "status": "unread",
+  "createdAt": {
+    "$date": "2026-05-16T13:20:39.801Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T13:20:39.801Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0870704b521dbbc02eb58f"
+  },
+  "sender": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "receiver": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "property": {
+    "$oid": "69eb538a31a2d00c9f2cabc0"
+  },
+  "subject": "for meeting",
+  "message": "Ohh Really sorry. I see Your Messsge ..",
+  "type": "owner-to-tenant",
+  "status": "unread",
+  "createdAt": {
+    "$date": "2026-05-16T13:26:08.744Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T13:26:08.744Z"
+  },
+  "__v": 0
+}]

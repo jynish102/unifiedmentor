@@ -1,0 +1,141 @@
+[{
+  "_id": {
+    "$oid": "69a3116bebe68000ecb2642e"
+  },
+  "fullname": "Admin",
+  "email": "admin@gmail.com",
+  "phone": "1234567890",
+  "role": "admin",
+  "password": "$2b$10$UWroz5TCjErGlV65tPgflOy9n1JRxuwPkp.C6RLocoQRzMLRQu7Hq",
+  "createdAt": {
+    "$date": "2026-02-28T16:01:47.951Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-07T17:54:37.623Z"
+  },
+  "__v": 0,
+  "isActive": true,
+  "profileImage": "uploads/profile/1778176477608-profile_boy.png"
+},
+{
+  "_id": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "fullname": "Krupa Patel ",
+  "email": "krupap34@gmail.com",
+  "phone": "2345678913",
+  "role": "owner",
+  "password": "$2b$10$1FQaM5DU2NAcpoQ8/dMQDes.7OhUbBhAnP5TyDCHNUJ88MpRRZ19a",
+  "createdAt": {
+    "$date": "2026-04-10T17:07:34.885Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T18:58:49.076Z"
+  },
+  "__v": 0,
+  "profileImage": "uploads/profile/1778957929059-default_girl.avif",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "fullname": "Aaliya Shaikh",
+  "email": "aliyas45@gmail.com",
+  "phone": "3456789012",
+  "role": "tenant",
+  "password": "$2b$10$70I2cHFnRnehlj/24ztL/uXjfQEGxPfot90ovl0aKYMekEE8uVt2K",
+  "createdAt": {
+    "$date": "2026-04-11T09:40:37.050Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T19:02:26.504Z"
+  },
+  "__v": 0,
+  "profileImage": "uploads/profile/1778958146485-default_girl.avif",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "69e25f46e6555130cc7c3616"
+  },
+  "fullname": "Hetal Shah",
+  "email": "hetals46@gmail.com",
+  "phone": "7894561230",
+  "role": "tenant",
+  "password": "$2b$10$ExSC5J.9nIQf4ysZIz7SBeni8eIIk66cpr8SrG9Wl9BFsuFfcorg6",
+  "createdAt": {
+    "$date": "2026-04-17T16:26:46.332Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-08T17:19:31.886Z"
+  },
+  "__v": 0,
+  "profileImage": "uploads/profile/1776709110039-75772.jpg",
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "69eafab7d06a2e245a9d56e7"
+  },
+  "fullname": "Dhruv Patel",
+  "email": "dhruvp35@gmail.com",
+  "phone": "7256897512",
+  "role": "owner",
+  "password": "$2b$10$jYVRwD9Hm1ITinlb7svzUOd1NgQ5Dn2M5X10JnhP.WSm7ulvegglq",
+  "profileImage": "uploads/profile/1777007827596-profile_boy.png",
+  "createdAt": {
+    "$date": "2026-04-24T05:08:07.170Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-24T05:17:07.605Z"
+  },
+  "__v": 0,
+  "isActive": true
+},
+{
+  "_id": {
+    "$oid": "69efb27e31bee22b4eb491fa"
+  },
+  "fullname": "Riddhi Desai",
+  "email": "riddhid@gmail.com",
+  "phone": "8978895646",
+  "role": "staff",
+  "password": "$2b$10$CWeK0t/Cm0/YMkOVYjxxMudkdnC5VGOMoLjGilnwbfseCwcu9.jqO",
+  "profileImage": "uploads/profile/1777401381868-default_girl.avif",
+  "owner": {
+    "$oid": "69d92e5614471dabc64fb7ff"
+  },
+  "isActive": true,
+  "specialization": "Cleaner",
+  "createdAt": {
+    "$date": "2026-04-27T19:01:18.719Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-04T13:45:51.520Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69f1004f94abd9eb7a31d473"
+  },
+  "fullname": "Kunal Mehta",
+  "email": "kunalm13@gmail.com",
+  "phone": "8789565412",
+  "role": "staff",
+  "password": "$2b$10$UPjsx/E1Ol/xREPDrrr7bOZxpG009a87tcUbzrR3ldNz3aharLlB.",
+  "profileImage": "",
+  "owner": {
+    "$oid": "69eafab7d06a2e245a9d56e7"
+  },
+  "isActive": true,
+  "specialization": "Electrician ",
+  "createdAt": {
+    "$date": "2026-04-28T18:45:35.385Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-15T06:42:55.476Z"
+  },
+  "__v": 0
+}]

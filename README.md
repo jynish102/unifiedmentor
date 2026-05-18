@@ -11,6 +11,9 @@ Backend :
 DB :
 • MongoDB
 
+# For Frountend run : Your Dirve:\Unifiedmentor\unifiedmentor\uni_realestate>npm run dev
+# For Backend Run : Your Drive:\Unifiedmentor\unifiedmentor\server>node server.js
+
 # Project Overview
 
 1.) Features

@@ -20,7 +20,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
 
-//admin
+{/* admin */}
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import PropertyRequests from "./pages/admin/PropertyRequests";
 import { Properties } from "./pages/admin/Properties";
@@ -29,12 +29,11 @@ import { Amenities } from "./pages/admin/Amenities";
 import Maintenance from "./pages/admin/Maintenance";
 import PropertyDetails from "./pages/admin/PropertyDetails";
 import AdminProfile from "./pages/admin/AdminProfile";
-import AddAmenity from "./pages/admin/AdminProfile";
 import AmenityDetails from "./pages/admin/AmenityDetails";
 import SupportRequest from "./pages/admin/SupportRequests";
 import AdminNotification from "./pages/admin/AdminNotifications";
 
-//owner
+{/* owner */}
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
 import OwnerProperties from "./pages/owner/Properties";
 import OwnerAddProperty from "./pages/owner/AddProperty";
@@ -50,7 +49,7 @@ import OwnerMessages from "./pages/owner/Messages";
 import Settings from "./pages/owner/Settings";
 import OwnerNotification from "./pages/owner/OwnerNotifications";
 
-//tenants
+{/* tenants */}
 import { Dashboard as TenantsDashboard } from "./pages/tenants/Dashboard";
 import Profile from "./pages/tenants/Profile";
 import TenantProperty from "./pages/tenants/Property";
@@ -65,7 +64,7 @@ import CreateMaintenance from "./pages/tenants/CreateMaintenance";
 import TenantMaintenance from "./pages/tenants/TenantMaintenance";
 import TenantNotification from "./pages/tenants/TenantNotification";
 
-//staff
+{/* staff */}
 import StaffDashboard from "./pages/staff/StaffDashboard";
 import StaffProfile from "./pages/staff/StaffProfile";
 import StaffMaintenance from "./pages/staff/AssignMaintenance";
@@ -104,7 +103,7 @@ function App() {
             <Route path="/ResetPassword/:token" element={<ResetPassword/>} />
             
           </Route>
-          //admin routes
+          {/* admin routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/admin" element={<AdminDashboardLayout />}>
               <Route
@@ -145,7 +144,7 @@ function App() {
               />
             </Route>
           </Route>
-          //owner routes
+          {/* owner routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/owner" element={<OwnerDashboardLayout />}>
               <Route path="ownerdashboard" element={<OwnerDashboard />} />
@@ -187,7 +186,7 @@ function App() {
               />
             </Route>
           </Route>
-          //tenant routes
+          {/* tenant routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/tenant" element={<TenantsDashboardLayout />}>
               <Route path="dashboard" element={<TenantsDashboard />} />
@@ -227,7 +226,7 @@ function App() {
               />
             </Route>
           </Route>
-          //staff routes
+          {/* staff routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/staff" element={<StaffDashboardLayout />}>
               <Route path="/staff/dashboard" element={<StaffDashboard />} />

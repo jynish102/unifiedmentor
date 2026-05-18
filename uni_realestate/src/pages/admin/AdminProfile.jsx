@@ -20,7 +20,7 @@ import { Button } from "../../components/ui/button";
 import API from "../../utils/api";
 import toast from "react-hot-toast";
 
-export default function StaffProfile() {
+export default function AdminProfile() {
   const [user, setUser] = useState(null);
   const [preview, setPreview] = useState(null);
   const [, setCounts] = useState(null);

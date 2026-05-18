@@ -1,0 +1,169 @@
+[{
+  "_id": {
+    "$oid": "6a0709d144269425b4db383a"
+  },
+  "property": {
+    "$oid": "69eb538a31a2d00c9f2cabc0"
+  },
+  "name": "This Villa",
+  "description": "This Villa is for also given as any celebration.",
+  "price": 15000,
+  "capacity": 100,
+  "location": " Bopal, Near Club Area, Ahnemdabad ",
+  "operatingHours": {
+    "start": "07:00",
+    "end": "00:00",
+    "closesNextDay": true
+  },
+  "status": "operational",
+  "priority": "medium",
+  "upcomingMaintenanceDate": {
+    "$date": "2026-06-29T00:00:00.000Z"
+  },
+  "images": [
+    "uploads\\properties\\1778846161791-villa2.jpeg",
+    "uploads\\properties\\1778846161792-Villa_security.webp"
+  ],
+  "createdAt": {
+    "$date": "2026-05-15T11:56:01.826Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-15T12:02:49.885Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a070bef44269425b4db3899"
+  },
+  "property": {
+    "$oid": "69ee5c3a935b89bda055c67f"
+  },
+  "name": "Satyam Party Plot",
+  "description": "for graba, and any of your party ",
+  "price": 10000,
+  "capacity": 1000,
+  "location": "Mangnath Road, Zanzarda Chokdi,Junagadh",
+  "operatingHours": {
+    "start": "07:00",
+    "end": "00:00",
+    "closesNextDay": true
+  },
+  "status": "operational",
+  "priority": "medium",
+  "upcomingMaintenanceDate": {
+    "$date": "2026-07-12T00:00:00.000Z"
+  },
+  "images": [
+    "uploads\\properties\\1778846703516-party_plot.jpeg",
+    "uploads\\properties\\1778846703517-partyplot.jpeg",
+    "uploads\\properties\\1778846703518-party-plot.jpg"
+  ],
+  "createdAt": {
+    "$date": "2026-05-15T12:05:03.530Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-15T12:05:03.530Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a070cf644269425b4db38e2"
+  },
+  "property": {
+    "$oid": "69eb562c31a2d00c9f2cabda"
+  },
+  "name": "City Center Shop",
+  "description": " Prime location shop for business",
+  "price": 30000,
+  "capacity": 3,
+  "location": " MG Road, Junagadh , Gujarat , 234577",
+  "operatingHours": {
+    "start": "07:00",
+    "end": "00:00",
+    "closesNextDay": true
+  },
+  "status": "operational",
+  "priority": "medium",
+  "upcomingMaintenanceDate": {
+    "$date": "2026-06-16T00:00:00.000Z"
+  },
+  "images": [
+    "uploads\\properties\\1778846966886-lift.jpeg"
+  ],
+  "createdAt": {
+    "$date": "2026-05-15T12:09:26.896Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-15T12:09:26.896Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a070d4d44269425b4db38ef"
+  },
+  "property": {
+    "$oid": "69fe29671edbc059a2dd5037"
+  },
+  "name": "Royal Heritage Villa",
+  "description": " Elegant 5BHK villa located in the premium area of Surat with luxurious interiors, spacious living room, home theater, landscaped garden, private terrace, and smart home features. Perfect for families looking for comfort and modern lifestyle.",
+  "price": 30000,
+  "capacity": 500,
+  "location": " Green Valley Estate, Vesu, Surat , Gujarat , 395007",
+  "operatingHours": {
+    "start": "07:00",
+    "end": "00:00",
+    "closesNextDay": true
+  },
+  "status": "operational",
+  "priority": "medium",
+  "upcomingMaintenanceDate": {
+    "$date": "2026-07-15T00:00:00.000Z"
+  },
+  "images": [
+    "uploads\\properties\\1778847053703-vilaa3.jpg",
+    "uploads\\properties\\1778847053703-villa2.jpeg"
+  ],
+  "createdAt": {
+    "$date": "2026-05-15T12:10:53.709Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-15T12:10:53.709Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a070dce44269425b4db38fc"
+  },
+  "property": {
+    "$oid": "69fe2c0cf55a252b44a37146"
+  },
+  "name": "A room For rent",
+  "description": "In this house we have a room for rent.",
+  "price": 30000,
+  "capacity": 1,
+  "location": " Shiv Residency, Vaishnodevi Circle, Rajkot , Gujarat , 360005",
+  "operatingHours": {
+    "start": "07:00",
+    "end": "00:00",
+    "closesNextDay": true
+  },
+  "status": "operational",
+  "priority": "medium",
+  "upcomingMaintenanceDate": {
+    "$date": "2026-08-15T00:00:00.000Z"
+  },
+  "images": [
+    "uploads\\properties\\1778847182890-inhous.avif"
+  ],
+  "createdAt": {
+    "$date": "2026-05-15T12:13:02.895Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-15T12:13:02.895Z"
+  },
+  "__v": 0
+}]

@@ -1,0 +1,93 @@
+[{
+  "_id": {
+    "$oid": "6a08629e1a225b2eb47b00bc"
+  },
+  "amenity": {
+    "$oid": "6a0709d144269425b4db383a"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "date": {
+    "$date": "2026-05-16T00:00:00.000Z"
+  },
+  "startTime": {
+    "$date": "2026-05-16T02:30:00.000Z"
+  },
+  "endTime": {
+    "$date": "2026-05-16T17:30:00.000Z"
+  },
+  "guests": 100,
+  "note": "For Aniversly celebration",
+  "status": "cancelled",
+  "paymentStatus": "pending",
+  "createdAt": {
+    "$date": "2026-05-16T12:27:10.215Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-17T06:58:52.124Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0863231a225b2eb47b00d0"
+  },
+  "amenity": {
+    "$oid": "6a070bef44269425b4db3899"
+  },
+  "user": {
+    "$oid": "69da17151a2d6fd4f8bf0901"
+  },
+  "date": {
+    "$date": "2026-05-21T00:00:00.000Z"
+  },
+  "startTime": {
+    "$date": "2026-05-21T02:30:00.000Z"
+  },
+  "endTime": {
+    "$date": "2026-05-21T18:15:00.000Z"
+  },
+  "guests": 1000,
+  "note": "For party",
+  "status": "approved",
+  "paymentStatus": "pending",
+  "createdAt": {
+    "$date": "2026-05-16T12:29:23.434Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T12:36:20.649Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6a0867791a225b2eb47b0214"
+  },
+  "amenity": {
+    "$oid": "6a0709d144269425b4db383a"
+  },
+  "user": {
+    "$oid": "69e25f46e6555130cc7c3616"
+  },
+  "date": {
+    "$date": "2026-05-31T00:00:00.000Z"
+  },
+  "startTime": {
+    "$date": "2026-05-31T02:30:00.000Z"
+  },
+  "endTime": {
+    "$date": "2026-05-31T15:30:00.000Z"
+  },
+  "guests": 97,
+  "note": "",
+  "status": "approved",
+  "paymentStatus": "pending",
+  "createdAt": {
+    "$date": "2026-05-16T12:47:53.545Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-16T13:24:42.806Z"
+  },
+  "__v": 0
+}]

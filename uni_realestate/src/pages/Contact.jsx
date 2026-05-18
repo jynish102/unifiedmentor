@@ -5,7 +5,7 @@ import API from "../utils/api";
 import toast from "react-hot-toast";
 
 const ContactHeader = () => {
-    {/*contact header section*/}
+    //contact header section
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -22,7 +22,7 @@ const ContactHeader = () => {
   const blobX = useTransform(mouseX, [0, window.innerWidth], [-50, 50]);
   const blobY = useTransform(mouseY, [0, window.innerHeight], [-50, 50]);
 
-  {/*contact form section*/}
+  //======================contact form section========================
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,9 +32,7 @@ const ContactHeader = () => {
     message: "",
   });
 
-   {
-     /*-----------name validation--------------------- */
-   }
+   //-----------name validation---------------------
    const validateName = (name) => {
      const regex = /^[A-Za-z\s]+$/;
      return regex.test(name);
@@ -42,9 +40,7 @@ const ContactHeader = () => {
 
   const isValidName = validateName(formData.fullname);
 
-   {
-     /*======================email validation======================== */
-   }
+     //======================email validation========================
    const validateEmail = (email) => {
      const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
      return emailRegex.test(email);

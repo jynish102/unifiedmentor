@@ -37,9 +37,7 @@ export default function ProfileCard() {
     }));
   };
 
-  {
-    /*-----------name validation--------------------- */
-  }
+  //-----------name validation--------------------
   const validateName = (name) => {
     const regex = /^[A-Za-z\s]+$/;
     return regex.test(name);
@@ -47,9 +45,7 @@ export default function ProfileCard() {
 
   const isValidName = validateName(formData.fullname);
 
-  {
-    /*======================email validation======================== */
-  }
+  //======================email validation======================== 
   const validateEmail = (email) => {
     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
     return emailRegex.test(email);
@@ -68,9 +64,7 @@ export default function ProfileCard() {
 
   const isCorrectDomain = validDomains.includes(domain);
 
-  {
-    /*======================phone validation======================== */
-  }
+  //======================phone validation======================== 
   const validatePhone = (phone) => {
     const phoneRegex = /^[0-9]{10}$/;
     return phoneRegex.test(phone);
@@ -120,7 +114,7 @@ export default function ProfileCard() {
             },
           },
         ); // your API endpoint
-        console.log("API RESPONSE:", res.data); //
+        console.log("API RESPONSE:", res.data); 
         setUser(res.data.user);
       } catch (err) {
         console.log("Error", err.res?.data?.message);

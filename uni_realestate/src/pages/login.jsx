@@ -13,7 +13,7 @@ export default function Login() {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  {/*======================password ======================== */}
+  //======================password ======================== 
   const [shake, setShake] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -192,6 +192,6 @@ export default function Login() {
       </div>
     </div>
   );
-};
+}
 
 

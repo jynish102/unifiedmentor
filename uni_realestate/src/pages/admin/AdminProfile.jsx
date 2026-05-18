@@ -52,9 +52,7 @@ export default function AdminProfile() {
     confirm: false,
   });
 
-  {
-    /*-----------name validation--------------------- */
-  }
+  //-----------name validation--------------------- 
   const validateName = (name) => {
     const regex = /^[A-Za-z\s]+$/;
     return regex.test(name);
@@ -62,9 +60,7 @@ export default function AdminProfile() {
 
   const isValidName = validateName(formData.fullname);
 
-  {
-    /*======================email validation======================== */
-  }
+  //======================email validation======================== 
   const validateEmail = (email) => {
     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
     return emailRegex.test(email);
@@ -83,9 +79,7 @@ export default function AdminProfile() {
 
   const isCorrectDomain = validDomains.includes(domain);
 
-  {
-    /*======================phone validation======================== */
-  }
+  //======================phone validation========================
   const validatePhone = (phone) => {
     const phoneRegex = /^[0-9]{10}$/;
     return phoneRegex.test(phone);

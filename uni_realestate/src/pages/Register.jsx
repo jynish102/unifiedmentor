@@ -20,7 +20,7 @@ export default function Register() {
   // const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  {/*-----------name validation--------------------- */}
+  //-----------name validation--------------------- //
   const validateName = (name) => {
     const regex = /^[A-Za-z\s]+$/;
     return regex.test(name);
@@ -28,9 +28,9 @@ export default function Register() {
 
   const isValidName = validateName(formData.fullname);
 
-  {
-    /*======================password======================== */
-  }
+  
+    //======================password======================== 
+  
   const getPasswordStrength = (password) => {
     const rules = {
       length: password.length >= 8,
@@ -49,9 +49,9 @@ export default function Register() {
     return { strength, rules, passedRules };
   };
 
-  {
-    /*======================email validation======================== */
-  }
+  
+    //======================email validation======================== 
+  
   const validateEmail = (email) => {
     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
     return emailRegex.test(email);
@@ -70,19 +70,19 @@ export default function Register() {
 
   const isCorrectDomain = validDomains.includes(domain);
 
-  {
-    /*======================phone validation======================== */
-  }
+  
+    //======================phone validation======================== 
+  
   const validatePhone = (phone) => {
     const phoneRegex = /^[0-9]{10}$/;
     return phoneRegex.test(phone);
   };
   const phoneIsValid = validatePhone(formData.phone);
 
-  {/*======================checkpassword======================== */}
+  //======================checkpassword======================== 
   const passwordsMatch =
     formData.confirmPassword && formData.password === formData.confirmPassword;
-  {/*======================shake if passwords do not match======================== */}
+  //======================shake if passwords do not match======================== 
   const [shake, setShake] = useState(false);
 
   useEffect(() => {

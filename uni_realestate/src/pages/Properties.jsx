@@ -12,6 +12,7 @@ import {
   Trash2,
   Eye,
   Banknote,
+  ArrowBigLeft,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast"
@@ -70,7 +71,13 @@ export default function Properties() {
           <p className="text-slate-500 mt-1">Manage your rental properties</p>
         </div>
 
-        
+        <Button
+          onClick={() => navigate("/")}
+          className=" bg-slate-700 hover:bg-slate-800 rounded-xl cursor-pointer"
+        >
+          <ArrowBigLeft size={18} className="mr-2" />
+          Back
+        </Button>
       </div>
 
       {/* Search + List */}
@@ -169,9 +176,7 @@ export default function Properties() {
                       variant="outline"
                       size="sm"
                       className="flex-1"
-                      onClick={() =>
-                        navigate(`/login`)
-                      }
+                      onClick={() => navigate(`/login`)}
                     >
                       <Eye size={14} />
                       View

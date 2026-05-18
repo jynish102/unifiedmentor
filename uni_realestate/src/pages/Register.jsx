@@ -140,6 +140,20 @@ const Register = () => {
   //------------------------------form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+     if (!isValidName) {
+          toast.error(`Please Fix Name Error!!!`);
+          return;
+        }
+    
+        if (!emailIsValid || !isCorrectDomain) {
+          toast.error(`Please Fix Email Error!!!`);
+          return;
+        }
+    
+        if (!phoneIsValid) {
+          toast.error(`Please Fix PhoneNumber Error!!!`);
+          return;
+        }
     try {
       const res = await API.post("/auth/register", {
         fullname: formData.fullname,
@@ -409,13 +423,13 @@ const Register = () => {
 
             <button
               type="submit"
-              disabled={
-                !isValidName ||
-                !emailIsValid ||
-                !passwordsMatch ||
-                !phoneIsValid ||
-                !isCorrectDomain
-              }
+              // disabled={
+              //   !isValidName ||
+              //   !emailIsValid ||
+              //   !passwordsMatch ||
+              //   !phoneIsValid ||
+              //   !isCorrectDomain
+              // }
               className={`w-full py-3 rounded-xl font-semibold transition ${
                 passwordsMatch
                   ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:scale-105"

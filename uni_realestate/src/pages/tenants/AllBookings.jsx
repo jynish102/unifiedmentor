@@ -275,7 +275,7 @@ export default function AllBooking() {
                       ) : (
                         // CANCEL BUTTON
                         <Button
-                          className="cursor-pointer w-full bg-red-600 hover:bg-red-700"
+                          className="cursor-pointer +6w-full bg-red-600 hover:bg-red-700"
                           disabled={loadingId === b._id}
                           onClick={() =>
                             handleStatusChange(b._id, b.type, "cancelled")

@@ -73,10 +73,10 @@ export default function Amenities() {
   //   }
   // };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure?");
+  
 
-    if (!confirmDelete) return;
+  const handleDelete = async (id) => {
+    
 
     try {
       const token = localStorage.getItem("token");
@@ -92,9 +92,36 @@ export default function Amenities() {
 
       toast.success("Deleted successfully ");
     } catch (err) {
-      console.error(err.res?.data?.message||"Error");
+      console.log(err.res?.data?.message||"Error");
       toast.error(err.res?.data?.message ||"Delete failed ");
     }
+  };
+
+  const confirmDelete = (id) => {
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <p>Are you sure you want to delete?</p>
+
+        <div className="flex gap-2">
+          <button
+            className="bg-red-600 text-white px-3 py-1 rounded"
+            onClick={() => {
+              handleDelete(id);
+              toast.dismiss(t.id);
+            }}
+          >
+            Delete
+          </button>
+
+          <button
+            className="bg-gray-200 px-3 py-1 rounded"
+            onClick={() => toast.dismiss(t.id)}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    ));
   };
 
   return (
@@ -243,7 +270,7 @@ export default function Amenities() {
                       variant="outline"
                       size="sm"
                       className="flex-1 cursor-pointer"
-                      onClick={() => handleDelete(amenity._id)}
+                      onClick={() => confirmDelete(amenity._id)}
                     >
                       <Trash2 size={14} />
                       Delete

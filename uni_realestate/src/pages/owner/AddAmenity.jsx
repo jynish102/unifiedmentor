@@ -19,7 +19,7 @@ export default function AddAmenity() {
     operatingHours: {
       start: "",
       end: "",
-      closesNextDay: "",
+      closesNextDay: false,
     },
     status: "operational",
     priority: "medium",
@@ -52,7 +52,7 @@ export default function AddAmenity() {
           operatingHours: {
             start: data.operatingHours?.start?.slice(0, 5) || "",
             end: data.operatingHours?.end?.slice(0, 5) || "",
-            closesNextDay: data.operatingHours?.closesNextDay || 0,
+            closesNextDay: data.operatingHours?.closesNextDay || false,
           },
 
           status: data.status || "operational",

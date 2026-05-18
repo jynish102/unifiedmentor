@@ -110,23 +110,23 @@ const Footer =() => {
               <div className="space-y-3 text-sm">
                 <div className="flex items-center gap-3">
                   <Mail size={16} className="text-green-400" />
-                  <span>support@propertypro.com</span>
+                  <span>Add Proper Email Address</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <Phone size={16} className="text-blue-400" />
-                  <span>+91 </span>
+                  <span>Add Phone Number</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <MapPin size={16} className="text-green-400" />
-                  <span>Ahmadabad, India</span>
+                  <span>City, Country</span>
                 </div>
               </div>
 
               {/* Social Icons */}
               <div className="flex gap-4 mt-6">
-                <Facebook
+                {/* <Facebook
                   className="hover:text-white cursor-pointer transition"
                   size={18}
                 />
@@ -137,7 +137,7 @@ const Footer =() => {
                 <Linkedin
                   className="hover:text-white cursor-pointer transition"
                   size={18}
-                />
+                /> */}
               </div>
             </div>
           </div>

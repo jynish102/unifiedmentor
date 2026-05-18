@@ -263,7 +263,7 @@ export default function AddProperty() {
 
       navigate("/owner/properties");
     } catch (err) {
-      console.error(err);
+      console.log(err.res?.data || err.message);
       const message =
         err.response?.data?.message || 
         err.message || 

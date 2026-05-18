@@ -59,9 +59,6 @@ export  default function Properties() {
 
     fetchProperties();
   }, []);
-
-  
-
   const getStatusColor = (status) => {
     switch (status) {
       case "occupied":
@@ -113,9 +110,7 @@ export  default function Properties() {
   );
 
    const handleDelete = async (id) => {
-     const confirmDelete = window.confirm("Are you sure?");
-
-     if (!confirmDelete) return;
+    
 
      try {
        const token = localStorage.getItem("token");
@@ -134,6 +129,33 @@ export  default function Properties() {
        console.log("Delete failed",err.res?.data || err.message);
        toast.error(err.res?.data?.message ||"Delete failed");
      }
+   };
+
+   const confirmDelete = (id) => {
+     toast((t) => (
+       <div className="flex flex-col gap-3">
+         <p>Are you sure you want to delete?</p>
+
+         <div className="flex gap-2">
+           <button
+             className="bg-red-600 text-white px-3 py-1 rounded"
+             onClick={() => {
+               handleDelete(id);
+               toast.dismiss(t.id);
+             }}
+           >
+             Delete
+           </button>
+
+           <button
+             className="bg-gray-200 px-3 py-1 rounded"
+             onClick={() => toast.dismiss(t.id)}
+           >
+             Cancel
+           </button>
+         </div>
+       </div>
+     ));
    };
 
 
@@ -332,7 +354,7 @@ export  default function Properties() {
                     variant="outline"
                     size="sm"
                     className="flex-1 cursor-pointer"
-                    onClick={() => handleDelete(property._id)}
+                    onClick={() => confirmDelete(property._id)}
                   >
                     <Trash2 size={14} />
                     Delete

@@ -93,9 +93,6 @@ export function Properties() {
         return null;
     }
   };
-
-  
-
   return (
     <div className="space-y-6">
       {/* Header */}

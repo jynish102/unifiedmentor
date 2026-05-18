@@ -191,7 +191,7 @@ const handleSubmit = async (e) => {
                 <Mail className="w-8 h-8 text-pink-400 group-hover:scale-110 transition" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Email</h3>
-              <p className="text-white/80">support@pixelaura.com</p>
+              <p className="text-white/80">Add Proper Email Address</p>
             </div>
 
             {/* Phone */}
@@ -200,7 +200,7 @@ const handleSubmit = async (e) => {
                 <Phone className="w-8 h-8 text-yellow-400 group-hover:scale-110 transition" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Phone</h3>
-              <p className="text-white/80">+91 98765 43210</p>
+              <p className="text-white/80">ADD Phone Number</p>
             </div>
 
             {/* Location */}
@@ -211,7 +211,7 @@ const handleSubmit = async (e) => {
               <h3 className="text-xl font-semibold text-white mb-2">
                 Location
               </h3>
-              <p className="text-white/80">Ahmedabad, India</p>
+              <p className="text-white/80">City, Country</p>
             </div>
 
             {/* Working Hours */}
@@ -222,7 +222,7 @@ const handleSubmit = async (e) => {
               <h3 className="text-xl font-semibold text-white mb-2">
                 Working Hours
               </h3>
-              <p className="text-white/80">Mon – Fri : 9:00 AM – 6:00 PM</p>
+              <p className="text-white/80">Add Working Hours</p>
             </div>
           </div>
         </div>
@@ -255,12 +255,12 @@ const handleSubmit = async (e) => {
                 onChange={handleChange}
                 required
                 autoFocus
-                className={`w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-red-900 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                className={`w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
                   formData.fullname
                     ? isValidName
                       ? "border-green-400 focus:ring-green-400"
                       : "border-red-500 focus:ring-red-400"
-                    : "border-white/30 focus:ring-purple-400"
+                    : ""
                 }`}
               />
               {formData.fullname && (
@@ -281,12 +281,12 @@ const handleSubmit = async (e) => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className={`w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-red-900 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                className={`w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500${
                   formData.email && isCorrectDomain
                     ? emailIsValid
                       ? "border-green-400 focus:ring-green-400"
                       : "border-red-500 focus:ring-red-400"
-                    : "border-white/30 focus:ring-purple-400"
+                    : ""
                 }`}
               />
               {formData.email && (
@@ -318,12 +318,12 @@ const handleSubmit = async (e) => {
                   });
                 }}
                 maxLength={10}
-                className={`w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border  dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                className={`w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
                   formData.phone
                     ? phoneIsValid
                       ? "border-green-400 focus:ring-green-400"
                       : "border-red-500 focus:ring-red-400"
-                    : "border-white/30 focus:ring-purple-400"
+                    : ""
                 }`}
               />
               {formData.phone && (
@@ -414,14 +414,14 @@ const handleSubmit = async (e) => {
             <div className="backdrop-blur-xl bg-white/20 border border-white/30 text-white shadow-2xl rounded-3xl p-8 text-center">
               <h3 className="text-2xl font-bold mb-4">Our Headquarters</h3>
               <p className="text-white/90">
-                301, Business Tower,
+              Add Address
                 <br />
-                SG Highway,
+              Address
                 <br />
-                Ahmedabad, Gujarat, India
+                City, State, , Country
               </p>
               <p className="mt-4 font-semibold text-indigo-300">
-                +91 98765 43210
+                Mobile Number
               </p>
             </div>
           </div>

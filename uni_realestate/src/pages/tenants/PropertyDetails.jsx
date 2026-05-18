@@ -175,7 +175,7 @@ export default function PropertyDetails() {
                   <MapPin size={18} />
 
                   <p>
-                    {property.address}, {property.city}, {property.state} ,{" "}
+                    {property.address}, {property.city}, {property.state} ,
                     {property.country}
                   </p>
                 </div>

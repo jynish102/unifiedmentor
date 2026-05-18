@@ -8,7 +8,7 @@ const crypto = require("crypto");
 exports.registerUser = async (req, res) => {
   try {
     const { fullname, email, phone, role, password } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -84,9 +84,6 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-
-
-
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -112,7 +109,7 @@ exports.forgotPassword = async (req, res) => {
     // FRONTEND URL
     const resetUrl = `http://localhost:5173/ResetPassword/${resetToken}`;
 
-    console.log("RESET URL:", resetUrl);
+    // console.log("RESET URL:", resetUrl);
 
     res.json({
       success: true,
@@ -146,9 +143,6 @@ exports.resetPassword = async (req, res) => {
         message: "Invalid or expired token",
       });
     }
-
-  
-
     user.password = password;
 
     // clear token

@@ -20,7 +20,7 @@ import {
   Trash2,
   Wrench,
 } from "lucide-react";
-import { ImageWithFallback } from "../../components/ui/imageWithFallback";
+import { ImageWithFallback } from "../../components/ui/ImageWithFallback";
 import { useState, useEffect } from "react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";

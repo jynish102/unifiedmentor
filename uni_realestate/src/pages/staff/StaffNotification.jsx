@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Bell, CheckCheck } from "lucide-react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
 
 export default function StaffNotifications() {
   const [notifications, setNotifications] = useState([]);

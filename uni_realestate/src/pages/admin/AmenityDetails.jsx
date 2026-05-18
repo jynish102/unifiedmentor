@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
 
 export default function AmenityDetails() {
   const { id } = useParams();

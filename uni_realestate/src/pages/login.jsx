@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import logo from "../assets/logo2.png";
-import API from "../api/api";
+import API from "../utils/api";
 import { toast } from "react-toastify";
 
 

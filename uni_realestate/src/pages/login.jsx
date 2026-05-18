@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import logo from "../assets/logo2.png";
-import axios from "axios";
+import API from "../api/api";
+import { toast } from "react-toastify";
 
 
 const Login = () => {
@@ -31,12 +32,12 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await API.post("/auth/login", {
         email: formData.email,
         password: formData.password,
       });
 
-      console.log(res.data);
+      // console.log(res.data);
 
       // store token (if your API returns it)
       localStorage.setItem("token", res.data.token);
@@ -45,11 +46,11 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(res.data.user));
         
 
-    console.log("LOGIN USER:", res.data.user);
+    // console.log("LOGIN USER:", res.data.user);
       // success
       setError("");
 
-      //  🔥 redirect to dashboard
+      //  redirect to dashboard
       // navigate("/dashboard");
       const role = res.data.user.role;
 
@@ -64,7 +65,8 @@ const Login = () => {
       }
 
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      console.log("Login error:", err.response?.data || err.message);
+      toast.error(err.response?.data?.message || "Login failed");
       triggerShake();
     }
   };

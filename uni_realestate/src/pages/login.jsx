@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import logo from "../assets/logo2.png";
 import API from "../utils/api";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 
 export default function Login() {

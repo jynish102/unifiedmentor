@@ -6,7 +6,7 @@ import API from "../utils/api";
 import toast from "react-hot-toast"
 
 
-const Register = () => {
+export default function Register() {
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
@@ -454,4 +454,4 @@ const Register = () => {
   );
 };;
 
-export default Register;
+

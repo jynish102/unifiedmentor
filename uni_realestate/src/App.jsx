@@ -3,12 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./routes/ProtectedRoutes.jsx";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
-
 import { AdminDashboardLayout } from "./layouts/AdminDashboardLayout";
 import { OwnerDashboardLayout } from "./layouts/OwnerDashboardLayout";
 import { TenantsDashboardLayout } from "./layouts/TenantsDashboardLayout";
 import { StaffDashboardLayout } from "./layouts/StaffDashboardLayout";
-
+{/* public pages */}
 import Home from "./pages/Home";
 import Features from "./pages/Features";
 import Contact from "./pages/Contact";
@@ -18,8 +17,6 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-
-
 {/* admin */}
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import PropertyRequests from "./pages/admin/PropertyRequests";
@@ -32,7 +29,6 @@ import AdminProfile from "./pages/admin/AdminProfile";
 import AmenityDetails from "./pages/admin/AmenityDetails";
 import SupportRequest from "./pages/admin/SupportRequests";
 import AdminNotification from "./pages/admin/AdminNotifications";
-
 {/* owner */}
 import { OwnerDashboard } from "./pages/owner/OwnerDashboard";
 import OwnerProperties from "./pages/owner/Properties";
@@ -48,7 +44,6 @@ import OwnerTenant from "./pages/owner/Tenants";
 import OwnerMessages from "./pages/owner/Messages";
 import Settings from "./pages/owner/Settings";
 import OwnerNotification from "./pages/owner/OwnerNotifications";
-
 {/* tenants */}
 import { Dashboard as TenantsDashboard } from "./pages/tenants/Dashboard";
 import Profile from "./pages/tenants/Profile";
@@ -63,7 +58,6 @@ import TenantMessage from "./pages/tenants/Message";
 import CreateMaintenance from "./pages/tenants/CreateMaintenance";
 import TenantMaintenance from "./pages/tenants/TenantMaintenance";
 import TenantNotification from "./pages/tenants/TenantNotification";
-
 {/* staff */}
 import StaffDashboard from "./pages/staff/StaffDashboard";
 import StaffProfile from "./pages/staff/StaffProfile";
@@ -101,7 +95,6 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/ForgotPassword" element={<ForgotPassword />} />
             <Route path="/ResetPassword/:token" element={<ResetPassword/>} />
-            
           </Route>
           {/* admin routes */}
           <Route element={<ProtectedRoute />}>
@@ -116,7 +109,6 @@ function App() {
               />
               <Route path="properties" element={<Properties />} />
               <Route path="/admin/profile" element={<AdminProfile />} />
-
               <Route
                 path="/admin/properties/:id"
                 element={<PropertyDetails />}
@@ -132,7 +124,6 @@ function App() {
               />
               <Route path="/admin/amenities/:id" element={<AmenityDetails />} />
               <Route path="tenants" element={<Tenants />} />
-
               <Route path="maintenance" element={<Maintenance />} />
               <Route
                 path="/admin/support-requests"
@@ -199,7 +190,6 @@ function App() {
                 path="/tenant/properties/booking/:propertyId"
                 element={<PropertyBooking />}
               />
-
               <Route path="amenities" element={<TenantAmenities />} />
               <Route
                 path="/tenant/amenities/:id"

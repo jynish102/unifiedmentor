@@ -114,14 +114,6 @@ function App() {
                 element={<PropertyDetails />}
               />
               <Route path="amenities" element={<Amenities />} />
-              <Route
-                path="/admin/amenities/add-amenity/:propertyId"
-                element={<AddAmenity />}
-              />
-              <Route
-                path="/admin/amenities/edit/:id"
-                element={<AddAmenity />}
-              />
               <Route path="/admin/amenities/:id" element={<AmenityDetails />} />
               <Route path="tenants" element={<Tenants />} />
               <Route path="maintenance" element={<Maintenance />} />

@@ -3,7 +3,7 @@ const AmenityBooking = require("../models/AmenityBooking");
 const Property = require("../models/Property");
 const Amenity = require("../models/Amenity");
 const Notification = require("../models/Notifications");
-const User = require("../models/user")
+const User = require("../models/User")
 
 // CREATE BOOKING (with conflict check)
 exports.createAmenityBooking = async (req, res) => {

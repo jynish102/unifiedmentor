@@ -1,6 +1,6 @@
 const Notification = require("../models/Notifications");
 const mongoose = require("mongoose");
-const Use = require("../models/user");
+const User = require("../models/User");
 
 /* ---------------------------------------------------
    CREATE NOTIFICATION

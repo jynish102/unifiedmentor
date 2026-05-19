@@ -1,7 +1,7 @@
 const Property = require("../models/Property");
 const mongoose = require("mongoose");
 const Notification = require("../models/Notifications")
-const User = require("../models/user");
+const User = require("../models/User");
 
 exports.addProperty = async (req, res) => {
   try {

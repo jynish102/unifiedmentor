@@ -27,7 +27,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://unifiedmentor-ionf.vercel.app/",
+    origin: "https://unifiedmentor-ionf.vercel.app",
     credentials: true,
   }),
 );
